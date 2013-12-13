@@ -27,30 +27,21 @@
   (.exists (new java.io.File (str (io/resource-path) db-store-sqlite "")))
   )
 
+
 (defn create-users-table
-  []
-  (sql/with-connection db-spec
-    (sql/create-table
-      :users
-      [:id "varchar(20) PRIMARY KEY"]
-      [:first_name "varchar(30)"]
-      [:last_name "varchar(30)"]
-      [:email "varchar(30)"]
-      [:admin :boolean]
-      [:last_login :time]
-      [:is_active :boolean]
-      [:pass "varchar(100)"])))
-(defn create-test-table
   []
   (sql/with-connection db-spec-sqlite
     (sql/create-table
       :users
-      [:id "varchar(20) PRIMARY KEY"]
-      [:first_name "varchar(30)"]
-      [:last_name "varchar(30)"]
+      [:id "integer primary key autoincrement"]  ;;
+      [:username "varchar(30)"]
+      [:displayname "varchar(30)"]
+      [:telnum "varchar(30)"]
+      [:departments "varchar(30)"]
       [:email "varchar(30)"]
       [:admin :boolean]
       [:last_login :time]
+      [:time :time]
       [:is_active :boolean]
       [:pass "varchar(100)"])))
 
@@ -58,5 +49,5 @@
   "creates the database tables used by the application"
   []
   (create-users-table)
-  (create-test-table)
+
   )

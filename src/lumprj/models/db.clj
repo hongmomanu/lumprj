@@ -8,8 +8,11 @@
 (defentity users)
 
 (defn create-user [user]
+
   (insert users
-          (values user)))
+          (values user))
+
+  )
 
 (defn update-user [id first-name last-name email]
   (update users
