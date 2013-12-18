@@ -25,3 +25,8 @@
   (first (select users
                  (where {:id id})
                  (limit 1))))
+
+(defn has-user [username pass]
+   (exec-raw ["SELECT * FROM users WHERE username = ? and pass=?" [username pass]] :results)
+
+                 )
