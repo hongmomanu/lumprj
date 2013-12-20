@@ -1,6 +1,7 @@
 (ns lumprj.controller.server
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
+            [lumprj.funcs.system :as  system]
             [noir.response :as resp]
             )
   )
@@ -16,6 +17,12 @@
  )
 
 (defn serverlist [key start limit]
-  (resp/json {:results (db/serverlist start limit) :totalCount 1})
+  (let  [results (db/serverlist start limit)]
+
+
+
+    (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results) :totalCount (count (db/servercount))})
+    )
+
   )
 
