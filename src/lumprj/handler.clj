@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [defroutes]]
             [lumprj.routes.home :refer [home-routes]]
             [lumprj.routes.user :refer [user-routes]]
+            [lumprj.routes.server :refer [server-routes]]
             [noir.util.middleware :as middleware]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
@@ -61,7 +62,7 @@
 
 (def app (middleware/app-handler
            ;; add your application routes here
-           [user-routes home-routes app-routes]
+           [user-routes server-routes home-routes app-routes]
            ;; add custom middleware here
            :middleware [template-error-page]
            ;; add access rules here

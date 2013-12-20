@@ -7,11 +7,19 @@
 
 (defentity users)
 
+(defentity servers)
+
 (defn create-user [user]
 
   (insert users
           (values user))
 
+  )
+
+(defn create-server [server]
+
+  (insert servers
+    (values server))
   )
 
 (defn update-user [id first-name last-name email]
@@ -27,6 +35,14 @@
                  (limit 1))))
 
 (defn has-user [username pass]
-   (exec-raw ["SELECT * FROM users WHERE username = ? and pass=?" [username pass]] :results)
+   (exec-raw ["SELECT * FROM users WHERE username = ? and password=?" [username pass]] :results)
 
                  )
+
+(defn has-username [username]
+  (exec-raw ["SELECT * FROM users WHERE username = ? " [username]] :results)
+  )
+
+(defn has-server [servername port]
+  (exec-raw ["SELECT * FROM servers WHERE servername = ? and port=?" [servername port]] :results)
+  )

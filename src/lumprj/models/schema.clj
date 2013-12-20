@@ -5,6 +5,9 @@
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
+(def datapath (str (System/getProperty "user.dir") "/"))
+
+
 
 (def db-spec {:classname "org.h2.Driver"
               :subprotocol "h2"
@@ -16,7 +19,7 @@
 
 (def db-spec-sqlite {:classname "org.sqlite.JDBC"
                      :subprotocol "sqlite"
-                     :subname (str (io/resource-path) db-store-sqlite)
+                     :subname (str datapath db-store-sqlite)
                      })
 
 
@@ -24,7 +27,8 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  (.exists (new java.io.File (str (io/resource-path) db-store-sqlite "")))
+
+  (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
 
@@ -39,15 +43,28 @@
       [:telnum "varchar(30)"]
       [:departments "varchar(30)"]
       [:email "varchar(30)"]
-      [:admin :boolean]
-      [:last_login :time]
-      [:time :time]
-      [:is_active :boolean]
-      [:pass "varchar(100)"])))
+      [:admin "BOOLEAN DEFAULT 0"]
+      [:last_login "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      [:is_active "BOOLEAN DEFAULT 0"]
+      [:password "varchar(100)"])))
+
+(defn create-servers-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :servers
+      [:id "integer primary key autoincrement"]  ;;
+      [:servername "varchar(30)"]
+      [:serverip "varchar(30)"]
+      [:port "varchar(30)"]
+      [:portname "varchar(30)"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      )))
 
 (defn create-tables
   "creates the database tables used by the application"
   []
   (create-users-table)
-
+  (create-servers-table)
   )

@@ -1,6 +1,7 @@
 (ns lumprj.routes.user
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
+            [lumprj.controller.user :as user]
             [noir.response :as resp]
             )
 
@@ -9,30 +10,16 @@
 
 (defroutes user-routes
 
-  (GET "/adduser" [name,passwd]
-       (println name)
-       (println passwd)
+  (GET "/adduser" [username password displayname admin telnum departments email]
+    (user/adduser username password displayname admin telnum departments email)
+    )
 
-       (db/create-user {:username name :pass passwd})
+  (POST "/login" [username password]
 
-       (resp/jsonp "showUsers" {:username name :pass passwd})
-       ;;(json {:response "ok"})
-
-       )
-
-  (POST "/login" [username,password]
-
-
-       (let [results (db/has-user  username password)]
-
-
-        ( if (> (count results) 0) (resp/json {:success true }) (resp/json {:success false}))
-
-         )
-
-
-       )
+    (user/login username password)
 
   )
+
+)
 
 
