@@ -43,6 +43,9 @@
   (exec-raw ["SELECT * FROM users WHERE username = ? " [username]] :results)
   )
 
-(defn has-server [servername port]
-  (exec-raw ["SELECT * FROM servers WHERE servername = ? and port=?" [servername port]] :results)
+(defn has-server [servername servervalue]
+  (exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results)
+  )
+(defn serverlist [start limit]
+  (exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results)
   )

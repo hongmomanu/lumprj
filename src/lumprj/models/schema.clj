@@ -56,9 +56,8 @@
       :servers
       [:id "integer primary key autoincrement"]  ;;
       [:servername "varchar(30)"]
-      [:serverip "varchar(30)"]
-      [:port "varchar(30)"]
-      [:portname "varchar(30)"]
+      [:servervalue "varchar(30)"]
+      [:parentid "integer DEFAULT -1"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       )))
 
