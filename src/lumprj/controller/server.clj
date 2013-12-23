@@ -18,11 +18,16 @@
 
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
-
-
-
-    (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results) :totalCount (count (db/servercount))})
+    (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results)
+                :totalCount (count (db/servercount))})
     )
+
+  )
+(defn serverport [serverid ip]
+  (let  [results (db/serverport serverid)]
+    (resp/json (map #(conj % {:isconnect (system/checkport ip (:servervalue %))}) results))
+    )
+  ;;(resp/json [{:servername "test1" :value 1} {:servername "test2" :value 0} {:servername "test3" :value 1}])
 
   )
 

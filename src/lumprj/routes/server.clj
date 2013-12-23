@@ -18,6 +18,10 @@
     (servermanager/serverlist key start limit)
     )
 
+  (GET "/serverport" [serverid ip]
+    (servermanager/serverport serverid ip)
+    )
+
 
 )
 

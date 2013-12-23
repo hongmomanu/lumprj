@@ -50,7 +50,12 @@
   (exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results)
   )
 
+
 (defn servercount []
   (exec-raw ["SELECT * FROM servers WHERE parentid=-1" []] :results)
  )
+
+(defn serverport [serverid]
+  (exec-raw ["SELECT * FROM servers WHERE parentid=?" [serverid]] :results)
+  )
 

@@ -18,6 +18,15 @@
 ;;    (catch Exception e (str "caught exception: " (.getMessage e))))
 
 ;;chekc ip connected
+(defn checkport [ip port]
+  (try
+    (println ip)
+    (println port)
+    (new Socket ip (read-string port))
+    true
+    (catch Exception e false)
+  )
+)
 
 (defn ping
   [host]
