@@ -1,6 +1,6 @@
 (ns lumprj.funcs.system
 
-  (:import (java.net Socket InetAddress)
+  (:import (java.net Socket InetAddress InetSocketAddress)
            (com.sun.management OperatingSystemMXBean)
            (java.lang.management ManagementFactory))
   )
@@ -20,9 +20,8 @@
 ;;chekc ip connected
 (defn checkport [ip port]
   (try
-    (println ip)
-    (println port)
-    (new Socket ip (read-string port))
+
+    (.connect (new Socket) (new InetSocketAddress ip  (read-string port)) 500)
     true
     (catch Exception e false)
   )
