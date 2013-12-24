@@ -7,7 +7,19 @@
 
 (def datapath (str (System/getProperty "user.dir") "/"))
 
+;;(defdb korma-db
+;;  (oracle { :user "xxx"
+;;            :password "xxx"
+;;            :host "my.oracle.db"
+;;            :port 1521
+;;            :make-pool? true }))
 
+(def db-oracle  {:classname "oracle.jdbc.OracleDriver"
+                 :subprotocol "oracle"
+                 :subname "thin:@192.168.2.141:1521:orcl"
+                 :user "CIVILAFFAIRS_ZS"
+                 :password "hvit"
+                 :naming {:keys clojure.string/lower-case :fields clojure.string/upper-case}})
 
 (def db-spec {:classname "org.h2.Driver"
               :subprotocol "h2"

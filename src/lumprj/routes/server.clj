@@ -1,6 +1,6 @@
 (ns lumprj.routes.server
   (:use compojure.core)
-  (:require [lumprj.models.db :as db]
+  (:require [lumprj.models.dboracle :as dboracle]
             [lumprj.controller.server :as servermanager]
             [noir.response :as resp]
             )
@@ -20,6 +20,10 @@
 
   (GET "/serverport" [serverid ip]
     (servermanager/serverport serverid ip)
+    )
+
+  (GET "/orcltest" []
+    (resp/json (dboracle/oracltest))
     )
 
 
