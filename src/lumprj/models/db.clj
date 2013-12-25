@@ -1,15 +1,19 @@
 (ns lumprj.models.db
   (:use korma.core
-        [korma.db :only (defdb)])
+        [korma.db :only [defdb with-db]])
   (:require [lumprj.models.schema :as schema]))
 
 (defdb db schema/db-spec-sqlite)
 
 
 
-(defentity users)
+(defentity users
+  (database db)
+  )
 
-(defentity servers)
+(defentity servers
+  (database db)
+  )
 
 (defn create-user [user]
 
@@ -37,27 +41,34 @@
                  (limit 1))))
 
 (defn has-user [username pass]
-   (exec-raw ["SELECT * FROM users WHERE username = ? and password=?" [username pass]] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM users WHERE username = ? and password=?" [username pass]] :results))
+
 
                  )
 
 (defn has-username [username]
-  (exec-raw ["SELECT * FROM users WHERE username = ? " [username]] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM users WHERE username = ? " [username]] :results))
   )
 
 (defn has-server [servername servervalue]
-  (exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results))
   )
 (defn serverlist [start limit]
-  (exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results))
   )
 
 
 (defn servercount []
-  (exec-raw ["SELECT * FROM servers WHERE parentid=-1" []] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM servers WHERE parentid=-1" []] :results))
  )
 
 (defn serverport [serverid]
-  (exec-raw ["SELECT * FROM servers WHERE parentid=?" [serverid]] :results)
+  (with-db db
+    (exec-raw ["SELECT * FROM servers WHERE parentid=?" [serverid]] :results))
   )
 
