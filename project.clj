@@ -67,4 +67,6 @@
                  ]
   :description
   "FIXME: write description"
+  :java-source-paths ["src/lumprj/java"] ; Java source is stored separately.
+  :resource-paths ["lib/*"]
   :min-lein-version "2.0.0")

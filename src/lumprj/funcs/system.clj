@@ -2,6 +2,9 @@
 
   (:import (java.net Socket InetAddress InetSocketAddress)
            (com.sun.management OperatingSystemMXBean)
+           (java.io  BufferedReader InputStreamReader)
+           (java.util StringTokenizer)
+           (org.hyperic.sigar Sigar CpuPerc)
            (java.lang.management ManagementFactory))
   )
 
@@ -9,15 +12,7 @@
 
 
 
-
-;;check port method
-;;(try
-
-;;    (new Socket "192.168.2.141" 8080)
-
-;;    (catch Exception e (str "caught exception: " (.getMessage e))))
-
-;;chekc ip connected
+;;chekc port connected
 (defn checkport [ip port]
   (try
 
@@ -26,10 +21,41 @@
     (catch Exception e false)
   )
 )
-
+;;check ip connected
 (defn ping
   [host]
   (.isReachable (InetAddress/getByName host) 500))
+
+;;get cpu information
+
+(defn getCpuRatio []
+  ;;(println (.getCpuPercList (new Sigar)))
+  (let [cpuperclist  (.getCpuPercList (new Sigar))]
+    (map #(str  (.getSys %)) cpuperclist)
+    ;;(println (count cpuperclist))
+    )
+  )
+
+
+
+;;(let [osname (System/getProperty "os.name")
+;;      osversion  (System/getProperty "os.version")
+;;      brStat  (new BufferedReader (new InputStreamReader (.getInputStream (.exec (Runtime/getRuntime) "top -b -n 1" ))))
+;;      ]
+;;  (.readLine brStat)
+;;  (.readLine brStat)
+;;  (let [tokenStat (new StringTokenizer (.readLine brStat)) ]
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (.nextToken tokenStat)
+;;    (println (.nextToken tokenStat))
+;;    )
+
+;;  )
 ;;(println (ping "bigjason.com"))
 
 ;;system info

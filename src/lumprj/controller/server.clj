@@ -18,8 +18,9 @@
 
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
+
     (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results)
-                :totalCount (count (db/servercount))})
+                :totalCount (:counts (first (db/servercount)))})
     )
 
   )
@@ -30,4 +31,12 @@
   ;;(resp/json [{:servername "test1" :value 1} {:servername "test2" :value 0} {:servername "test3" :value 1}])
 
   )
+;;cpu info list
+(defn getcpuratio []
+  ( let [cpulistlist  (system/getCpuRatio)]
+
+    (resp/json (map-indexed (fn [idx itm ] {:name idx :value itm}) cpulistlist) )
+
+            )
+)
 

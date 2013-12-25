@@ -1,4 +1,5 @@
 (ns lumprj.routes.server
+  (:import (lumprj.java Test))
   (:use compojure.core)
   (:require [lumprj.models.dboracle :as dboracle]
             [lumprj.controller.server :as servermanager]
@@ -21,8 +22,13 @@
   (GET "/serverport" [serverid ip]
     (servermanager/serverport serverid ip)
     )
+  (GET "/getcpuratio" []
+    (servermanager/getcpuratio)
+    )
+
 
   (GET "/orcltest" []
+    ;;(println (.say (new Test)))
     (resp/json (dboracle/oracltest))
     )
 

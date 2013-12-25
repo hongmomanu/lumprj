@@ -56,15 +56,23 @@
   (with-db db
     (exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results))
   )
-(defn serverlist [start limit]
-  (with-db db
-    (exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results))
+(defn serverlist [start limits]
+
+
+  (select servers
+    (where {:parentid -1})
+    (order :id)
+    (limit limits)
+    (offset start))
+
+    ;;(exec-raw ["SELECT * FROM servers WHERE parentid=-1 limit ? offset ?" [limit start]] :results))
   )
 
 
 (defn servercount []
   (with-db db
-    (exec-raw ["SELECT * FROM servers WHERE parentid=-1" []] :results))
+    (select servers (where {:parentid -1}) (aggregate (count :id) :counts)))
+    ;;(exec-raw ["SELECT * FROM servers WHERE parentid=-1" []] :results))
  )
 
 (defn serverport [serverid]
