@@ -16,6 +16,8 @@
 
 (defn oracltest []
   (with-db dboracle
-    (exec-raw ["SELECT count(*) FROM t_doorplate" []] :results))
+    ;;(select t_doorplate
+      (select t_doorplate (aggregate (count :id) :cnt)))
+    ;;(exec-raw ["SELECT count(*) FROM t_doorplate" []] :results))
   )
 
