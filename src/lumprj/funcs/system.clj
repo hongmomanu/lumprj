@@ -31,12 +31,18 @@
 (defn getCpuRatio []
   ;;(println (.getCpuPercList (new Sigar)))
   (let [cpuperclist  (.getCpuPercList (new Sigar))]
-    (map #(str  (.getSys %)) cpuperclist)
+    (map #(str  (.getUser %)) cpuperclist)
     ;;(println (count cpuperclist))
     )
   )
 
-
+(defn getMemoryRatio []
+  ;;(println (.getCpuPercList (new Sigar)))
+  (let [memory  (.getMem (new Sigar))]
+    [{:name "已使用"  :memory (/ (/ (.getUsed memory) 1024) (/ (.getTotal memory) 1024))}
+     {:name "未使用"  :memory (/ (/ (.getFree memory) 1024) (/ (.getTotal memory) 1024))}]
+    )
+  )
 
 ;;(let [osname (System/getProperty "os.name")
 ;;      osversion  (System/getProperty "os.version")

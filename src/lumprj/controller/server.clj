@@ -37,9 +37,15 @@
                                                (read-string (str "{:cpu" (:name item) " " (* (read-string (:value item)) 100) "}" )) ))
                     {} cpulistlist)
          ]
-    (conj {:time (/ (System/currentTimeMillis) 1000 )} cpusmap)
+    (conj {:time (System/currentTimeMillis )} cpusmap)
     )
 
+  )
+(defn memorytimenow []
+  ( let [memorymap (system/getMemoryRatio)
+         ]
+    memorymap
+    )
   )
 ;;cpu info list
 (defn getcpuratio []
@@ -47,6 +53,10 @@
     (resp/json [(cputimenow) (cputimenow) (cputimenow) (cputimenow) (cputimenow)])
 
 )
+
+(defn getmemoryratio []
+    (resp/json (memorytimenow))
+  )
 
 
 

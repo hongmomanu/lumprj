@@ -26,6 +26,10 @@
     (servermanager/getcpuratio)
     )
 
+  (GET "/getmemoryratio" []
+    (servermanager/getmemoryratio)
+    )
+
 
   (GET "/orcltest" []
     ;;(println (.say (new Test)))
