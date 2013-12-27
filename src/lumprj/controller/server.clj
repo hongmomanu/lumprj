@@ -50,7 +50,7 @@
 ;;cpu info list
 (defn getcpuratio []
 
-    (resp/json [(cputimenow) (cputimenow) (cputimenow) (cputimenow) (cputimenow)])
+    (resp/json [(cputimenow)])
 
 )
 
