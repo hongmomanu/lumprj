@@ -32,7 +32,7 @@
   )
 
 (defn cputimenow []
-  ( let [cpulistlist  (map-indexed (fn [idx itm ] {:name idx :value itm}) (system/getCpuRatio))
+  ( let [cpulistlist  (map-indexed (fn [idx itm ] {:name (inc idx) :value itm}) (system/getCpuRatio))
          cpusmap  (reduce (fn [initstr item] (conj initstr
                                                (read-string (str "{:cpu" (:name item) " " (* (read-string (:value item)) 100) "}" )) ))
                     {} cpulistlist)
