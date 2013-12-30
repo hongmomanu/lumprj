@@ -5,6 +5,7 @@
   [[com.h2database/h2 "1.3.174"]
    [org.xerial/sqlite-jdbc "3.7.2"]
    [com.oracle/ojdbc6 "11.2.0.3"]
+   [self/sigar "1.6.4"]
    [ring-server "0.3.1"]
    [lein-ring "0.8.8"]
    [environ "0.4.0"]
@@ -67,6 +68,8 @@
                  ]
   :description
   "FIXME: write description"
-  :java-source-paths ["src/lumprj/java"] ; Java source is stored separately.
-  :resource-paths ["lib/*"]
+  :jvm-opts ["-Djava.library.path=/home/jack/soft/lumprj/target/native"]
+  :java-source-paths ["src/lumprj/java" ] ; Java source is stored separately.
+  ;;:native-path "native"
+  ;;:resource-paths ["lib/*"]
   :min-lein-version "2.0.0")
