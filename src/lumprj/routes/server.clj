@@ -32,7 +32,7 @@
 
 
   (GET "/orcltest" []
-    ;;(println (.say (new Test)))
+    (println (.say (new Test)))
     (resp/json (dboracle/oracltest))
     )
 

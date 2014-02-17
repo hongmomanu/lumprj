@@ -6,14 +6,18 @@
 
 (defn home-page []
   (layout/render
-    "home.html" {:content (util/md->html "/md/docs.md")}))
+    "home.html" {:content (util/md->html "/md/success.md")}))
 
 (defn about-page []
   (layout/render "about.html"))
+(comment "(defn home-page []
+  (layout/render
+    'home.html' {:content (util/md->html '/md/docs.md')})")
 
 (defroutes home-routes
-  (GET "/" [] (resp/redirect "index.html"))
-  ;;(GET "/adduser" [] (about-page))
+
+  ;;(GET "/" [] (resp/redirect "index.html"))
+  (GET "/" [] (home-page))
   (GET "/about" [] (about-page)))
 
 

@@ -2,7 +2,7 @@ package lumprj.java;
 
 public class Test {
     public String say() {
-        return "Hello World!!";
+        return "Hello Worlds!!";
     }
 
     public static void main(String[] args) {
