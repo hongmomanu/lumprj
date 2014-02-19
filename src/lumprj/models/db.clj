@@ -7,7 +7,7 @@
 
 
 
-(declare users dutyenum)
+(declare users dutyenum dutymission)
 
 (defentity dutyenum
   (database db)
@@ -16,7 +16,9 @@
 (defentity users
   (database db)
   ;;(has-one dutyenum {:fk :userid})
-
+  )
+(defentity dutymission
+  (database db)
   )
 
 (defentity servers
@@ -69,9 +71,11 @@
     (where {:id (if(instance? String ids)ids [in ids])})
     )
   )
+(defn mission-query []
+  (select dutymission)
+  )
 (defn duty-query-day [day]
   (select dutyenum
-
     (fields [:id :enumid] :day :userid)
     (with users
       (fields :username :displayname)
@@ -82,6 +86,12 @@
 (defn duty-insert [day userid]
   (insert dutyenum
     (values {:day day :userid userid}))
+  )
+
+(defn mission-insert [missionname missiontime]
+  (insert dutymission
+    (values {:missionname missionname :missiontime missiontime})
+    )
   )
 
 (defn has-user [username pass]

@@ -2,6 +2,8 @@
   (:require [clojure.java.jdbc :as sql]
             [noir.io :as io]))
 
+
+(declare create-dutymission-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -39,7 +41,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-
+  ;;(create-dutymission-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -92,7 +94,8 @@
       :dutymission
       [:id "integer primary key autoincrement"]
       [:missionname "varchar(100)"]
-      [:missiontime "DATETIME"]
+      [:missiontime "varchar(100)"]
+      [:missioninterval "integer"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
   )
@@ -130,4 +133,5 @@
   (create-users-table)
   (create-servers-table)
   (create-dutyenum-table)
+  (create-dutymission-table)
   )

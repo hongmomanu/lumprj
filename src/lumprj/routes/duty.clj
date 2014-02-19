@@ -18,14 +18,20 @@
   (GET "/getcurrentduty" [day]
     (duty/getcurrentduty day)
     )
+  (GET "/getmissions" []
+    (duty/getmissions)
 
+    )
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )
+  (POST "/addnewmission" [missionname missiontime]
+    (duty/insertmission missionname missiontime)
+    )
   (POST "/delenumbyid" request
 
-    (duty/delenumbyid request)
-    (resp/json {:success false})
+    (resp/json  (duty/delenumbyid request))
+    ;;(resp/json {:success false})
     )
 
 
