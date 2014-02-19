@@ -15,6 +15,10 @@
     (duty/dutylist)
     )
 
+  (GET "/getcurrentduty" [day]
+    (duty/getcurrentduty day)
+    )
+
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )

@@ -7,15 +7,16 @@
 
 
 
-(defentity users
-  (database db)
-  (has-one dutyenum {:fk :userid})
-
-  )
+(declare users dutyenum)
 
 (defentity dutyenum
   (database db)
   (belongs-to users {:fk :userid})
+  )
+(defentity users
+  (database db)
+  (has-one dutyenum {:fk :userid})
+
   )
 
 (defentity servers
@@ -64,6 +65,16 @@
     (with users
       (fields :username :displayname)
       )
+    )
+  )
+(defn duty-query-day [day]
+  (select dutyenum
+
+    (fields [:id :enumid] :day :userid)
+    (with users
+      (fields :username :displayname)
+      )
+    (where {:day day})
     )
   )
 (defn duty-insert [day userid]
