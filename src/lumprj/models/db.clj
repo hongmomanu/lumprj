@@ -9,6 +9,13 @@
 
 (defentity users
   (database db)
+  (has-one dutyenum {:fk :userid})
+
+  )
+
+(defentity dutyenum
+  (database db)
+  (belongs-to users {:fk :userid})
   )
 
 (defentity servers
@@ -39,6 +46,30 @@
   (first (select users
                  (where {:id id})
                  (limit 1))))
+
+(defn user-list []
+  (select users
+    (fields [:id :userid] :displayname :username )
+    (with dutyenum
+      (fields :day)
+      )
+
+    )
+  )
+
+(defn duty-list []
+  (select dutyenum
+
+    (fields [:id :enumid] :day :userid)
+    (with users
+      (fields :username :displayname)
+      )
+    )
+  )
+(defn duty-insert [day userid]
+  (insert dutyenum
+    (values {:day day :userid userid}))
+  )
 
 (defn has-user [username pass]
   (with-db db

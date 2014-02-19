@@ -15,6 +15,9 @@
                                                 :telnum telnum :departments departments :email email})})
            )
  )
+(defn userlist []
+  (resp/json (db/user-list))
+  )
 
 (defn login [username password]
     (let [results (db/has-user  username password)]

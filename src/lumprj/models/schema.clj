@@ -66,16 +66,68 @@
   (sql/with-connection db-spec-sqlite
     (sql/create-table
       :servers
-      [:id "integer primary key autoincrement"]  ;;
+      [:id "integer primary key autoincrement"]
       [:servername "varchar(30)"]
       [:servervalue "varchar(30)"]
       [:parentid "integer DEFAULT -1"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       )))
+;;值日枚举表
+(defn create-dutyenum-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :dutyenum
+      [:id "integer primary key autoincrement"]
+      [:day "int"]  ;;1-7
+      [:userid "integer"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+;;值班任务表
+(defn create-dutymission-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :dutymission
+      [:id "integer primary key autoincrement"]
+      [:missionname "varchar(100)"]
+      [:missiontime "DATETIME"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+
+;;值日登记记录表
+(defn create-dutyhistory-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :dutyhistory
+      [:id "integer primary key autoincrement"]
+      [:userid "integer"]
+      [:isonduty "integer"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+
+;;值日任务记录表
+(defn create-dutymissionhistory-table
+    []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :dutymissionhistory
+      [:id "integer primary key autoincrement"]
+      [:dutyhistory "integer"]
+      [:missionid "integer"]
+      [:missionstatus "integer"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
 
 (defn create-tables
   "creates the database tables used by the application"
   []
   (create-users-table)
   (create-servers-table)
+  (create-dutyenum-table)
   )
