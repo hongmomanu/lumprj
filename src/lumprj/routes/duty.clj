@@ -22,6 +22,11 @@
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )
+  (POST "/delenumbyid" request
+
+    (duty/delenumbyid request)
+    (resp/json {:success false})
+    )
 
 
 )

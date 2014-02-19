@@ -15,7 +15,7 @@
   )
 (defentity users
   (database db)
-  (has-one dutyenum {:fk :userid})
+  ;;(has-one dutyenum {:fk :userid})
 
   )
 
@@ -51,9 +51,6 @@
 (defn user-list []
   (select users
     (fields [:id :userid] :displayname :username )
-    (with dutyenum
-      (fields :day)
-      )
 
     )
   )
@@ -65,6 +62,11 @@
     (with users
       (fields :username :displayname)
       )
+    )
+  )
+(defn duty-del-byids [ids]
+  (delete dutyenum
+    (where {:id (if(instance? String ids)ids [in ids])})
     )
   )
 (defn duty-query-day [day]
