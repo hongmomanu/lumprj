@@ -78,6 +78,15 @@
 (defn mission-query []
   (select dutymission)
   )
+
+(defn mission-history-query [day userid]
+  (select dutymissionhistory
+    (where {:time [like (str day "%")] :userid userid})
+    (aggregate (count :id) :counts)
+    )
+
+  )
+
 (defn duty-query-day [day]
   (select dutyenum
     (fields [:id :enumid] :day :userid)
@@ -90,6 +99,11 @@
 (defn duty-insert [day userid]
   (insert dutyenum
     (values {:day day :userid userid}))
+  )
+(defn mission-history-insert [missionlist]
+  (insert dutymissionhistory
+    (values missionlist)
+    )
   )
 
 (defn mission-insert [missionname missiontime]

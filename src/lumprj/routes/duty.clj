@@ -22,6 +22,9 @@
     (duty/getmissions)
 
     )
+  (GET "/maketodaymission" [day userid]
+    (duty/maketodaymission day userid)
+    )
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )

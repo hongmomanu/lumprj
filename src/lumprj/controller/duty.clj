@@ -17,6 +17,17 @@
   (resp/json (db/mission-query))
   )
 
+(defn insertnewmission [userid]
+  (db/mission-history-insert (let [missions (db/mission-query)]
+    (map #(conj (select-keys % [:id]) {:userid userid}) missions)
+    ))
+  )
+
+(defn maketodaymission [day userid]
+  (if (= (:counts (first (db/mission-history-query day userid))) 0)(println (insertnewmission userid))())
+  (resp/json {:success true :msg "测试成功"})
+  )
+
 (defn insertduty [day userid]
   (if (> (count (db/duty-query-day day)) 0) (resp/json {:success false :msg "已存在"})
     (if (> (first (vals (db/duty-insert day userid))) 0) (resp/json {:success true})

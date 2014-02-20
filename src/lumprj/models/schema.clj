@@ -109,6 +109,7 @@
       :dutymissionhistory
       [:id "integer primary key autoincrement"]
       [:missionid "integer"]
+      [:userid "integer"]
       [:missionstatus "integer"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
