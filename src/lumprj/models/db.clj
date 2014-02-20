@@ -7,7 +7,7 @@
 
 
 
-(declare users dutyenum dutymission)
+(declare users dutyenum dutymission dutymissionhistory)
 
 (defentity dutyenum
   (database db)
@@ -19,6 +19,10 @@
   )
 (defentity dutymission
   (database db)
+  )
+(defentity dutymissionhistory
+  (database db)
+  (belongs-to dutymission {:fk :missionid})
   )
 
 (defentity servers
@@ -95,11 +99,12 @@
   )
 
 (defn has-user [username pass]
-  (with-db db
-    (exec-raw ["SELECT * FROM users WHERE username = ? and password=?" [username pass]] :results))
-
-
-                 )
+  (select users
+    (where {:username username :password pass})
+    ))
+  ;;(with-db db
+  ;;  (exec-raw ["SELECT * FROM users WHERE username = ? and password=?" [username pass]] :results))
+  ;;               )
 
 (defn has-username [username]
   (with-db db

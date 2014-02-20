@@ -3,7 +3,7 @@
             [noir.io :as io]))
 
 
-(declare create-dutymission-table)
+(declare create-dutymission-table create-dutymissionhistory-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -41,7 +41,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  ;;(create-dutymission-table)
+  ;;(create-dutymissionhistory-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -100,18 +100,6 @@
       ))
   )
 
-;;值日登记记录表
-(defn create-dutyhistory-table
-  []
-  (sql/with-connection db-spec-sqlite
-    (sql/create-table
-      :dutyhistory
-      [:id "integer primary key autoincrement"]
-      [:userid "integer"]
-      [:isonduty "integer"]
-      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
-      ))
-  )
 
 ;;值日任务记录表
 (defn create-dutymissionhistory-table
@@ -120,7 +108,6 @@
     (sql/create-table
       :dutymissionhistory
       [:id "integer primary key autoincrement"]
-      [:dutyhistory "integer"]
       [:missionid "integer"]
       [:missionstatus "integer"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
@@ -134,4 +121,5 @@
   (create-servers-table)
   (create-dutyenum-table)
   (create-dutymission-table)
+  (create-dutymissionhistory-table)
   )
