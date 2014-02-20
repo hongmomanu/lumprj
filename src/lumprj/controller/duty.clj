@@ -28,8 +28,8 @@
   )
 
 (defn maketodaymission [day userid]
-  (if (= (:counts (first (db/mission-history-query day userid))) 0)(println (insertnewmission userid))())
-  (resp/json {:success true :msg "测试成功"})
+  (if (= (:counts (first (db/mission-history-query day userid))) 0)
+    ((insertnewmission userid)(resp/json {:success true}))(resp/json {:success false}))
   )
 
 (defn insertduty [day userid]
