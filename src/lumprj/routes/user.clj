@@ -1,7 +1,6 @@
 (ns lumprj.routes.user
   (:use compojure.core)
-  (:require [lumprj.models.db :as db]
-            [lumprj.controller.user :as user]
+  (:require [lumprj.controller.user :as user]
             [noir.response :as resp]
             )
 

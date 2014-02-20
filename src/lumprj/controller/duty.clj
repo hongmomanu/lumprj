@@ -17,9 +17,13 @@
   (resp/json (db/mission-query))
   )
 
+(defn getdutymissions [day]
+  (resp/json (db/mission-today-list day))
+  )
+
 (defn insertnewmission [userid]
   (db/mission-history-insert (let [missions (db/mission-query)]
-    (map #(conj (select-keys % [:id]) {:userid userid}) missions)
+    (map #(conj {:missionid (:id (select-keys % [:id]))} {:userid userid :missionstatus 0}) missions)
     ))
   )
 

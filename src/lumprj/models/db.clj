@@ -79,6 +79,14 @@
   (select dutymission)
   )
 
+(defn mission-today-list [day]
+  (select dutymissionhistory
+    (with dutymission
+      (fields :missionname :missiontime :missioninterval)
+      )
+    (where {:time [like (str day "%")]})
+    )
+  )
 (defn mission-history-query [day userid]
   (select dutymissionhistory
     (where {:time [like (str day "%")] :userid userid})

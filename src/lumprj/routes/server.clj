@@ -1,8 +1,7 @@
 (ns lumprj.routes.server
   (:import (lumprj.java Test))
   (:use compojure.core)
-  (:require [lumprj.models.dboracle :as dboracle]
-            [lumprj.controller.server :as servermanager]
+  (:require [lumprj.controller.server :as servermanager]
             [noir.response :as resp]
             )
 
@@ -33,7 +32,7 @@
 
   (GET "/orcltest" []
     (println (.say (new Test)))
-    (resp/json (dboracle/oracltest))
+    ;;(resp/json (dboracle/oracltest))
     )
 
 

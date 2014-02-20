@@ -1,15 +1,12 @@
 (ns lumprj.routes.duty
   (:use compojure.core)
-  (:require [lumprj.models.db :as db]
-            [lumprj.controller.duty :as duty]
+  (:require [lumprj.controller.duty :as duty]
             [noir.response :as resp]
             )
-
   )
 
 
 (defroutes duty-routes
-
 
   (GET "/getworkmanagers" []
     (duty/dutylist)
@@ -21,6 +18,9 @@
   (GET "/getmissions" []
     (duty/getmissions)
 
+    )
+  (GET "/getdutymissions" [day]
+    (duty/getdutymissions day)
     )
   (GET "/maketodaymission" [day userid]
     (duty/maketodaymission day userid)
@@ -36,7 +36,6 @@
     (resp/json  (duty/delenumbyid request))
     ;;(resp/json {:success false})
     )
-
 
 )
 
