@@ -114,9 +114,9 @@
     )
   )
 
-(defn mission-insert [missionname missiontime]
+(defn mission-insert [missionname missiontime missioninterval]
   (insert dutymission
-    (values {:missionname missionname :missiontime missiontime})
+    (values {:missionname missionname :missiontime missiontime :missioninterval missioninterval})
     )
   )
 

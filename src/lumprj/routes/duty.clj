@@ -22,14 +22,16 @@
   (GET "/getdutymissions" [day]
     (duty/getdutymissions day)
     )
+
   (GET "/maketodaymission" [day userid]
     (duty/maketodaymission day userid)
     )
+
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )
-  (POST "/addnewmission" [missionname missiontime]
-    (duty/insertmission missionname missiontime)
+  (POST "/addnewmission" [missionname missiontime missioninterval]
+    (duty/insertmission missionname missiontime missioninterval)
     )
   (POST "/delenumbyid" request
 
