@@ -47,6 +47,7 @@
     )
   )
 
+
 (defn delenumbyid [request]
   (let [form-params (:form-params request)]
     (db/duty-del-byids (get form-params "enumids"))
