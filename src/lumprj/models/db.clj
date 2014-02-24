@@ -135,7 +135,13 @@
 
 (defn has-server [servername servervalue]
   (with-db db
-    (exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results))
+    (select servers (where {:servervalue servervalue :servername servername}) (aggregate (count :id) :counts)))
+    ;;(exec-raw ["SELECT * FROM servers WHERE servername = ? and servervalue=?" [servername servervalue]] :results))
+  )
+(defn has-system [servervalue]
+    (with-db db
+      (select servers (where {:servervalue servervalue}) (aggregate (count :id) :counts)))
+
   )
 (defn serverlist [start limits]
 
