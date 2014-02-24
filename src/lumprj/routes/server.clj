@@ -18,8 +18,8 @@
     (servermanager/serverlist key start limit)
     )
 
-  (GET "/server/getsystems" [key start limit]
-    (servermanager/systemmachines key start limit)
+  (GET "/server/getsystems" [node]
+    (servermanager/systemmachines node)
     )
 
   (GET "/serverport" [serverid ip]

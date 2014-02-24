@@ -143,6 +143,12 @@
       (select servers (where {:servervalue servervalue}) (aggregate (count :id) :counts)))
 
   )
+(defn servertree [parentid]
+  (select servers
+    (where {:parentid parentid})
+    (order :id))
+
+  )
 (defn serverlist [start limits]
 
 

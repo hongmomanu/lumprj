@@ -21,9 +21,9 @@
  )
 
 
-(defn systemmachines [key start limit]
+(defn systemmachines [parentid]
 
-  (resp/json (db/serverlist start limit))
+  (resp/json (db/servertree parentid))
   )
 
 (defn serverlist [key start limit]
