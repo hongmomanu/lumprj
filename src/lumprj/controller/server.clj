@@ -16,6 +16,12 @@
            )
  )
 
+
+(defn systemmachines [key start limit]
+
+  (resp/json (db/serverlist start limit))
+  )
+
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
 

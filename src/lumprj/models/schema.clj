@@ -3,7 +3,7 @@
             [noir.io :as io]))
 
 
-(declare create-dutymission-table create-dutymissionhistory-table)
+(declare create-dutymission-table create-dutymissionhistory-table create-servers-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -41,7 +41,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  ;;(create-dutymissionhistory-table)
+  ;;(create-servers-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -72,6 +72,7 @@
       [:servername "varchar(30)"]
       [:servervalue "varchar(30)"]
       [:parentid "integer DEFAULT -1"]
+      [:type "integer"]   ;;0:port 1:appname
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       )))
 ;;值日枚举表

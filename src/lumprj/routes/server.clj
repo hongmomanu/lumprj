@@ -10,12 +10,16 @@
 
 (defroutes server-routes
 
-  (GET "/addserver" [servername servervalue parentid]
+  (POST "/server/addserver" [servername servervalue parentid]
     (servermanager/addserver servername servervalue parentid)
     )
 
   (GET "/serverlist" [key start limit]
     (servermanager/serverlist key start limit)
+    )
+
+  (GET "/server/getsystems" [key start limit]
+    (servermanager/systemmachines key start limit)
     )
 
   (GET "/serverport" [serverid ip]
