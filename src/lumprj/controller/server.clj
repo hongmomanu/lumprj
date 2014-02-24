@@ -7,14 +7,14 @@
   )
 
 
-(defn  addserver [servername servervalue parentid]
+(defn  addserver [servername servervalue parentid type]
   (let [servercount (if (> (read-string parentid) 0)(:counts (first (db/has-server servername servervalue)))
                       (:counts (first (db/has-system servervalue))))]
     (if (> servercount 0)
       (resp/json {:success false :msg "服务端口已存在"})
       (resp/json {:success true :msg (db/create-server
                                           {:servername servername :servervalue servervalue
-                                           :parentid parentid})})
+                                           :parentid parentid :type type})})
       )
     )
 

@@ -69,8 +69,9 @@
     (sql/create-table
       :servers
       [:id "integer primary key autoincrement"]
-      [:servername "varchar(30)"]
-      [:servervalue "varchar(30)"]
+      [:servername "nvarchar(200)"]
+      [:machinecss "nvarchar(200)"]
+      [:servervalue "nvarchar(200)"]
       [:parentid "integer DEFAULT -1"]
       [:type "integer"]   ;;0:port 1:appname
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]

@@ -10,8 +10,8 @@
 
 (defroutes server-routes
 
-  (POST "/server/addserver" [servername servervalue parentid]
-    (servermanager/addserver servername servervalue parentid)
+  (POST "/server/addserver" [servername servervalue parentid type]
+    (servermanager/addserver servername servervalue parentid type)
     )
 
   (GET "/serverlist" [key start limit]
