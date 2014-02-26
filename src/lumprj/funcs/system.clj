@@ -10,6 +10,7 @@
            (java.lang.management ManagementFactory))
   )
 
+(declare execCommand)
 ;;chekc port connected
 (defn checkport [ip port]
   (try
@@ -21,23 +22,12 @@
 )
 
 (defn checkappname [ip appname SSH_SHOW_LIST]
-  (let [connect (get SSH_SHOW_LIST (read-string (str ":" ip)))
-        ]
-    (if (nil? connect)false ( let [
-                                    sess  (.openSession connect)
-                                    ]
-                              (.execCommand sess (str "pidof " appname))
+  (let [result (execCommand ip (str "pidof " appname) SSH_SHOW_LIST) ]
+    (if(> (count result) 0) true false)
+    )
+  )
 
-                              (if (> (count (line-seq (new BufferedReader
-                                                        (new InputStreamReader (new StreamGobbler (.getStdout sess ))))))
-                                    0) true false
-                                )
-
-                              ))
-
-    ))
-
-;;check appname
+;;check appname-old
 (defn checkappname-old [ip appname]
   (let [connect (new Connection ip)
         ]
@@ -71,6 +61,37 @@
       (if (true? (.authenticateWithPassword connect username password)) (assoc {} (read-string (str ":" ip)) connect){})
       (catch Exception e {})
       )
+    )
+  )
+
+(defn execCommand [ip cmdstr SSH_SHOW_LIST]
+  (let [connect (get SSH_SHOW_LIST (read-string (str ":" ip)))
+        ]
+
+    (if (nil? connect)[] ( let [
+                                    sess  (.openSession connect)
+                                    ]
+                              (.requestPTY sess "vt100" 80 24 640 480 nil)
+                              (.execCommand sess cmdstr)
+
+                              (let [result (line-seq (new BufferedReader
+                                                                     (new InputStreamReader (new StreamGobbler (.getStdout sess )))))
+                                                 ]
+                                (.close sess)
+                                result
+                               )
+
+
+                              ))
+
+    )
+  )
+(defn getCpuRatioByIp [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "top -n 1 |grep Cpu | cut -d ',' -f 1 | cut -d ':' -f 2" SSH_SHOW_LIST) ]
+    ;;(println result)
+    ;;["0.2" "0.3"]
+    result
+    ;;(if(> (count result) 0) true false)
     )
   )
 

@@ -48,15 +48,25 @@
   )
 (defn serverport-app [serverid ip]
   (let [results (serverport-app-check serverid ip)]
-    (println results)
-    ;;(println (filter #(true? (:isconnect %)) results))
+    results
+    )
+  )
+
+(defn server-cpu [ip]
+  (let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
+    ;(println (count results))
+    (if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
+
     )
   )
 
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
-    (println (serverport-app 1 "192.168.2.112"))
-    (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results)
+    ;;(println (server-cpu "192.168.2.112"))
+    (resp/json {:results (map #(conj %
+                                 {:isping (system/ping (:servervalue %))
+                                  :cpu (server-cpu (:servervalue %))
+                                  :apps (serverport-app (:key %) (:servervalue %))}) results)
                 :totalCount (:counts (first (db/servercount)))})
     )
 
@@ -67,7 +77,7 @@
 
 
 (defn cputimenow []
-  ( let [cpulistlist  (map-indexed (fn [idx itm ] {:name (inc idx) :value itm}) (system/getCpuRatio))
+  ( let [cpulistlist  (map-indexed (fn [idx itm ] {:name (inc idx) :value itm}) (system/getCpuRatioByIp "192.168.2.112" @SSH_SHOW_LIST))
          cpusmap  (reduce (fn [initstr item] (conj initstr
                                                (read-string (str "{:cpu" (:name item) " " (* (read-string (:value item)) 100) "}" )) ))
                     {} cpulistlist)
