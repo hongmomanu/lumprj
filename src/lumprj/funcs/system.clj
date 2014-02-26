@@ -19,8 +19,26 @@
     (catch Exception e false)
   )
 )
+
+(defn checkappname [ip appname SSH_SHOW_LIST]
+  (let [connect (get SSH_SHOW_LIST (read-string (str ":" ip)))
+        ]
+    (if (nil? connect)false ( let [
+                                    sess  (.openSession connect)
+                                    ]
+                              (.execCommand sess (str "pidof " appname))
+
+                              (if (> (count (line-seq (new BufferedReader
+                                                        (new InputStreamReader (new StreamGobbler (.getStdout sess ))))))
+                                    0) true false
+                                )
+
+                              ))
+
+    ))
+
 ;;check appname
-(defn checkappname [ip appname]
+(defn checkappname-old [ip appname]
   (let [connect (new Connection ip)
         ]
     (.connect connect)

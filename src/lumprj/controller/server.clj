@@ -9,11 +9,9 @@
 (def SSH_SHOW_LIST (atom {}))
 
 (defn update-ssh-list []
-  ;;(if(< (count @SSH_SHOW_LIST) 1)(println "ok")(swap! SSH_SHOW_LIST conj {:1 2}))
   (let  [results (db/serverlist 0 10000)]
     (dorun(map #(swap! SSH_SHOW_LIST conj (system/get-ssh-connect (:servervalue %) (:username %) (:password %))) results)
     ))
-  ;;(println @SSH_SHOW_LIST)
   )
 
 
@@ -45,7 +43,7 @@
   )
 (defn serverport-app-check [serverid ip]
   (let  [results (db/serverport serverid)]
-    (map #(conj % {:isconnect (if (> (:type %) 0)(system/checkappname ip (:servervalue %))(system/checkport ip (:servervalue %)))}) results)
+    (map #(conj % {:isconnect (if (> (:type %) 0)(system/checkappname ip (:servervalue %) @SSH_SHOW_LIST)(system/checkport ip (:servervalue %)))}) results)
     )
   )
 (defn serverport-app [serverid ip]
@@ -57,7 +55,7 @@
 
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
-    ;;(println (serverport-app 1 "192.168.2.112"))
+    (println (serverport-app 1 "192.168.2.112"))
     (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results)
                 :totalCount (:counts (first (db/servercount)))})
     )
