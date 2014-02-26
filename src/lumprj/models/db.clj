@@ -153,7 +153,7 @@
 
 
   (select servers
-    (fields [:id :key] :servername :servervalue :machinecss :type :parentid :time)
+    (fields [:id :key] :servername :servervalue :machinecss :type :parentid :time :username :password)
     (where {:parentid -1})
     (order :id)
     (limit limits)

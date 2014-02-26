@@ -6,6 +6,16 @@
             )
   )
 
+(def SSH_SHOW_LIST (atom {}))
+
+(defn update-ssh-list []
+  ;;(if(< (count @SSH_SHOW_LIST) 1)(println "ok")(swap! SSH_SHOW_LIST conj {:1 2}))
+  (let  [results (db/serverlist 0 10000)]
+    (dorun(map #(swap! SSH_SHOW_LIST conj (system/get-ssh-connect (:servervalue %) (:username %) (:password %))) results)
+    ))
+  ;;(println @SSH_SHOW_LIST)
+  )
+
 
 (defn  addserver [servername servervalue parentid type]
   (let [servercount (if (> (read-string parentid) 0)(:counts (first (db/has-server servername servervalue)))
@@ -26,20 +36,37 @@
   (resp/json (db/servertree parentid))
   )
 
+(defn serverport [serverid ip]
+  (let  [results (db/serverport serverid)]
+
+    (resp/json (map #(conj % {:isconnect (system/checkport ip (:servervalue %))}) results))
+    )
+
+  )
+(defn serverport-app-check [serverid ip]
+  (let  [results (db/serverport serverid)]
+    (map #(conj % {:isconnect (if (> (:type %) 0)(system/checkappname ip (:servervalue %))(system/checkport ip (:servervalue %)))}) results)
+    )
+  )
+(defn serverport-app [serverid ip]
+  (let [results (serverport-app-check serverid ip)]
+    (println results)
+    ;;(println (filter #(true? (:isconnect %)) results))
+    )
+  )
+
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
-
+    ;;(println (serverport-app 1 "192.168.2.112"))
     (resp/json {:results (map #(conj % {:isping (system/ping (:servervalue %))}) results)
                 :totalCount (:counts (first (db/servercount)))})
     )
 
   )
-(defn serverport [serverid ip]
-  (let  [results (db/serverport serverid)]
-    (resp/json (map #(conj % {:isconnect (system/checkport ip (:servervalue %))}) results))
-    )
 
-  )
+
+
+
 
 (defn cputimenow []
   ( let [cpulistlist  (map-indexed (fn [idx itm ] {:name (inc idx) :value itm}) (system/getCpuRatio))

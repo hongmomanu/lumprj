@@ -19,12 +19,42 @@
     (catch Exception e false)
   )
 )
+;;check appname
+(defn checkappname [ip appname]
+  (let [connect (new Connection ip)
+        ]
+    (.connect connect)
+    (.authenticateWithPassword connect "jack" "shayu626")
+    ( let [
+            sess  (.openSession connect)
+            ]
+      (.execCommand sess (str "pidof " appname))
+
+      (if (> (count (line-seq (new BufferedReader
+                                (new InputStreamReader (new StreamGobbler (.getStdout sess ))))))
+            0) true false
+      )
+
+    )
+  ))
 ;;check ip connected
 (defn ping
   [host]
   (.isReachable (InetAddress/getByName host) 500))
 
 ;;get cpu information
+
+
+(defn get-ssh-connect [ip username password]
+  (let [connect (new Connection ip)
+        ]
+    (try
+      (.connect connect)
+      (if (true? (.authenticateWithPassword connect username password)) (assoc {} (read-string (str ":" ip)) connect){})
+      (catch Exception e {})
+      )
+    )
+  )
 
 (defn getCpuRatio []
 
@@ -34,8 +64,11 @@
   ;;  )
   (let [connect (new Connection "192.168.2.112")
         ]
+    (println "begin ")
     (.connect connect)
+    (println "connecting ")
     (println (.authenticateWithPassword connect "jack" "shayu626"))
+    (println "connected ")
     ( let [
             sess  (.openSession connect)
             ]

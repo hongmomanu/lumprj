@@ -8,6 +8,7 @@
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
             [lumprj.models.schema :as schema]
+            [lumprj.controller.server :as server]
             [com.postspectacular.rotor :as rotor]
             [selmer.parser :as parser]
             [environ.core :refer [env]]))
@@ -39,7 +40,7 @@
   (if (env :selmer-dev) (parser/cache-off!))
 
   (if-not (schema/initialized?) (schema/create-tables))
-
+  (server/update-ssh-list) ;;更新ssh列表
   (timbre/info "lumprj started successfully"))
 
 (defn destroy

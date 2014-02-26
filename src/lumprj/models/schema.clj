@@ -73,6 +73,8 @@
       [:machinecss "nvarchar(200)"]
       [:servervalue "nvarchar(200)"]
       [:parentid "integer DEFAULT -1"]
+      [:username "nvarchar(200)"]
+      [:password "nvarchar(200)"]
       [:type "integer"]   ;;0:port 1:appname
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       )))
