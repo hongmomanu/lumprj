@@ -7,6 +7,7 @@
    [com.oracle/ojdbc6 "11.2.0.3"]
    ;;[self/sigar "1.6.4"]
    [ch.ethz.ganymed/ganymed-ssh2 "261"]
+   [clj-http "0.9.0"]
    [ring-server "0.3.1"]
    [lein-ring "0.8.8"]
    [environ "0.4.0"]

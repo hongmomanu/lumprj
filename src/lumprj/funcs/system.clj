@@ -95,6 +95,13 @@
     )
   )
 
+(defn getMemRatioByIp [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "top -n 1 |grep Mem:| cut -d ':' -f 2" SSH_SHOW_LIST) ]
+    result
+    )
+  )
+
+
 (defn getCpuRatio []
 
   ;;(let [cpuperclist  (.getCpuPercList (new Sigar))]

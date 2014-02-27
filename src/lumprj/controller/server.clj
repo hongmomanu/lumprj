@@ -60,6 +60,20 @@
     )
   )
 
+(defn server-mem [ip]
+  (let [results (system/getMemRatioByIp ip @SSH_SHOW_LIST)]
+    (if
+      (> (count results) 0)
+      (
+        /
+        (read-string (first (clojure.string/split (re-find #"\d+ used" (first results)) "used")))
+        (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) "total")))
+
+      )"")
+
+    )
+  )
+
 (defn serverlist [key start limit]
   (let  [results (db/serverlist start limit)]
     ;;(println (server-cpu "192.168.2.112"))
