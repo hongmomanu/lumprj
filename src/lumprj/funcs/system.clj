@@ -10,7 +10,7 @@
            (java.lang.management ManagementFactory))
   )
 
-(declare execCommand)
+(declare execCommand get-ssh-connect)
 ;;chekc port connected
 (defn checkport [ip port]
   (try

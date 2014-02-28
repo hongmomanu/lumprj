@@ -4,6 +4,7 @@
             [lumprj.routes.user :refer [user-routes]]
             [lumprj.routes.server :refer [server-routes]]
             [lumprj.routes.duty :refer [duty-routes]]
+            [lumprj.routes.log :refer [log-routes]]
             [noir.util.middleware :as middleware]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
@@ -64,7 +65,7 @@
 
 (def app (middleware/app-handler
            ;; add your application routes here
-           [user-routes server-routes home-routes duty-routes app-routes]
+           [user-routes server-routes home-routes duty-routes log-routes app-routes]
            ;; add custom middleware here
            :middleware [template-error-page]
            ;; add access rules here
