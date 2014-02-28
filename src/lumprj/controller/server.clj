@@ -65,9 +65,10 @@
     (if
       (> (count results) 0)
       (
+
         /
-        (read-string (first (clojure.string/split (re-find #"\d+ used" (first results)) "used")))
-        (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) "total")))
+        (read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"used")))
+        (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
 
       )"")
 
@@ -80,6 +81,7 @@
     (resp/json {:results (map #(conj %
                                  {:isping (system/ping (:servervalue %))
                                   :cpu (server-cpu (:servervalue %))
+                                  :mem (server-mem (:servervalue %))
                                   :apps (serverport-app (:key %) (:servervalue %))}) results)
                 :totalCount (:counts (first (db/servercount)))})
     )

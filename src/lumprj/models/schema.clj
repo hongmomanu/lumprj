@@ -119,6 +119,20 @@
       ))
   )
 
+;;系统监测记录表
+(defn create-systemwatchlog-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :systemwatchlog
+      [:id "integer primary key autoincrement"]
+      [:serverid "integer"]
+      [:statustype "nvarchar(100)"]
+      [:logcontent "nvarchar(200)"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+
 (defn create-tables
   "creates the database tables used by the application"
   []

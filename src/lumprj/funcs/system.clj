@@ -87,7 +87,7 @@
     )
   )
 (defn getCpuRatioByIp [ip SSH_SHOW_LIST]
-  (let [result (execCommand ip "top -n 1 |grep Cpu | cut -d ',' -f 1 | cut -d ':' -f 2" SSH_SHOW_LIST) ]
+  (let [result (execCommand ip "top -n 1 b|grep Cpu | cut -d ',' -f 1 | cut -d ':' -f 2" SSH_SHOW_LIST) ]
     ;;(println result)
     ;;["0.2" "0.3"]
     result
@@ -96,7 +96,7 @@
   )
 
 (defn getMemRatioByIp [ip SSH_SHOW_LIST]
-  (let [result (execCommand ip "top -n 1 |grep Mem:| cut -d ':' -f 2" SSH_SHOW_LIST) ]
+  (let [result (execCommand ip "top -n 1 b|grep Mem:| cut -d ':' -f 2" SSH_SHOW_LIST) ]
     result
     )
   )
