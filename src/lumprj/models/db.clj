@@ -25,8 +25,14 @@
   (belongs-to dutymission {:fk :missionid})
   )
 
+
 (defentity servers
   (database db)
+  )
+
+(defentity systemwatchlog
+  (database db)
+  (belongs-to servers {:fk :serverid})
   )
 
 (defn create-user [user]
@@ -36,6 +42,11 @@
 
   )
 
+(defn add-systemlog [systemlog]
+  (insert systemwatchlog
+    (values systemlog)
+    )
+  )
 (defn create-server [server]
 
   (insert servers

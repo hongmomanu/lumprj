@@ -28,6 +28,12 @@
 
  )
 
+(defn addsystemlog [systemlogs]
+
+  (db/add-systemlog
+    systemlogs)
+  )
+
 
 (defn systemmachines [parentid]
 

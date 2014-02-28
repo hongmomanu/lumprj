@@ -3,7 +3,8 @@
             [noir.io :as io]))
 
 
-(declare create-dutymission-table create-dutymissionhistory-table create-servers-table)
+(declare create-dutymission-table create-dutymissionhistory-table
+  create-servers-table create-systemwatchlog-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -41,7 +42,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  ;;(create-servers-table)
+  ;;(create-systemwatchlog-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
