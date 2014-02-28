@@ -66,6 +66,15 @@
     )
   )
 
+(defn server-disk [ip]
+  (let [results (system/getDiskRatioByIp ip @SSH_SHOW_LIST)]
+    (if
+      (> (count results) 0)
+      (
+         map #( re-find #"\d+%" %) results
+        )[])
+    )
+  )
 (defn server-mem [ip]
   (let [results (system/getMemRatioByIp ip @SSH_SHOW_LIST)]
     (if
@@ -88,6 +97,7 @@
                                  {:isping (system/ping (:servervalue %))
                                   :cpu (server-cpu (:servervalue %))
                                   :mem (server-mem (:servervalue %))
+                                  :disk (server-disk (:servervalue %))
                                   :apps (serverport-app (:key %) (:servervalue %))}) results)
                 :totalCount (:counts (first (db/servercount)))})
     )

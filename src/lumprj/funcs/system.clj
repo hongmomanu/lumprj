@@ -86,12 +86,14 @@
 
     )
   )
+(defn getDiskRatioByIp [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "df -hl | grep -w '/home\\|/'" SSH_SHOW_LIST) ]
+    result
+    )
+  )
 (defn getCpuRatioByIp [ip SSH_SHOW_LIST]
   (let [result (execCommand ip "top -n 1 b|grep Cpu | cut -d ',' -f 1 | cut -d ':' -f 2" SSH_SHOW_LIST) ]
-    ;;(println result)
-    ;;["0.2" "0.3"]
     result
-    ;;(if(> (count result) 0) true false)
     )
   )
 
