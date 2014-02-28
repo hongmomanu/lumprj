@@ -15,8 +15,7 @@
     (servermanager/addserver servername servervalue parentid type)
     )
   (POST "/server/sendsystemlogs" [systemlogs]
-    (println(json/read-str systemlogs
-      :key-fn keyword))
+
     (servermanager/addsystemlog (json/read-str systemlogs
                                   :key-fn keyword))
     )
