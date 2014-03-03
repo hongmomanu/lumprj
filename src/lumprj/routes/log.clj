@@ -9,7 +9,12 @@
 
 (defroutes log-routes
 
-  (GET "/log/getlogsystem" requets
-    (resp/json {:success true})
+  (GET "/log/getlogsystem" request
+    (logmanager/log-system-list (:params  request))
+
+    )
+  (GET "/log/getlogduty" request
+    (logmanager/log-duty-list (:params  request))
+
     )
   )

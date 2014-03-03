@@ -35,6 +35,11 @@
   (belongs-to servers {:fk :serverid})
   )
 
+(defentity dutylog
+  (database db)
+  (belongs-to users {:fk :userid})
+  )
+
 (defn create-user [user]
 
   (insert users
@@ -47,6 +52,13 @@
     (values systemlog)
     )
   )
+
+(defn add-dutylog [dutylogs]
+  (insert dutylog
+    (values dutylogs)
+    )
+  )
+
 (defn create-server [server]
 
   (insert servers
@@ -69,6 +81,38 @@
   (select users
     (fields [:id :userid] :displayname :username )
 
+    )
+  )
+
+(defn log-list [params]
+  (select systemwatchlog
+    (with servers
+      (fields :servername :servervalue)
+      )
+    (limit (:limit params))
+    (offset (:start params))
+    (order :id :DESC)
+    )
+  )
+(defn log-duty-list [params]
+  (select dutylog
+    (with users
+      (fields :username)
+      )
+    (limit (:limit params))
+    (offset (:start params))
+    (order :id :DESC)
+    )
+  )
+(defn log-duty-count [params]
+  (select dutylog
+    (aggregate (count :id) :counts)
+    )
+  )
+
+(defn log-count [params]
+  (select systemwatchlog
+    (aggregate (count :id) :counts)
     )
   )
 

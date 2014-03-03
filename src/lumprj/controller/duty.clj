@@ -47,6 +47,11 @@
     )
   )
 
+(defn senddutylogs [dutylogs]
+  (db/add-dutylog
+    dutylogs)
+  )
+
 
 (defn delenumbyid [request]
   (let [form-params (:form-params request)]

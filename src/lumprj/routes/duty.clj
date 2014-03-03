@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:require [lumprj.controller.duty :as duty]
             [noir.response :as resp]
+            [clojure.data.json :as json]
             )
   )
 
@@ -37,6 +38,12 @@
 
     (resp/json  (duty/delenumbyid request))
     ;;(resp/json {:success false})
+    )
+  (POST "/duty/senddutylogs" [systemlogs]
+
+    (duty/senddutylogs (json/read-str systemlogs
+                         :key-fn keyword))
+
     )
 
 )

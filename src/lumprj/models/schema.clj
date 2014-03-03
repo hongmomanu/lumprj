@@ -4,7 +4,7 @@
 
 
 (declare create-dutymission-table create-dutymissionhistory-table
-  create-servers-table create-systemwatchlog-table)
+  create-servers-table create-systemwatchlog-table create-dutylog-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -42,7 +42,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  ;;(create-systemwatchlog-table)
+  ;;(create-dutylog-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -128,6 +128,20 @@
       :systemwatchlog
       [:id "integer primary key autoincrement"]
       [:serverid "integer"]
+      [:statustype "nvarchar(100)"]
+      [:logcontent "nvarchar(200)"]
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+
+;;值班日志记录表
+(defn create-dutylog-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :dutylog
+      [:id "integer primary key autoincrement"]
+      [:userid "integer"]
       [:statustype "nvarchar(100)"]
       [:logcontent "nvarchar(200)"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
