@@ -65,6 +65,13 @@
     (values server))
   )
 
+(defn update-server [data id]
+  (update servers
+    (set-fields data)
+    (where {:id id}))
+
+  )
+
 (defn update-user [id first-name last-name email]
   (update users
   (set-fields {:first_name first-name

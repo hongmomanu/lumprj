@@ -15,7 +15,14 @@
     )
   )
 
+(defn saveserver [servername servervalue id username password]
 
+  (db/update-server
+    {:servername servername :servervalue servervalue :username username :password password}
+     id
+    )
+  (resp/json {:success true})
+  )
 (defn addserver [servername servervalue parentid type]
   (let [servercount (if (> (read-string parentid) 0) (:counts (first (db/has-server servername servervalue)))
                       (:counts (first (db/has-system servervalue))))]
