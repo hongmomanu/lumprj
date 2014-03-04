@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
             [noir.response :as resp]
+            [me.raynes.fs :as fs]
             [clj-http.client :as client]
             )
   )
@@ -53,6 +54,11 @@
     dutylogs)
   )
 
+(defn copywavefile [sourcedir targetdir]
+  (fs/copy-dir sourcedir targetdir)
+  (resp/json {:success (fs/exists? sourcedir)})
+
+  )
 (defn completeduty [id]
   (db/completedutymission id)
   (resp/json {:success true})

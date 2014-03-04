@@ -56,6 +56,10 @@
 
     )
 
+  (POST "/duty/copywavefile" [sourcedir targetdir]
+    (duty/copywavefile sourcedir targetdir)
+    )
+
 )
 
 

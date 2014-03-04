@@ -143,7 +143,7 @@
 
 (defn completedutymission [id]
   (update dutymissionhistory
-    (set-fields {:missionstatus 1})
+    (set-fields {:missionstatus 1 :time (sqlfn datetime "now" "localtime")})
     (where {:id id}))
   )
 (defn mission-today-list [day]
