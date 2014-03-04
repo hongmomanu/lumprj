@@ -50,6 +50,11 @@
     (duty/eqimcheck id username password url)
 
     )
+  (POST "/duty/completeduty" [id]
+
+    (duty/completeduty id)
+
+    )
 
 )
 

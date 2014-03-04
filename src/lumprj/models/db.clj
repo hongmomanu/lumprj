@@ -141,6 +141,11 @@
   (select dutymission)
   )
 
+(defn completedutymission [id]
+  (update dutymissionhistory
+    (set-fields {:missionstatus 1})
+    (where {:id id}))
+  )
 (defn mission-today-list [day]
   (select dutymissionhistory
     (with dutymission

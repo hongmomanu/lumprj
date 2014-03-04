@@ -53,6 +53,10 @@
     dutylogs)
   )
 
+(defn completeduty [id]
+  (db/completedutymission id)
+  (resp/json {:success true})
+  )
 (defn eqimcheck [id username password url]
   (let [my-cs (clj-http.cookies/cookie-store)]
 
