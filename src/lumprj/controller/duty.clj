@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
             [noir.response :as resp]
+            [clj-http.client :as client]
             )
   )
 
@@ -50,6 +51,24 @@
 (defn senddutylogs [dutylogs]
   (db/add-dutylog
     dutylogs)
+  )
+
+(defn eqimcheck [id username password url]
+  (let [my-cs (clj-http.cookies/cookie-store)]
+
+    (try
+      (client/post url {:form-params {:username username :password password}
+                        :socket-timeout 1000
+                        :conn-timeout 1000
+                        :cookie-store my-cs})
+      (resp/json {:success true :msg (:body (client/get "http://192.168.2.141:8080/jz" {:cookie-store my-cs}))})
+
+      (catch Exception e (resp/json {:success false}))
+      )
+
+    )
+
+
   )
 
 

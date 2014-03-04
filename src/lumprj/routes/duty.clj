@@ -45,6 +45,11 @@
                          :key-fn keyword))
 
     )
+  (POST "/duty/eqimcheck" [id username password url]
+
+    (duty/eqimcheck id username password url)
+
+    )
 
 )
 
