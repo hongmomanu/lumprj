@@ -31,7 +31,7 @@
 (defn login [username password]
     (let [results (db/has-user  username password)]
       ( if (> (count results) 0) (resp/json {:success true :result (first results) })
-          (resp/json {:success false :msg "用户名密码错误"})
+          (resp/json {:success false :msg "用户名密码错误" :username username})
       )
     )
 

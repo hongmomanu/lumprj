@@ -20,6 +20,9 @@
     (duty/getmissions)
 
     )
+  (POST "/duty/savemission" request
+    (duty/savemission request)
+    )
   (GET "/getdutymissions" [day]
     (duty/getdutymissions day)
     )

@@ -18,6 +18,12 @@
 (defn getmissions []
   (resp/json (db/mission-query))
   )
+(defn savemission [request]
+  (let [form-params (:form-params request)]
+    (db/update-mission form-params (get form-params "id"))
+    (resp/json {:success true})
+    )
+  )
 
 (defn getdutymissions [day]
   (resp/json (db/mission-today-list day))

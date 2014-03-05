@@ -74,7 +74,12 @@
     (where {:id id}))
 
   )
-
+(defn update-mission [data id]
+  (update dutymission
+    (set-fields data)
+    (where {:id id})
+    )
+  )
 (defn update-user [data id]
   (update users
   (set-fields data)
@@ -131,6 +136,7 @@
     (with users
       (fields :username :displayname)
       )
+    (order :day)
     )
   )
 (defn duty-del-byids [ids]
