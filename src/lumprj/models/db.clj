@@ -102,6 +102,9 @@
     (with servers
       (fields :servername :servervalue)
       )
+    (where (and {:time [> (:bgday params)]}
+                {:time [< (:edday params)]}
+             ))
     (limit (:limit params))
     (offset (:start params))
     (order :id :DESC)
@@ -112,6 +115,7 @@
     (with users
       (fields :username)
       )
+
     (limit (:limit params))
     (offset (:start params))
     (order :id :DESC)
@@ -125,6 +129,9 @@
 
 (defn log-count [params]
   (select systemwatchlog
+    (where (and {:time [> (:bgday params)]}
+                {:time [< (:edday params)]}
+             ))
     (aggregate (count :id) :counts)
     )
   )
@@ -163,7 +170,7 @@
   )
 (defn mission-history-query [day userid]
   (select dutymissionhistory
-    (where {:time [like (str day "%")] :userid userid})
+    (where {:time [like (str day "%")] }) ;;:userid userid
     (aggregate (count :id) :counts)
     )
 
