@@ -72,11 +72,9 @@
 
   )
 
-(defn update-user [id first-name last-name email]
+(defn update-user [data id]
   (update users
-  (set-fields {:first_name first-name
-               :last_name last-name
-               :email email})
+  (set-fields data)
   (where {:id id})))
 
 (defn get-user [id]
