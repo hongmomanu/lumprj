@@ -92,7 +92,7 @@
 
 (defn user-list []
   (select users
-    (fields [:id :userid] :displayname :username )
+    (fields [:id :userid] :displayname :username :telnum)
 
     )
   )
