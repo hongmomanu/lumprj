@@ -4,10 +4,13 @@
   (:require [lumprj.models.schema :as schema]))
 
 (defdb db schema/db-spec-sqlite)
+(defdb dbmysql schema/db-mysql)
 
 
 
 (declare users dutyenum dutymission dutymissionhistory)
+
+
 
 (defentity dutyenum
   (database db)
@@ -237,5 +240,10 @@
 (defn serverport [serverid]
   (with-db db
     (exec-raw ["SELECT * FROM servers WHERE parentid=?" [serverid]] :results))
+  )
+
+(defn mysqlalert []
+  (with-db dbmysql
+    (exec-raw ["select user from mysql.user" []] :results))
   )
 

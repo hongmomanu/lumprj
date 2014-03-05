@@ -5,6 +5,7 @@
   [[com.h2database/h2 "1.3.174"]
    [org.xerial/sqlite-jdbc "3.7.15-M1"]
    [com.oracle/ojdbc6 "11.2.0.3"]
+   [org.mariadb.jdbc/mariadb-java-client "1.1.5"]
    ;;[self/sigar "1.6.4"]
    [ch.ethz.ganymed/ganymed-ssh2 "261"]
    [clj-http "0.9.0"]
