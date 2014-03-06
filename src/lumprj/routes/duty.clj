@@ -31,6 +31,10 @@
     (duty/maketodaymission day userid)
     )
 
+  (GET "/duty/mysqlalert" []
+    (resp/json {:success false})
+    )
+
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
     )

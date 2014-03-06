@@ -104,6 +104,31 @@
     (group :date)
     )
   )
+(defn log-duty-statics [params]
+  (select dutylog
+    (fields  [(sqlfn strftime "%Y-%m-%d" :time) :date])
+    (aggregate (count :id) :counts)
+    (group :date)
+    )
+  )
+
+(defn log-duty-statics-dayinfo [day]
+  (select dutylog
+    (fields  :statustype)
+    (where {:time [like (str day "%")]})
+    (aggregate (count :id) :counts)
+    (group :statustype)
+    )
+  )
+
+(defn log-system-statics-dayinfo [day]
+  (select systemwatchlog
+    (fields  :statustype)
+    (where {:time [like (str day "%")]})
+    (aggregate (count :id) :counts)
+    (group :statustype)
+    )
+  )
 (defn log-list [params]
   (select systemwatchlog
     (with servers

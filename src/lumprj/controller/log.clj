@@ -6,9 +6,18 @@
   )
 
 (defn log-system-statics [params]
-  (resp/json (db/log-system-statics params)
+  (let [searchtype (:type params)]
+    (if (= searchtype "duty")
+      (resp/json (db/log-duty-statics params))
+      (resp/json (db/log-system-statics params))
     )
-
+  )
+  )
+(defn log-system-statics-dayinfo [day searchtype]
+  (if (= searchtype "duty")
+    (resp/json (db/log-duty-statics-dayinfo day))
+    (resp/json (db/log-system-statics-dayinfo day))
+    )
   )
 
 (defn log-system-list [params]

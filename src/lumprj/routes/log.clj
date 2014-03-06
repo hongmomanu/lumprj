@@ -21,4 +21,7 @@
   (GET "/log/logsystemstatics" request
     (logmanager/log-system-statics (:params  request))
     )
+  (GET "/log/logsystemstaticsinfobyday" [day searchtype]
+    (logmanager/log-system-statics-dayinfo day searchtype)
+    )
   )
