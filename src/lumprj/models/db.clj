@@ -97,6 +97,13 @@
     )
   )
 
+(defn log-system-statics [params]
+  (select systemwatchlog
+    (fields  [(sqlfn strftime "%Y-%m-%d" :time) :date])
+    (aggregate (count :id) :counts)
+    (group :date)
+    )
+  )
 (defn log-list [params]
   (select systemwatchlog
     (with servers
@@ -115,7 +122,9 @@
     (with users
       (fields :username)
       )
-
+    (where (and {:time [> (:bgday params)]}
+             {:time [< (:edday params)]}
+             ))
     (limit (:limit params))
     (offset (:start params))
     (order :id :DESC)
@@ -123,14 +132,17 @@
   )
 (defn log-duty-count [params]
   (select dutylog
+    (where (and {:time [> (:bgday params)]}
+             {:time [< (:edday params)]}
+             ))
     (aggregate (count :id) :counts)
     )
   )
 
 (defn log-count [params]
   (select systemwatchlog
-    (where (and {:time [> (:bgday params)]}
-                {:time [< (:edday params)]}
+    (where (and {:time [>= (:bgday params)]}
+                {:time [<= (:edday params)]}
              ))
     (aggregate (count :id) :counts)
     )

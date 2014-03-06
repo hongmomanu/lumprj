@@ -5,6 +5,11 @@
             )
   )
 
+(defn log-system-statics [params]
+  (resp/json (db/log-system-statics params)
+    )
+
+  )
 
 (defn log-system-list [params]
 

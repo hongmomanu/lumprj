@@ -17,4 +17,8 @@
     (logmanager/log-duty-list (:params  request))
 
     )
+
+  (GET "/log/logsystemstatics" request
+    (logmanager/log-system-statics (:params  request))
+    )
   )
