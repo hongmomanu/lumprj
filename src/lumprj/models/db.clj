@@ -100,6 +100,9 @@
 (defn log-system-statics [params]
   (select systemwatchlog
     (fields  [(sqlfn strftime "%Y-%m-%d" :time) :date])
+    (where (and {:time [> (:bgday params)]}
+             {:time [< (:edday params)]}
+             ))
     (aggregate (count :id) :counts)
     (group :date)
     )
@@ -107,6 +110,9 @@
 (defn log-duty-statics [params]
   (select dutylog
     (fields  [(sqlfn strftime "%Y-%m-%d" :time) :date])
+    (where (and {:time [> (:bgday params)]}
+             {:time [< (:edday params)]}
+             ))
     (aggregate (count :id) :counts)
     (group :date)
     )
