@@ -32,7 +32,8 @@
     )
 
   (GET "/duty/mysqlalert" []
-    (resp/json {:success false})
+    (duty/mysqlalert)
+
     )
 
   (POST "/addnewduty" [day userid]

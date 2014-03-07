@@ -25,9 +25,11 @@
                  :naming {:keys clojure.string/lower-case :fields clojure.string/upper-case}})
 
 (def db-mysql {:subprotocol "mysql"
-               :subname "//127.0.0.1:3306"
-               :user "root"
-               :password "shayu626"})
+               :subname "//127.0.0.1:9306?characterEncoding=utf8&maxAllowedPacket=512000"
+               ;;:subname "//127.0.0.1:3306"
+               ;;:user "root"
+               ;;:password "shayu626"
+               })
 
 (def db-spec {:classname "org.h2.Driver"
               :subprotocol "h2"

@@ -300,6 +300,6 @@
 
 (defn mysqlalert []
   (with-db dbmysql
-    (exec-raw ["select user from mysql.user" []] :results))
+    (exec-raw ["SELECT * FROM rt where MATCH ('\"320902\"')" []] :results))
   )
 

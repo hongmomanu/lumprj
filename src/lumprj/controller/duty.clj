@@ -36,6 +36,9 @@
   (resp/json {:success true})
   )
 
+(defn mysqlalert []
+  (resp/json (db/mysqlalert))
+  )
 (defn maketodaymission [day userid]
   (if (= (:counts (first (db/mission-history-query day userid))) 0)
     (insertnewmission userid)(resp/json {:success false}))
