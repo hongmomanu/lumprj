@@ -36,6 +36,7 @@
 (defentity systemwatchlog
   (database db)
   (belongs-to servers {:fk :serverid})
+  (belongs-to users {:fk :userid})
   )
 
 (defentity dutylog
@@ -140,6 +141,9 @@
   (select systemwatchlog
     (with servers
       (fields :servername :servervalue)
+      )
+    (with users
+      (fields :username :displayname)
       )
     (where (and {:time [> (:bgday params)]}
                 {:time [< (:edday params)]}
