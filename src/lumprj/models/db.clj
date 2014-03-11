@@ -92,7 +92,7 @@
 
 (defn user-list []
   (select users
-    (fields [:id :userid] :displayname :username :telnum :password :admin)
+    (fields [:id :userid]  :id [:displayname :title] :displayname :username :telnum :password :admin)
 
     )
   )
@@ -198,15 +198,15 @@
   (select dutymission)
   )
 
-(defn completedutymission [id]
+(defn completedutymission [id dutylog]
   (update dutymissionhistory
-    (set-fields {:missionstatus 1 :time (sqlfn datetime "now" "localtime")})
+    (set-fields {:missionstatus 1 :time (sqlfn datetime "now" "localtime") :dutylog dutylog})
     (where {:id id}))
   )
 (defn mission-today-list [day]
   (select dutymissionhistory
     (with dutymission
-      (fields :missionname :missiontime :missioninterval)
+      (fields :missionname :missiontime :missioninterval )
       )
     (where {:time [like (str day "%")]})
     )
@@ -217,6 +217,39 @@
     (aggregate (count :id) :counts)
     )
 
+  )
+
+(defn addworkmanagerevents [cid start end]
+  (insert dutyenum
+    (values {:start start :end end :userid cid }))
+  )
+(defn saveworkmanagerevents [id data]
+  (update dutyenum
+    (set-fields data)
+    (where {:id id})
+    )
+  )
+(defn deleteworkmanagerevents [id]
+  (delete dutyenum
+    (where {:id id})
+    )
+  )
+(defn getworkmanagerevents [startDate endDate]
+  (select dutyenum
+    (fields [:id :enumid] :id  :day :userid [:userid :cid] :start :end )
+    (with users
+      (fields [:displayname :title] :username)
+      )
+    (where (or (and {:start [>= startDate]}
+             {:start [<= endDate]}
+             )
+             (and {:end [>= startDate]}
+               {:end [<= endDate]}
+               )
+             )
+
+      )
+    )
   )
 
 (defn duty-query-day [day]

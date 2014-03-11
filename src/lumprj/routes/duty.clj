@@ -33,7 +33,22 @@
 
   (GET "/duty/mysqlalert" []
     (duty/mysqlalert)
+    )
 
+  (GET "/duty/getworkmanagerevents" [startDate endDate]
+    (duty/getworkmanagerevents startDate endDate)
+    )
+  (POST "/duty/getworkmanagerevents/0" [cid start end]
+    (duty/addworkmanagerevents cid start end)
+    )
+  (PUT "/duty/getworkmanagerevents/:id" [id cid start end]
+    (duty/saveworkmanagerevents id cid start end)
+    )
+  (DELETE "/duty/getworkmanagerevents/:id" [id]
+    (duty/deleteworkmanagerevents id)
+    )
+  (GET "/duty/getcalendars" []
+    (duty/getcalendars)
     )
 
   (POST "/addnewduty" [day userid]
@@ -53,14 +68,14 @@
                          :key-fn keyword))
 
     )
-  (POST "/duty/eqimcheck" [id username password url]
+  (POST "/duty/eqimcheck" [id username password url securl]
 
-    (duty/eqimcheck id username password url)
+    (duty/eqimcheck id username password url securl)
 
     )
-  (POST "/duty/completeduty" [id]
+  (POST "/duty/completeduty" [id dutylog]
 
-    (duty/completeduty id)
+    (duty/completeduty id dutylog)
 
     )
 

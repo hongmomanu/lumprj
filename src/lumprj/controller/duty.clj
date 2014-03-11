@@ -36,6 +36,39 @@
   (resp/json {:success true})
   )
 
+(defn getworkmanagerevents [startDate endDate]
+  (let [data (db/getworkmanagerevents startDate (str endDate "T"))]
+    (resp/json {:success true :data (map #(conj {:ad true} %) data)})
+    )
+
+  )
+
+(defn addworkmanagerevents [cid start end]
+  (resp/json {:success true :data [{:cid cid :start start :end end
+                                    :id (first (vals (db/addworkmanagerevents cid start end)))}]
+              :msg "添加成功"} )
+  )
+
+(defn saveworkmanagerevents [id cid start end]
+  (db/saveworkmanagerevents id {:userid cid :start start :end end})
+  (resp/json {:success true :data [{:cid cid :start start :end end
+                                    :id id}]
+              :msg "保存成功"} )
+  )
+
+(defn deleteworkmanagerevents [id]
+  (db/deleteworkmanagerevents id)
+  (resp/json {:success true :data []
+              :msg "删除成功"} )
+  )
+
+(defn getcalendars []
+  (let [results (db/user-list)]
+    (resp/json {:results (map #(conj {:color (* (:id %) 10)} %) results)})
+    )
+
+    )
+
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )
@@ -79,11 +112,11 @@
 
   )
 
-(defn completeduty [id]
-  (db/completedutymission id)
+(defn completeduty [id dutylog]
+  (db/completedutymission id dutylog)
   (resp/json {:success true})
   )
-(defn eqimcheck [id username password url]
+(defn eqimcheck [id username password url securl]
   (let [my-cs (clj-http.cookies/cookie-store)]
 
     (try
@@ -91,7 +124,7 @@
                         :socket-timeout 1000
                         :conn-timeout 1000
                         :cookie-store my-cs})
-      (resp/json {:success true :msg (:body (client/get "http://192.168.2.141:8080/jz" {:cookie-store my-cs}))})
+      (resp/json {:success true :msg (:body (client/get securl {:cookie-store my-cs}))})
 
       (catch Exception e (resp/json {:success false}))
       )

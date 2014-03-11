@@ -4,7 +4,7 @@
 
 
 (declare create-dutymission-table create-dutymissionhistory-table
-  create-servers-table create-systemwatchlog-table create-dutylog-table)
+  create-servers-table create-systemwatchlog-table create-dutylog-table create-stations-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -49,7 +49,7 @@
   "checks to see if the database schema is present"
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
-  ;;(create-dutylog-table)
+  ;;(create-stations-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -94,6 +94,8 @@
       :dutyenum
       [:id "integer primary key autoincrement"]
       [:day "int"]  ;;1-7
+      [:start "DATETIME"]
+      [:end "DATETIME"]
       [:userid "integer"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
@@ -123,6 +125,7 @@
       [:missionid "integer"]
       [:userid "integer"]
       [:missionstatus "integer"]
+      [:dutylog "varchar(300)"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
   )
@@ -154,6 +157,27 @@
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
   )
+;;台站表
+
+(defn create-stations-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :stations
+      [:id "integer primary key autoincrement"]
+      [:stationname "nvarchar(100)"] ;台站名称
+      [:networkname "nvarchar(100)"] ;台网名称
+      [:stationcode "nvarchar(100)"] ;台站代码
+      [:dataaddr "nvarchar(100)"] ;数采地址
+      [:gatewayaddr "nvarchar(100)"] ;网关地址
+      [:connecttype "nvarchar(100)"] ;通讯类型
+      [:contact "nvarchar(100)"] ;联系人
+      [:phone "nvarchar(100)"] ;联系人电话
+      [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
+      ))
+  )
+
+
 
 (defn create-tables
   "creates the database tables used by the application"
