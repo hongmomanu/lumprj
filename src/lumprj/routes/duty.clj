@@ -13,8 +13,8 @@
     (duty/dutylist)
     )
 
-  (GET "/getcurrentduty" [day]
-    (duty/getcurrentduty day)
+  (GET "/getcurrentduty" [day date]
+    (duty/getcurrentduty day date)
     )
   (GET "/getmissions" []
     (duty/getmissions)

@@ -11,8 +11,8 @@
   (resp/json (db/duty-list))
   )
 
-(defn getcurrentduty [day]
-  (resp/json (db/duty-query-day day))
+(defn getcurrentduty [day date]
+  (resp/json (db/duty-query-day day date))
   )
 
 (defn getmissions []

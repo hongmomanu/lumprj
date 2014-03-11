@@ -252,13 +252,17 @@
     )
   )
 
-(defn duty-query-day [day]
+(defn duty-query-day [day date]
   (select dutyenum
     (fields [:id :enumid] :day :userid)
     (with users
       (fields :username :displayname)
       )
-    (where {:day day})
+    ;(where {:day day})
+    (where (and {(sqlfn strftime "%Y-%m-%d" :start) [<= date]}
+                 {(sqlfn strftime "%Y-%m-%d" :end) [>= date]}
+                 )
+      )
     )
   )
 (defn duty-insert [day userid]
