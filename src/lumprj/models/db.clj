@@ -57,7 +57,8 @@
   )
 
 (defn add-dutylog [dutylogs]
-  (insert dutylog
+  ;;(insert dutylog
+  (insert systemwatchlog
     (values dutylogs)
     )
   )
