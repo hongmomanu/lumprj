@@ -15,10 +15,11 @@
     )
   )
 
-(defn saveserver [servername servervalue id username password]
+(defn saveserver [servername servervalue id username password machinecss]
 
   (db/update-server
-    {:servername servername :servervalue servervalue :username username :password password}
+    {:servername servername :servervalue servervalue
+     :username username :password password :machinecss machinecss}
      id
     )
   (resp/json {:success true})

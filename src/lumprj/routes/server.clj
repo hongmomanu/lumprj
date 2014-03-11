@@ -14,8 +14,8 @@
   (POST "/server/addserver" [servername servervalue parentid type]
     (servermanager/addserver servername servervalue parentid type)
     )
-  (POST "/server/saveserver" [servername servervalue id username password]
-    (servermanager/saveserver servername servervalue id username password)
+  (POST "/server/saveserver" [servername servervalue id username password machinecss]
+    (servermanager/saveserver servername servervalue id username password machinecss)
     )
   (POST "/server/sendsystemlogs" [systemlogs]
 

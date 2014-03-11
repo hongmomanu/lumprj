@@ -139,6 +139,7 @@
       [:id "integer primary key autoincrement"]
       [:serverid "integer"]
       [:statustype "nvarchar(100)"]
+      ;;[:userid "integer"]   ;;jack added 03-11
       [:logcontent "nvarchar(200)"]
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))

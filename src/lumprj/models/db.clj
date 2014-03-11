@@ -142,7 +142,10 @@
       )
     (where (and {:time [> (:bgday params)]}
                 {:time [< (:edday params)]}
-             ))
+             )
+
+      )
+    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
     (limit (:limit params))
     (offset (:start params))
     (order :id :DESC)
@@ -156,6 +159,7 @@
     (where (and {:time [> (:bgday params)]}
              {:time [< (:edday params)]}
              ))
+    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
     (limit (:limit params))
     (offset (:start params))
     (order :id :DESC)
@@ -166,6 +170,7 @@
     (where (and {:time [> (:bgday params)]}
              {:time [< (:edday params)]}
              ))
+    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
     (aggregate (count :id) :counts)
     )
   )
@@ -175,6 +180,7 @@
     (where (and {:time [>= (:bgday params)]}
                 {:time [<= (:edday params)]}
              ))
+    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
     (aggregate (count :id) :counts)
     )
   )
