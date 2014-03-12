@@ -137,6 +137,17 @@
     (group :statustype)
     )
   )
+(defn log-del [params]
+  (delete systemwatchlog
+    (where (and {:time [> (:bgday params)]}
+             {:time [< (:edday params)]}
+             )
+      )
+    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
+    (where {:statustype [like (str (:statustype params) "%")]})
+
+    )
+  )
 (defn log-list [params]
 
     (select systemwatchlog

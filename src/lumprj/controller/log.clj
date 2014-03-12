@@ -20,6 +20,9 @@
     )
   )
 
+(defn log-system-del [params]
+  (resp/json (db/log-del params))
+  )
 (defn log-system-list [params]
 
      (resp/json

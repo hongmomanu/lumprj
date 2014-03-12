@@ -17,6 +17,10 @@
     (logmanager/log-duty-list (:params  request))
 
     )
+  (POST "/log/deletelogs" request
+    (logmanager/log-system-del (:params  request))
+
+    )
 
   (GET "/log/logsystemstatics" request
     (logmanager/log-system-statics (:params  request))
