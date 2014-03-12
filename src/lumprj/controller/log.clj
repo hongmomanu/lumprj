@@ -24,7 +24,7 @@
 
      (resp/json
         {
-         :results (db/log-list params)
+         :results (db/log-list params )
          :totalCount (:counts (first (db/log-count params)))
         }
        )

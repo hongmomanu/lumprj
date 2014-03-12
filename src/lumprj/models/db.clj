@@ -138,23 +138,26 @@
     )
   )
 (defn log-list [params]
-  (select systemwatchlog
-    (with servers
-      (fields :servername :servervalue)
-      )
-    (with users
-      (fields :username :displayname)
-      )
-    (where (and {:time [> (:bgday params)]}
-                {:time [< (:edday params)]}
-             )
 
+    (select systemwatchlog
+      (with servers
+        (fields :servername :servervalue)
+        )
+      (with users
+        (fields :username :displayname)
+        )
+      (where (and {:time [> (:bgday params)]}
+               {:time [< (:edday params)]}
+               )
+        )
+
+      (where {:logcontent [like (str "%" (:keyword params) "%") ]})
+      (where {:statustype [like (str (:statustype params) "%")]})
+      (limit (:limit params))
+      (offset (:start params))
+      (order :id :DESC)
       )
-    (where {:logcontent [like (str "%" (:keyword params) "%") ]})
-    (limit (:limit params))
-    (offset (:start params))
-    (order :id :DESC)
-    )
+
   )
 (defn log-duty-list [params]
   (select dutylog
@@ -186,6 +189,7 @@
                 {:time [<= (:edday params)]}
              ))
     (where {:logcontent [like (str "%" (:keyword params) "%") ]})
+    (where {:statustype [like (str (:statustype params) "%")]})
     (aggregate (count :id) :counts)
     )
   )
