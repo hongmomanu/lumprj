@@ -50,6 +50,9 @@
   (GET "/duty/getcalendars" []
     (duty/getcalendars)
     )
+  (GET "/duty/getstations" [keyword start limit]
+    (duty/getstations keyword start limit)
+    )
 
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)

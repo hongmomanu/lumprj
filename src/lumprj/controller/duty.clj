@@ -69,6 +69,16 @@
 
     )
 
+(defn getstations[keyword start limit]
+  (resp/json
+    {
+      :results (db/stations-list keyword start limit )
+      :totalCount (:counts (first (db/stations-count keyword start limit)))
+      }
+    )
+
+  )
+
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )

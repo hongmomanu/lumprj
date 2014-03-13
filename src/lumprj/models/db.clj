@@ -44,6 +44,10 @@
   (belongs-to users {:fk :userid})
   )
 
+(defentity stations
+  (database db)
+  )
+
 (defn create-user [user]
 
   (insert users
@@ -184,6 +188,22 @@
     (order :id :DESC)
     )
   )
+(defn stations-list [keyword starts limits]
+  (select stations
+    (where {:stationname [like (str "%" keyword "%") ]})
+
+    (limit limits)
+    (offset starts)
+    (order :id :DESC)
+    )
+  )
+(defn stations-count [keyword start limit]
+  (select stations
+    (where {:stationname [like (str "%" keyword "%") ]})
+    (aggregate (count :id) :counts)
+    )
+  )
+
 (defn log-duty-count [params]
   (select dutylog
     (where (and {:time [> (:bgday params)]}

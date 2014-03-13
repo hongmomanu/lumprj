@@ -24,7 +24,6 @@
   (resp/json (db/log-del params))
   )
 (defn log-system-list [params]
-
      (resp/json
         {
          :results (db/log-list params )
