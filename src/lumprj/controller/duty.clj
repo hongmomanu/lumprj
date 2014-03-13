@@ -118,13 +118,17 @@
 
   )
 (defn checkarchive [sourcedir earthplatformlist archiveminsize]
-  ;;(println earthplatformlist)
-  (let [results (filter
-                  #(false? (and (fs/child-of? sourcedir (str sourcedir %))
-                     (>= (fs/size (str sourcedir %)) (* (read-string archiveminsize) 1048576)))) earthplatformlist)]
+  (println earthplatformlist)
+  (let [earthplatformlist (db/stationcode-list)]
+    (let [results (filter
+                    #(false? (and (fs/child-of? sourcedir (str sourcedir (:stationcode %)))
+                               (>= (fs/size (str sourcedir (:stationcode %))) (* (read-string archiveminsize) 1048576)))) earthplatformlist)]
 
-    (resp/json {:success (empty? results) :results results})
+      (resp/json {:success (empty? results) :results (map #(:stationcode %) results)})
+      )
+
     )
+
 
   )
 

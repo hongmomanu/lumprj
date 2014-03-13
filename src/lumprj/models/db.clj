@@ -188,6 +188,12 @@
     (order :id :DESC)
     )
   )
+
+(defn stationcode-list []
+  (select stations
+    (fields :stationcode)
+    )
+  )
 (defn stations-list [keyword starts limits]
   (select stations
     (where {:stationname [like (str "%" keyword "%") ]})
