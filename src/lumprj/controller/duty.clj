@@ -78,7 +78,13 @@
     )
 
   )
+(defn addnewstation [values]
 
+  (if (> (first (vals (db/savenewstation values))) 0) (resp/json {:success true})
+    (resp/json {:success false :msg "插入数据失败"})
+    )
+  (resp/json {:success true})
+  )
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )

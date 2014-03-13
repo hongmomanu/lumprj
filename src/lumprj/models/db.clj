@@ -197,6 +197,7 @@
     (order :id :DESC)
     )
   )
+
 (defn stations-count [keyword start limit]
   (select stations
     (where {:stationname [like (str "%" keyword "%") ]})
@@ -204,6 +205,12 @@
     )
   )
 
+(defn savenewstation [key-values]
+  (insert stations
+    (values  key-values)
+    )
+
+  )
 (defn log-duty-count [params]
   (select dutylog
     (where (and {:time [> (:bgday params)]}

@@ -35,6 +35,10 @@
     (duty/mysqlalert)
     )
 
+  (POST "/duty/addnewstation"  request
+    (duty/addnewstation (:params request))
+   )
+
   (GET "/duty/getworkmanagerevents" [startDate endDate]
     (duty/getworkmanagerevents startDate endDate)
     )
