@@ -64,7 +64,7 @@
 
 (defn getcalendars []
   (let [results (db/user-list)]
-    (resp/json {:results (map #(conj {:color (* (:id %) 10)} %) results)})
+    (resp/json {:results (map #(conj {:color (if(even? (:id %)) (- 32 (:id %))(+ 0 (:id %) )) } %) results)})
     )
 
     )

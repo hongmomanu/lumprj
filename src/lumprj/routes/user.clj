@@ -9,10 +9,10 @@
 
 (defroutes user-routes
 
-  (GET "/adduser" [username password displayname admin telnum departments email]
+  (POST "/user/adduser" [username password displayname admin telnum departments email]
     (user/adduser username password displayname admin telnum departments email)
     )
-  (GET "/user/saveuser" request
+  (POST "/user/saveuser" request
     (user/saveuser request)
     )
   (GET "/users" []
