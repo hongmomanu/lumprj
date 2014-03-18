@@ -22,7 +22,7 @@
 )
 
 (defn checkappname [ip appname SSH_SHOW_LIST]
-  (let [result (execCommand ip (str "pidof " appname) SSH_SHOW_LIST) ]
+  (let [result (execCommand ip  appname SSH_SHOW_LIST) ]
     (if(> (count result) 0) true false)
     )
   )

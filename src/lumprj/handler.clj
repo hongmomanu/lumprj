@@ -3,6 +3,7 @@
             [lumprj.routes.home :refer [home-routes]]
             [lumprj.routes.user :refer [user-routes]]
             [lumprj.routes.server :refer [server-routes]]
+            [lumprj.routes.realstream :refer [realstream-routes]]
             [lumprj.routes.duty :refer [duty-routes]]
             [lumprj.routes.log :refer [log-routes]]
             [noir.util.middleware :as middleware]
@@ -65,7 +66,7 @@
 
 (def app (middleware/app-handler
            ;; add your application routes here
-           [user-routes server-routes home-routes duty-routes log-routes app-routes]
+           [user-routes server-routes realstream-routes home-routes duty-routes log-routes app-routes]
            ;; add custom middleware here
            :middleware [template-error-page]
            ;; add access rules here
