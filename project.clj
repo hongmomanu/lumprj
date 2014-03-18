@@ -8,6 +8,8 @@
    ;;[org.mariadb.jdbc/mariadb-java-client "1.1.5"]
    [mysql/mysql-connector-java "5.1.25"]
    ;;[self/sigar "1.6.4"]
+   [self/lumprj "1.0.6"]
+   [self/IPPlot "1.0.0"]
    [ch.ethz.ganymed/ganymed-ssh2 "261"]
    [clj-http "0.9.0"]
    [me.raynes/fs "1.4.5"]
@@ -36,6 +38,7 @@
             [lein-environ "0.4.0"]
             [ring-refresh "0.1.1"]
             [ring/ring-jetty-adapter "1.2.1"]
+            [lein-localrepo "0.5.3"]
             ]
   :ring {:handler lumprj.handler/app
          :init    lumprj.handler/init
@@ -78,4 +81,5 @@
   :java-source-paths ["src/lumprj/java" ] ; Java source is stored separately.
   ;;:native-path "native"
   ;;:resource-paths ["lib/*"]
+  ;;:library-path "lib"
   :min-lein-version "2.0.0")
