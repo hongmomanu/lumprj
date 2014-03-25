@@ -10,6 +10,7 @@
    ;;[self/sigar "1.6.4"]
    [self/lumprj "1.0.6"]
    [self/IPPlot "1.0.0"]
+   [clojurewerkz/quartzite "1.1.0"]
    [ch.ethz.ganymed/ganymed-ssh2 "261"]
    [clj-http "0.9.0"]
    [me.raynes/fs "1.4.5"]

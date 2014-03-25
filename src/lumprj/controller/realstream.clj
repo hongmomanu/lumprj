@@ -10,13 +10,38 @@
             [lumprj.funcs.realstream :as realstream]
             [me.raynes.fs :as fs]
             [noir.response :as resp]
+            [clojurewerkz.quartzite.scheduler :as qs]
+            [clojurewerkz.quartzite.triggers :as t]
+            [clojurewerkz.quartzite.jobs :as j]
+            [clojurewerkz.quartzite.jobs :refer [defjob]]
+            [clojurewerkz.quartzite.schedule.calendar-interval :refer [schedule with-interval-in-days with-interval-in-minutes]]
+
             )
+  )
+(defjob realstreamcacheJob
+  [ctx]
+  (println "Does nothing"))
+
+(defn makerealstreamcache []
+  (qs/initialize)
+  (qs/start)
+  (let [job (j/build
+              (j/of-type realstreamcacheJob)
+              (j/with-identity (j/key "jobs.noop.1")))
+        trigger (t/build
+                  (t/with-identity (t/key "triggers.1"))
+                  (t/start-now)
+                  (t/with-schedule (schedule
+                                     ;;(with-repeat-count 10)
+                                     (with-interval-in-minutes 1))))]
+    (qs/schedule job trigger))
+
   )
 
 (defn makerealstreamfile []
   (.start (new Thread (new LissClientReader "10.33.5.103" "rts" "rts"
-                                            "/home/jack/test/testnew.BJT" 30 "HAZ"
-                                            "")))
+                                            "/home/jack/test/testnew11111.BJT" 30 "NJD"
+                                            "testsS")))
   )
 
 (defn readsiglefilestream [filepath]
@@ -46,7 +71,10 @@
   ;  (println bis)
   ;  (.printMiniSeedRecordContents (new GenericMiniSeedRecordOutput) bis System/err)
   ;  )
-  (let [paths ["/home/jack/Downloads/ZJ_HAZ_BHN_0.mseed" "/home/jack/Downloads/ZJ_HAZ_BHE_1.mseed" "/home/jack/Downloads/ZJ_HAZ_BHZ_2.mseed"]]
+  (let [paths ["/home/jack/test/ZJ_HAZ_BHE_1.mseed"
+               "/home/jack/test/ZJ_HAZ_BHN_0.mseed"
+               "/home/jack/test/ZJ_HAZ_BHZ_2.mseed"
+               ]]
     (map #(into [] (readsiglefilestream %)) paths)
 
     )
