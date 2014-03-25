@@ -43,8 +43,10 @@
   (if (env :selmer-dev) (parser/cache-off!))
 
   (if-not (schema/initialized?) (schema/create-tables))
-  (realstream/makerealstreamcache) ;;生成数据缓存
+
   (server/update-ssh-list) ;;更新ssh列表
+  (schema/create-streamcache-table) ;;创建缓存表
+  (realstream/makerealstreamcache) ;;生成数据缓存
   (timbre/info "lumprj started successfully"))
 
 (defn destroy

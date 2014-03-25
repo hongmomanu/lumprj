@@ -18,9 +18,17 @@
 
             )
   )
+
+(declare getrealstreams)
 (defjob realstreamcacheJob
   [ctx]
-  (println "Does nothing"))
+  (println "Does nothing")
+  (let [data (getrealstreams)]
+    ;;(db/insert-streamcache data)
+    (println (db/get-streamcache))
+    )
+
+  )
 
 (defn makerealstreamcache []
   (qs/initialize)
@@ -60,6 +68,18 @@
 
 
 
+  )
+
+
+(defn getrealstreams []
+  (let [paths ["/home/jack/test/ZJ_HAZ_BHE_1.mseed"
+               "/home/jack/test/ZJ_HAZ_BHN_0.mseed"
+               "/home/jack/test/ZJ_HAZ_BHZ_2.mseed"
+               ]]
+    (concat (readsiglefilestream (nth paths 0)) (readsiglefilestream (nth paths 1)) (readsiglefilestream (nth paths 2)))
+    ;;(map #(into [] (readsiglefilestream %)) paths)
+
+    )
   )
 (defn readrealstream []
 

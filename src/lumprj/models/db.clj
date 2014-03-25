@@ -5,12 +5,16 @@
 
 (defdb db schema/db-spec-sqlite)
 (defdb dbmysql schema/db-mysql)
+(defdb memdb schema/db-h2-mem)
 
 
 
 (declare users dutyenum dutymission dutymissionhistory)
 
 
+(defentity streamcache
+  (database memdb)
+  )
 
 (defentity dutyenum
   (database db)
@@ -48,6 +52,17 @@
   (database db)
   )
 
+(defn insert-streamcache [caches]
+  (insert streamcache
+    (values caches)
+    )
+  )
+
+(defn get-streamcache []
+  (select streamcache
+    (fields :stationname :time)
+    )
+  )
 (defn create-user [user]
 
   (insert users

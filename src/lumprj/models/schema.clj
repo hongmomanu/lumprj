@@ -44,6 +44,10 @@
                      :subname (str datapath db-store-sqlite)
                      })
 
+(def db-h2-mem {:classname "org.h2.Driver"
+                :subprotocol "h2"
+                :subname "mem:session;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false" })
+
 
 (defn initialized?
   "checks to see if the database schema is present"
@@ -51,6 +55,19 @@
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
   ;;(create-stations-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
+  )
+
+
+
+(defn create-streamcache-table
+  []
+  (sql/with-connection db-h2-mem
+    (sql/create-table
+      :streamcache
+      [:data "nvarchar(5000)"]
+      [:stationname "nvarchar(20)"]
+      [:time "TIMESTAMP"]
+      ))
   )
 
 
