@@ -5,14 +5,14 @@
             [lumprj.util :as util]))
 
 (defn home-page []
-  (layout/render
-    "home.html" {:content (util/md->html "/md/success.md")}))
+  (resp/json {:success true :msg "启动成功"}
+    ))
 
 (defn about-page []
   (layout/render "about.html"))
 (comment "(defn home-page []
   (layout/render
-    'home.html' {:content (util/md->html '/md/docs.md')})")
+    'home.html' {:content (util/md->html '/md/docs.md')})");;(util/md->html "/md/success.md")
 
 (defroutes home-routes
 
