@@ -58,9 +58,40 @@
     )
   )
 
+(defn update-streamcache [caches]
+  (update streamcache
+    (set-fields caches)
+    (where {:time (:time caches) :stationname (:stationname caches)}
+      )
+    )
+  )
+
+(defn del-streamcache []
+  (delete streamcache
+    (where {:time [< (sqlfn DATEADD "MINUTE"  -3 (sqlfn now) )]})
+    )
+  )
+
+(defn has-streamcache [time stationname]
+
+  (select streamcache
+    (fields :stationname)
+    (where {:time time :stationname stationname}
+             )
+    )
+  )
 (defn get-streamcache []
   (select streamcache
     (fields :stationname :time)
+    (where (and {:time [<= (sqlfn now)]}
+             {:time [>= (sqlfn DATEADD "MINUTE"  -3 (sqlfn now) )]}
+             ))
+    )
+  )
+(defn get-streamcacheall[]
+  (select streamcache
+
+    (order :time)
     )
   )
 (defn create-user [user]
@@ -114,7 +145,7 @@
 (defn user-list []
   (select users
     (fields [:id :userid]  :id [:displayname :title] :displayname :username :telnum :password :admin)
-
+    ;(limit 1)
     )
   )
 

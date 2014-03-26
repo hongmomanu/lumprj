@@ -65,6 +65,7 @@
     (sql/create-table
       :streamcache
       [:data "nvarchar(5000)"]
+      [:zerocrossnum "int"]
       [:stationname "nvarchar(20)"]
       [:time "TIMESTAMP"]
       ))

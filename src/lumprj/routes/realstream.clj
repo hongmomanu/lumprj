@@ -19,6 +19,13 @@
 
     )
 
+  (GET "/readrealstreamfromcache" []
+
+
+    (resp/json {:success true :result (realstreammanager/readrealstreamfromcache)})
+
+    )
+
   (GET "/readrealstream" []
 
     (realstreammanager/makerealstreamfile)

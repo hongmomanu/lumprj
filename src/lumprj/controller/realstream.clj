@@ -20,12 +20,35 @@
   )
 
 (declare getrealstreams)
+
+(defn readrealstreamfromcache []
+  (map #(conj {:time (:time % )} {:stationname (:stationname %)}
+          {:data (read-string (:data %))}
+          {:zerocrossnum (:zerocrossnum %)}
+          )
+    (db/get-streamcacheall))
+  )
+
+(defn caculate-zerocross-num [data]
+  (count (for [x (range 0 (count data))
+        :let [y 0]
+        :when (and (> x 0) (< (* (nth data x)(nth data (- x 1))) 0))]
+    y))
+  )
+
 (defjob realstreamcacheJob
   [ctx]
-  (println "Does nothing")
+  (println "定时获取实时数据")
   (let [data (getrealstreams)]
+
+    (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
+                        (db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
+                                (db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %)))
+                   data))
     ;;(db/insert-streamcache data)
-    (println (db/get-streamcache))
+    (let [result (db/get-streamcache)]
+      (when (> 0 (count result)) (db/del-streamcache))
+      )
     )
 
   )

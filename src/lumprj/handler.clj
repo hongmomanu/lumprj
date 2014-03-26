@@ -77,5 +77,5 @@
            :access-rules []
            ;; serialize/deserialize the following data formats
            ;; available formats:
-           ;; :json :json-kw :yaml :yaml-kw :edn :yaml-in-html
+           ;; :json :json-kw :yaml :yaml-kw :edn :yaml-in-html :xml
            :formats [:json-kw :edn :json :jsonp]))
