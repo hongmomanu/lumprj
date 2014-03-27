@@ -8,6 +8,7 @@
    ;;[org.mariadb.jdbc/mariadb-java-client "1.1.5"]
    [mysql/mysql-connector-java "5.1.25"]
    ;;[self/sigar "1.6.4"]
+   [org.codehaus.castor/castor "1.2"]
    [self/lumprj "1.0.6"]
    [self/IPPlot "1.0.0"]
    [clojurewerkz/quartzite "1.1.0"]

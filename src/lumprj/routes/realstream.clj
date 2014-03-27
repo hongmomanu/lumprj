@@ -33,6 +33,10 @@
 
     )
 
+  (GET "/realstream/getrealstream" []
+    (realstreammanager/getstreamzerocross)
+    )
+
 
 )
 

@@ -2,7 +2,8 @@
   (:import (cn.org.gddsn.liss.client LissClient LissException LissTransferType)
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord GenericMiniSeedRecordOutput)
            (cn.org.gddsn.liss.util LissClientReader)
-           (java.io FileInputStream BufferedInputStream)
+           (java.io FileInputStream BufferedInputStream PushbackInputStream)
+           (cn.org.gddsn.jopens.entity.seed Dataless)
 
            )
   (:use compojure.core)
@@ -19,8 +20,73 @@
             )
   )
 
-(declare getrealstreams)
+(declare getrealstreams readrealstreamfromcache)
 
+
+
+(defn average [coll]
+
+  (let [sum (apply + coll)]
+    (quot sum (count coll))))
+
+(defn make-average-type [type data]
+  (average(map #(:zerocrossnum %) (filter (fn [x]
+                                            (> (.indexOf (:stationname x) type) 0))
+                                    data
+                                    )))
+
+  )
+
+(defn getstreamzerocross-fn [station]
+
+
+  (let [
+        alldata   (reverse (readrealstreamfromcache))
+        stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
+        sub  (take-last (quot  (count alldata) 2) stationdata)
+        last (take  (quot  (count alldata) 2) stationdata )
+        ]
+
+                          {
+                            :crossavgbhe (make-average-type "BHE" sub)
+                            :crossavgbhz (make-average-type "BHZ" sub)
+                            :crossavgbhn (make-average-type "BHN" sub)
+                            :crossnowbhe (make-average-type "BHE" last)
+                            :crossnowbhz (make-average-type "BHZ" last)
+                            :crossnowbhn (make-average-type "BHN" last)
+                            :stationname (:stationname station)
+                            :stationcode (:stationcode station)
+                            :time  (:time (first stationdata))
+                           }
+
+    )
+  )
+;;读取头文件
+(defn dataless []
+  (let [in (new FileInputStream "/home/jack/test/ZJ.201402130341.0002.seed" )
+        dl (new Dataless)
+        ]
+    (.readSeedVolumeDataless dl (new PushbackInputStream in 4096))
+    (.close in)
+    (let [
+           station (-> (.getSeedConfig dl) (.getStation)(.get 0))
+           channel (-> (.getChannel station)(.get 0))
+
+           ]
+      ;(println (-> (.getResponse channel)(.get 0) (.getBlockette061)))
+      )
+
+    )
+
+  )
+
+(defn getstreamzerocross []
+
+
+  (resp/json {:success true
+              :results  (map getstreamzerocross-fn  (db/stationcode-list))
+              }   )
+  )
 (defn readrealstreamfromcache []
   (map #(conj {:time (:time % )} {:stationname (:stationname %)}
           {:data (read-string (:data %))}
@@ -114,7 +180,8 @@
   ;  (println bis)
   ;  (.printMiniSeedRecordContents (new GenericMiniSeedRecordOutput) bis System/err)
   ;  )
-  (let [paths ["/home/jack/test/ZJ_HAZ_BHE_1.mseed"
+  (let [paths [
+               "/home/jack/test/ZJ_HAZ_BHE_1.mseed"
                "/home/jack/test/ZJ_HAZ_BHN_0.mseed"
                "/home/jack/test/ZJ_HAZ_BHZ_2.mseed"
                ]]

@@ -237,7 +237,7 @@
 
 (defn stationcode-list []
   (select stations
-    (fields :stationcode)
+    (fields :stationcode :stationname)
     )
   )
 (defn stations-list [keyword starts limits]

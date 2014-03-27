@@ -16,7 +16,7 @@
   (let [
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
-    (if(.decompress gmsRec updata)(println "ok")(println "error"))
+    (if(.decompress gmsRec updata)()())
 
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
