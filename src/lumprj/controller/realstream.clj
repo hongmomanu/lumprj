@@ -93,13 +93,15 @@
   (let [seedplugin (new SeedVolumeNativePlugin)
         ]
     (.setFile  seedplugin (new File "/home/jack/test/ZJ.201402130341.0002.seed"))
-    (let [
-           gmsRec (.getNextMiniSeedData seedplugin)
-           updata (.getNumSamples gmsRec)]
+    (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
+      (if (nil? gmsRec)
+        (println "解码完成la")
+        (recur (.getNextMiniSeedData seedplugin) (println (.getChannel gmsRec))  )))
 
-      (println (into [] (.getData gmsRec)))
-      (println "解码完成lawwwlassss")
-      )
+    ;;(while (let [gmsRec (.getNextMiniSeedData seedplugin)](not (nil? gmsRec)))
+    ;;  (println (.getChannel gmsRec)))
+    ;;(println "解码完成la")
+
     ;;(.readEvtFile seedvolume "/home/jack/test/ZJ.201402130341.0002.seed")
     )
 
