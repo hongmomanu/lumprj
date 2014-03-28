@@ -9,6 +9,7 @@
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
             [lumprj.funcs.realstream :as realstream]
+            [lumprj.funcs.conmmon :as conmmon]
             [me.raynes.fs :as fs]
             [noir.response :as resp]
             [clojurewerkz.quartzite.scheduler :as qs]
@@ -24,13 +25,10 @@
 
 
 
-(defn average [coll]
 
-  (let [sum (apply + coll)]
-    (quot sum (count coll))))
 
 (defn make-average-type [type data]
-  (average(map #(:zerocrossnum %) (filter (fn [x]
+  (conmmon/average(map #(:zerocrossnum %) (filter (fn [x]
                                             (> (.indexOf (:stationname x) type) 0))
                                     data
                                     )))
@@ -77,6 +75,22 @@
       )
 
     )
+
+  )
+;根据震中获取样本数据
+(defn get-epicenter-sampledata [epicenter]
+  (readrealstreamfromcache)
+  )
+
+;;相关分析业务
+(defn realstreamrelations []
+  (let [sampledata (:data (first (get-epicenter-sampledata "test")))
+        realstreamdata (:data (first (readrealstreamfromcache)))
+        ]
+
+    (resp/json {:success true :reation (realstream/correlation-analysis realstreamdata 0 sampledata 0 300)})
+    )
+
 
   )
 
