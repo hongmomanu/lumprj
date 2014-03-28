@@ -2,8 +2,11 @@
   (:import (cn.org.gddsn.liss.client LissClient LissException LissTransferType)
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord GenericMiniSeedRecordOutput)
            (cn.org.gddsn.liss.util LissClientReader)
-           (java.io FileInputStream BufferedInputStream PushbackInputStream)
+           (java.io FileInputStream BufferedInputStream PushbackInputStream File)
+           (java.util HashSet)
+           (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
+           (cn.org.gddsn.jopens.client SeedVolumeImporter Migration)
 
            )
   (:use compojure.core)
@@ -36,6 +39,7 @@
   )
 
 (defn getstreamzerocross-fn [station]
+  ;(.importIt (new SeedVolumeImporter)  (new FileInputStream "/home/jack/test/ZJ.201402130341.0002.seed"))
 
 
   (let [
@@ -84,11 +88,27 @@
 
 ;;相关分析业务
 (defn realstreamrelations []
+
+
+  (let [seedplugin (new SeedVolumeNativePlugin)
+        ]
+    (.setFile  seedplugin (new File "/home/jack/test/ZJ.201402130341.0002.seed"))
+    (let [
+           gmsRec (.getNextMiniSeedData seedplugin)
+           updata (.getNumSamples gmsRec)]
+
+      (println (into [] (.getData gmsRec)))
+      (println "解码完成lawwwlassss")
+      )
+    ;;(.readEvtFile seedvolume "/home/jack/test/ZJ.201402130341.0002.seed")
+    )
+
+
   (let [sampledata (:data (first (get-epicenter-sampledata "test")))
         realstreamdata (:data (first (readrealstreamfromcache)))
         ]
 
-    (resp/json {:success true :reation (realstream/correlation-analysis realstreamdata 0 sampledata 0 300)})
+    (resp/json {:success true :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 300) (range 0 1))})
     )
 
 
