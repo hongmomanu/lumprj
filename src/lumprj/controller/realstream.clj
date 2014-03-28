@@ -96,7 +96,7 @@
     (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
       (if (nil? gmsRec)
         (println "解码完成la")
-        (recur (.getNextMiniSeedData seedplugin) (println (.getChannel gmsRec))  )))
+        (recur (.getNextMiniSeedData seedplugin) (println (.getChannel gmsRec) (.getStation gmsRec))  )))
 
     ;;(while (let [gmsRec (.getNextMiniSeedData seedplugin)](not (nil? gmsRec)))
     ;;  (println (.getChannel gmsRec)))
