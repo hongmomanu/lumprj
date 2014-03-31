@@ -2,8 +2,8 @@
   (:import (cn.org.gddsn.liss.client LissClient LissException LissTransferType)
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord GenericMiniSeedRecordOutput)
            (cn.org.gddsn.liss.util LissClientReader)
-           (java.io FileInputStream BufferedInputStream PushbackInputStream File)
-           (java.util HashSet)
+           (java.io FileInputStream BufferedInputStream PushbackInputStream File DataInputStream)
+           (java.util HashSet Date)
            (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
            (cn.org.gddsn.jopens.client SeedVolumeImporter Migration)
@@ -15,6 +15,7 @@
             [lumprj.funcs.conmmon :as conmmon]
             [me.raynes.fs :as fs]
             [noir.response :as resp]
+            [taoensso.timbre :as timbre]
             [clojurewerkz.quartzite.scheduler :as qs]
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.jobs :as j]
@@ -26,7 +27,12 @@
 
 (declare getrealstreams readrealstreamfromcache)
 
-
+(def REAL_STREAM_CLIENT (atom {
+                                ;;:client (new LissClient "10.33.5.103" 5000)
+                                :ip  "10.33.5.103"
+                                :timelong 60
+                                :user "rts"
+                                :pass "rts"}))
 
 
 
@@ -138,20 +144,65 @@
     y))
   )
 
-(defjob realstreamcacheJob
-  [ctx]
-  (println "定时获取实时数据")
-  (let [data (getrealstreams)]
-
-    (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
-                        (db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
-                                (db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %)))
-                   data))
-    ;;(db/insert-streamcache data)
-    (let [result (db/get-streamcache)]
-      (when (> 0 (count result)) (db/del-streamcache))
-      )
+(defn realstreamcacheJob-child-dataprocess [data]
+  (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
+                (db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
+                (db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %)))
+          data))
+  ;;(db/insert-streamcache data)
+  (let [result (db/get-streamcache)]
+    (when (> 0 (count result)) (db/del-streamcache))
     )
+  )
+
+(defjob realstreamcacheJob
+  [ctx]    ;;realstreamcacheJob
+  (println "定时获取实时数据")
+  (let [data  (getrealstreams)] ;;(getrealstreams)
+
+    (realstreamcacheJob-child-dataprocess data)
+
+    )
+  )
+
+(defn realstream-nofile-Job
+  [ctx]
+
+  (try
+    (let [lissClient (:client @REAL_STREAM_CLIENT)
+          lissInputStream  (new DataInputStream (.retrieveRealTimeStream lissClient (into-array (map #(:stationcode %) (db/stationcode-list)))))
+          buf  (byte-array 512)
+          firstTime (new Date)
+          ]
+      (.login lissClient (:user @REAL_STREAM_CLIENT) (:pass @REAL_STREAM_CLIENT))
+      (timbre/info (str "Logged into Server: " (:ip @REAL_STREAM_CLIENT)))
+      (.setType lissClient LissTransferType/BINARY)
+      (.setRtServerPassiveMode lissClient false)
+      (timbre/info "Enter the passive transport mod")
+      (timbre/info (str "Retrieving  MiniSeed data from " (:ip @REAL_STREAM_CLIENT)))
+
+      (loop [nCurrent 0 test 1]
+        (if (< (:timelong @REAL_STREAM_CLIENT) nCurrent)
+          (do
+            (timbre/info "读取数据完成")
+            ;(.abortRealTimeStreamTransport lissClient)
+            ;(.quit lissClient)
+            )
+          (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
+            (
+              do
+              (.readFully lissInputStream buf)
+              (GenericMiniSeedRecord/buildMiniSeedRecord buf)
+              (realstreamcacheJob-child-dataprocess (map #(realstream/decodeminirtdata % buf (byte-array 512) 512)  (take 1 (iterate inc 0) ) ))
+
+              )  )))
+
+      )
+    true
+    (catch Exception e false)
+    )
+
+
 
   )
 
@@ -175,6 +226,44 @@
   (.start (new Thread (new LissClientReader "10.33.5.103" "rts" "rts"
                                             "/home/jack/test/testnew11111.BJT" 30 "NJD"
                                             "testsS")))
+  )
+
+(defn makerealstream-nofile [ip  user pass timelong stnCodes]
+  (try
+    (let [lissClient (new LissClient ip 5000)
+          lissInputStream  (new DataInputStream (.retrieveRealTimeStream lissClient stnCodes))
+          buf  (byte-array 512)
+          firstTime (new Date)
+          ]
+      (.login lissClient user pass)
+      (timbre/info (str "Logged into Server: " ip))
+      (.setType lissClient LissTransferType/BINARY)
+      (.setRtServerPassiveMode lissClient false)
+      (timbre/info "Enter the passive transport mod")
+      (timbre/info (str "Retrieving  MiniSeed data from " ip))
+
+      (loop [nCurrent 0 test 1]
+        (if (< timelong nCurrent)
+          (do
+            (timbre/info "读取数据完成")
+            (.abortRealTimeStreamTransport lissClient)
+            (.quit lissClient)
+            )
+          (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
+            (
+                do
+                (.readFully lissInputStream buf)
+                (GenericMiniSeedRecord/buildMiniSeedRecord buf)
+              (doall (map #(realstream/decodeminirtdata % buf (byte-array 512) 512)  (take 1 (iterate inc 0) ) ))
+
+            )  )))
+
+      )
+    true
+    (catch Exception e false)
+    )
+
+
   )
 
 (defn readsiglefilestream [filepath]
