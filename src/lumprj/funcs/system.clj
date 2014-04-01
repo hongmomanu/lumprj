@@ -31,11 +31,13 @@
 (defn checkappname-old [ip appname]
   (let [connect (new Connection ip)
         ]
-    (.connect connect)
+    (.connect connect nil 100 0)
+    (println 1)
     (.authenticateWithPassword connect "jack" "shayu626")
     ( let [
             sess  (.openSession connect)
             ]
+      (println 2)
       (.execCommand sess (str "pidof " appname))
 
       (if (> (count (line-seq (new BufferedReader
@@ -57,7 +59,9 @@
   (let [connect (new Connection ip)
         ]
     (try
-      (.connect connect)
+      (println 1)
+      (.connect connect nil 100 0)
+      (println 2)
       (if (true? (.authenticateWithPassword connect username password)) (assoc {} (read-string (str ":" ip)) connect){})
       (catch Exception e {})
       )

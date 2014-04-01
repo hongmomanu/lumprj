@@ -14,19 +14,35 @@
 ;;解码minidata
 (defn decodeminirtdata  [x bis buf recLen]
   (.read bis buf 0 recLen)
-
   (let [
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
     (if(.decompress gmsRec updata)()())
-
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
      :time (.getStartTime gmsRec)
+     :edtime (.getEndTime gmsRec)
      }
     )
 
   )
+
+;;解码minidata
+(defn decodeminirtbufdata  [x  buf]
+  (let [
+         gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
+         updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
+    (if(.decompress gmsRec updata)()())
+    {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
+     :data (into [] updata)
+     :time (.getStartTime gmsRec)
+     :edtime (.getEndTime gmsRec)
+     }
+    )
+
+  )
+
+
 ;;相关分析
 (defn correlation-analysis [reallist realbegin samplelist samplebegin len ]
 

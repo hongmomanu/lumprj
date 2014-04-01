@@ -4,6 +4,7 @@
            (cn.org.gddsn.liss.util LissClientReader)
            (java.io FileInputStream BufferedInputStream PushbackInputStream File DataInputStream)
            (java.util HashSet Date)
+           (java.sql Timestamp)
            (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
            (cn.org.gddsn.jopens.client SeedVolumeImporter Migration)
@@ -28,9 +29,10 @@
 (declare getrealstreams readrealstreamfromcache)
 
 (def REAL_STREAM_CLIENT (atom {
-                                ;;:client (new LissClient "10.33.5.103" 5000)
+
                                 :ip  "10.33.5.103"
-                                :timelong 60
+                                :port 5000
+                                :timelong 61
                                 :user "rts"
                                 :pass "rts"}))
 
@@ -46,7 +48,7 @@
 
 (defn getstreamzerocross-fn [station]
   ;(.importIt (new SeedVolumeImporter)  (new FileInputStream "/home/jack/test/ZJ.201402130341.0002.seed"))
-
+  ;;(println (readrealstreamfromcache))
 
   (let [
         alldata   (reverse (readrealstreamfromcache))
@@ -89,28 +91,13 @@
   )
 ;根据震中获取样本数据
 (defn get-epicenter-sampledata [epicenter]
-  (readrealstreamfromcache)
+  ;;(println (db/get))
+  ;;(readrealstreamfromcache)
+  (readsamplestreamcache)
   )
 
 ;;相关分析业务
 (defn realstreamrelations []
-
-
-  (let [seedplugin (new SeedVolumeNativePlugin)
-        ]
-    (.setFile  seedplugin (new File "/home/jack/test/ZJ.201402130341.0002.seed"))
-    (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
-      (if (nil? gmsRec)
-        (println "解码完成la")
-        (recur (.getNextMiniSeedData seedplugin) (println (.getChannel gmsRec) (.getStation gmsRec))  )))
-
-    ;;(while (let [gmsRec (.getNextMiniSeedData seedplugin)](not (nil? gmsRec)))
-    ;;  (println (.getChannel gmsRec)))
-    ;;(println "解码完成la")
-
-    ;;(.readEvtFile seedvolume "/home/jack/test/ZJ.201402130341.0002.seed")
-    )
-
 
   (let [sampledata (:data (first (get-epicenter-sampledata "test")))
         realstreamdata (:data (first (readrealstreamfromcache)))
@@ -123,18 +110,28 @@
   )
 
 (defn getstreamzerocross []
-
-
+  ;;(println (db/stationcode-list))
   (resp/json {:success true
               :results  (map getstreamzerocross-fn  (db/stationcode-list))
               }   )
   )
 (defn readrealstreamfromcache []
-  (map #(conj {:time (:time % )} {:stationname (:stationname %)}
+  (map #(conj {:time (:time % )}
+          {:edtime (:edtime % )}
+          {:stationname (:stationname %)}
           {:data (read-string (:data %))}
           {:zerocrossnum (:zerocrossnum %)}
           )
     (db/get-streamcacheall))
+  )
+
+(defn readsamplestreamcache []
+  (map #(conj
+          {:stationname (:stationname %)}
+          {:data (read-string (:data %))}
+          {:edtime (:edtime %)}
+          {:time (:time %)}
+          ) (db/get-samplecache))
   )
 
 (defn caculate-zerocross-num [data]
@@ -151,8 +148,13 @@
           data))
   ;;(db/insert-streamcache data)
   (let [result (db/get-streamcache)]
-    (when (> 0 (count result)) (db/del-streamcache))
+    (println (>  (count result) 0))
+    (when (>  (count result) 0) (db/del-streamcache))
     )
+  )
+
+(defn sampledata-child-process [data]
+  (db/insert-samplecache  data)
   )
 
 (defjob realstreamcacheJob
@@ -165,37 +167,44 @@
     )
   )
 
-(defn realstream-nofile-Job
+(defjob realstream-nofile-Job
   [ctx]
-
+  (println "定时获取实时数据la")
   (try
-    (let [lissClient (:client @REAL_STREAM_CLIENT)
-          lissInputStream  (new DataInputStream (.retrieveRealTimeStream lissClient (into-array (map #(:stationcode %) (db/stationcode-list)))))
+    (let [lissClient (new LissClient (:ip @REAL_STREAM_CLIENT) (:port @REAL_STREAM_CLIENT))
           buf  (byte-array 512)
           firstTime (new Date)
           ]
+
       (.login lissClient (:user @REAL_STREAM_CLIENT) (:pass @REAL_STREAM_CLIENT))
       (timbre/info (str "Logged into Server: " (:ip @REAL_STREAM_CLIENT)))
+
       (.setType lissClient LissTransferType/BINARY)
       (.setRtServerPassiveMode lissClient false)
       (timbre/info "Enter the passive transport mod")
       (timbre/info (str "Retrieving  MiniSeed data from " (:ip @REAL_STREAM_CLIENT)))
+      (let [lissInputStream  (new DataInputStream (.retrieveRealTimeStream lissClient (into-array (map #(:stationcode %) (db/stationcode-list)))))]
 
-      (loop [nCurrent 0 test 1]
-        (if (< (:timelong @REAL_STREAM_CLIENT) nCurrent)
-          (do
-            (timbre/info "读取数据完成")
-            ;(.abortRealTimeStreamTransport lissClient)
-            ;(.quit lissClient)
-            )
-          (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
+        (loop [nCurrent 0 test 1]
+
+          (if (< (:timelong @REAL_STREAM_CLIENT) nCurrent)
             (
               do
-              (.readFully lissInputStream buf)
-              (GenericMiniSeedRecord/buildMiniSeedRecord buf)
-              (realstreamcacheJob-child-dataprocess (map #(realstream/decodeminirtdata % buf (byte-array 512) 512)  (take 1 (iterate inc 0) ) ))
+              (timbre/info "读取数据完成")
+              (.abortRealTimeStreamTransport lissClient)
+              (.quit lissClient)
+              )
+            (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
+              (
+                do
+                (println "读取数据中...")
+                (.readFully lissInputStream buf)
+                (GenericMiniSeedRecord/buildMiniSeedRecord buf)
+                (realstreamcacheJob-child-dataprocess
+                  (doall (map #(realstream/decodeminirtbufdata % buf)  (take 1 (iterate inc 0) ) )))
+                )  )))
 
-              )  )))
+        )
 
       )
     true
@@ -207,10 +216,13 @@
   )
 
 (defn makerealstreamcache []
+
+
+
   (qs/initialize)
   (qs/start)
   (let [job (j/build
-              (j/of-type realstreamcacheJob)
+              (j/of-type  realstreamcacheJob);realstream-nofile-Job
               (j/with-identity (j/key "jobs.noop.1")))
         trigger (t/build
                   (t/with-identity (t/key "triggers.1"))
@@ -222,9 +234,27 @@
 
   )
 
+(defn make-sampledata-cache []
+
+  (let [seedplugin (new SeedVolumeNativePlugin)
+        ]
+    (.setFile  seedplugin (new File "/home/jack/test/ZJ.201402130341.0002.seed"))
+    (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
+      (if (nil? gmsRec)
+        (println "解码完成la")
+        (recur (.getNextMiniSeedData seedplugin)
+          (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
+                                     :data (into [] (.getData gmsRec))
+                                     :time (new Timestamp (* (long (.getStartTime gmsRec)) 1000))
+                                     :edtime (new Timestamp (* (long (.getEndTime gmsRec)) 1000))
+                                     }   ))) )
+
+    )
+  )
+
 (defn makerealstreamfile []
   (.start (new Thread (new LissClientReader "10.33.5.103" "rts" "rts"
-                                            "/home/jack/test/testnew11111.BJT" 30 "NJD"
+                                            "/home/jack/test/testnew11111.HAZ" 30 "HAZ"
                                             "testsS")))
   )
 

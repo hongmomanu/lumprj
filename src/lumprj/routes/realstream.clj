@@ -40,6 +40,9 @@
   (GET "/realstream/realstreamrelations" []
     (realstreammanager/realstreamrelations)
     )
+  (GET "/realstream/samplescache" []
+    (resp/json {:success true :result (realstreammanager/readsamplestreamcache)})
+    )
 
 
 )

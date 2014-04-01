@@ -15,6 +15,9 @@
 (defentity streamcache
   (database memdb)
   )
+(defentity samplecache
+  (database memdb)
+  )
 
 (defentity dutyenum
   (database db)
@@ -58,6 +61,12 @@
     )
   )
 
+(defn insert-samplecache [caches]
+  (insert samplecache
+    (values caches)
+    )
+  )
+
 (defn update-streamcache [caches]
   (update streamcache
     (set-fields caches)
@@ -67,6 +76,7 @@
   )
 
 (defn del-streamcache []
+
   (delete streamcache
     (where {:time [< (sqlfn DATEADD "MINUTE"  -3 (sqlfn now) )]})
     )
@@ -93,6 +103,9 @@
 
     (order :time)
     )
+  )
+(defn get-samplecache []
+  (select samplecache)
   )
 (defn create-user [user]
 

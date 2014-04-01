@@ -68,6 +68,21 @@
       [:zerocrossnum "int"]  ;零交点数目
       [:stationname "nvarchar(20)"]   ;台站名
       [:time "TIMESTAMP"]    ;时间
+      [:edtime "TIMESTAMP"]    ;结束时间
+      ))
+  )
+
+
+;;样本数据缓存表
+(defn create-samplecache-table
+  []
+  (sql/with-connection db-h2-mem
+    (sql/create-table
+      :samplecache
+      [:data "nvarchar(50000)"] ;数据
+      [:stationname "nvarchar(20)"]   ;台站名
+      [:time "TIMESTAMP"]    ;时间
+      [:edtime "TIMESTAMP"]    ;结束时间
       ))
   )
 
