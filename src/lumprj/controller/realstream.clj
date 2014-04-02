@@ -113,13 +113,13 @@
 ;;相关分析业务
 (defn realstreamrelations []
 
-  (let [sampledata (get-epicenter-sampledata "test"  "2014-03-06 00:02:20.85" "ZHNZ/BHZ")
-        realstreamdata (get-epicenter-sampledata "test"  "2014-03-08 22:00:08.93" "ZHNZ/BHZ") ;(:data (first (readrealstreamfromcache)))
+  (let [sampledata (get-epicenter-sampledata "test"  "2014-03-06 00:02:16.64" "QIY/BHZ")
+        realstreamdata (get-epicenter-sampledata "test"  "2014-03-08 22:00:04.74" "QIY/BHZ") ;(:data (first (readrealstreamfromcache)))
         ]
 
     (resp/json {
                  :success true
-                :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 700) (range 0 10))
+                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 500) (range 0 3))
                 })
 
     )
@@ -170,10 +170,17 @@
   (db/insert-streamcache (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))) )
   )
 
+(defn realstream-data-update-func [data]
+  ;;(println (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))))
+  (map #(db/update-streamcache %) (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))) )
+  )
+
+
 (defn realstreamcacheJob-child-dataprocess [data]
   (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
-                (db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
+                ;(db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
                 ;(db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
+                (realstream-data-update-func %)
                 (realstream-data-func %)
                 )
           data))

@@ -56,7 +56,7 @@
   )
 
 (defn insert-streamcache [caches]
-  (println caches)
+  ;;(println caches)
   (insert streamcache
     (values caches)
     )
@@ -119,7 +119,7 @@
     )
   )
 (defn get-samplecache [starttime station]
-  (println starttime station)
+  ;(println starttime station)
   (select samplecache
     ;(fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT+") :time]
     ;         [(sqlfn FORMATDATETIME :edtime "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT") :edtime]
