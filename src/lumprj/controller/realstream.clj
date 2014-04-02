@@ -3,8 +3,9 @@
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord GenericMiniSeedRecordOutput)
            (cn.org.gddsn.liss.util LissClientReader)
            (java.io FileInputStream BufferedInputStream PushbackInputStream File DataInputStream)
-           (java.util HashSet Date)
+           (java.util HashSet Date Calendar)
            (java.sql Timestamp)
+           ;;(edu.iris.timeutils TimeStamp)
            (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
            (cn.org.gddsn.jopens.client SeedVolumeImporter Migration)
@@ -26,7 +27,8 @@
             )
   )
 
-(declare getrealstreams readrealstreamfromcache)
+(declare getrealstreams readrealstreamfromcache readsamplestreamcache
+  make-milltime-data make-milltime-data-cross readrealstreamfromcacheall-filter)
 
 (def REAL_STREAM_CLIENT (atom {
 
@@ -46,27 +48,39 @@
 
   )
 
+(defn make-average-no-type [data]
+  (conmmon/average(map #(:zerocrossnum %) data))
+  )
+
+
 (defn getstreamzerocross-fn [station]
   ;(.importIt (new SeedVolumeImporter)  (new FileInputStream "/home/jack/test/ZJ.201402130341.0002.seed"))
   ;;(println (readrealstreamfromcache))
 
+
   (let [
-        alldata   (reverse (readrealstreamfromcache))
-        stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
-        sub  (take-last (quot  (count alldata) 2) stationdata)
-        last (take  (quot  (count alldata) 2) stationdata )
+        alldata-bhe   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHE")))
+        alldata-bhz   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHZ")))
+        alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHN")))
+        ;;stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
+        bhesub  (take-last (quot  (count alldata-bhe) 2) alldata-bhe)
+        bhelast (take  (quot  (count alldata-bhe) 2) alldata-bhe)
+        bhzsub  (take-last (quot  (count alldata-bhz) 2) alldata-bhz)
+        bhzlast (take  (quot  (count alldata-bhz) 2) alldata-bhz)
+        bhnsub  (take-last (quot  (count alldata-bhz) 2) alldata-bhn)
+        bhnlast (take  (quot  (count alldata-bhz) 2) alldata-bhn)
         ]
 
                           {
-                            :crossavgbhe (make-average-type "BHE" sub)
-                            :crossavgbhz (make-average-type "BHZ" sub)
-                            :crossavgbhn (make-average-type "BHN" sub)
-                            :crossnowbhe (make-average-type "BHE" last)
-                            :crossnowbhz (make-average-type "BHZ" last)
-                            :crossnowbhn (make-average-type "BHN" last)
+                            :crossavgbhe (make-average-no-type bhesub)
+                            :crossavgbhz (make-average-no-type bhzsub)
+                            :crossavgbhn (make-average-no-type bhnsub)
+                            :crossnowbhe (make-average-no-type bhelast)
+                            :crossnowbhz (make-average-no-type bhzlast)
+                            :crossnowbhn (make-average-no-type bhnlast)
                             :stationname (:stationname station)
                             :stationcode (:stationcode station)
-                            :time  (:time (first stationdata))
+                            :time  (:time (first bhesub))
                            }
 
     )
@@ -90,20 +104,24 @@
 
   )
 ;根据震中获取样本数据
-(defn get-epicenter-sampledata [epicenter]
+(defn get-epicenter-sampledata [epicenter time station]
   ;;(println (db/get))
   ;;(readrealstreamfromcache)
-  (readsamplestreamcache)
+  (readsamplestreamcache time station)
   )
 
 ;;相关分析业务
 (defn realstreamrelations []
 
-  (let [sampledata (:data (first (get-epicenter-sampledata "test")))
-        realstreamdata (:data (first (readrealstreamfromcache)))
+  (let [sampledata (get-epicenter-sampledata "test"  "2014-03-06 00:02:20.85" "ZHNZ/BHZ")
+        realstreamdata (get-epicenter-sampledata "test"  "2014-03-08 22:00:08.93" "ZHNZ/BHZ") ;(:data (first (readrealstreamfromcache)))
         ]
 
-    (resp/json {:success true :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 300) (range 0 1))})
+    (resp/json {
+                 :success true
+                :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 700) (range 0 10))
+                })
+
     )
 
 
@@ -115,23 +133,29 @@
               :results  (map getstreamzerocross-fn  (db/stationcode-list))
               }   )
   )
-(defn readrealstreamfromcache []
+
+(defn readrealstreamfromcacheall-filter [stationname]
+  (map #(conj {:time (:time % )}
+          {:stationname (:stationname %)}
+          {:data (read-string (:data %))}
+          {:zerocrossnum (:zerocrossnum %)}
+          )
+    (db/get-streamcacheall-data stationname))
+  )
+(defn readrealstreamfromcache [time station]
   (map #(conj {:time (:time % )}
           {:edtime (:edtime % )}
           {:stationname (:stationname %)}
           {:data (read-string (:data %))}
           {:zerocrossnum (:zerocrossnum %)}
           )
-    (db/get-streamcacheall))
+    (db/get-streamcacheall time station))
   )
 
-(defn readsamplestreamcache []
-  (map #(conj
-          {:stationname (:stationname %)}
-          {:data (read-string (:data %))}
-          {:edtime (:edtime %)}
-          {:time (:time %)}
-          ) (db/get-samplecache))
+(defn readsamplestreamcache [time station]
+  ;;(println time station)
+  ;;(println (db/get-samplecache time station))
+  (map #(read-string (:data %)) (db/get-samplecache time station))
   )
 
 (defn caculate-zerocross-num [data]
@@ -141,20 +165,46 @@
     y))
   )
 
+(defn realstream-data-func [data]
+  ;;(println (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))))
+  (db/insert-streamcache (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))) )
+  )
+
 (defn realstreamcacheJob-child-dataprocess [data]
   (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
                 (db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
-                (db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %)))
+                ;(db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
+                (realstream-data-func %)
+                )
           data))
   ;;(db/insert-streamcache data)
   (let [result (db/get-streamcache)]
-    (println (>  (count result) 0))
+    ;(println (>  (count result) 0))
     (when (>  (count result) 0) (db/del-streamcache))
     )
   )
+(defn make-milltime-data [data time n]
+  (let [cal (Calendar/getInstance)]
+    (.setTimeInMillis cal (.getTime time))
+    (.add cal Calendar/MILLISECOND (* 10 n))
+    {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n) :stationname (:stationname data) }
+    )
 
+  )
+(defn make-milltime-data-cross [data time n]
+  (let [cal (Calendar/getInstance)]
+    (.setTimeInMillis cal (.getTime (Timestamp/valueOf time)))
+    (.add cal Calendar/MILLISECOND (* 10 n))
+    {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n)
+     :stationname (:stationname data)
+     :zerocrossnum (caculate-zerocross-num (:data data))
+     }
+    )
+
+  )
 (defn sampledata-child-process [data]
-  (db/insert-samplecache  data)
+  ;(println (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
+  (db/insert-samplecache  (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
   )
 
 (defjob realstreamcacheJob
@@ -222,7 +272,7 @@
   (qs/initialize)
   (qs/start)
   (let [job (j/build
-              (j/of-type  realstreamcacheJob);realstream-nofile-Job
+              (j/of-type  realstreamcacheJob);realstream-nofile-Job realstreamcacheJob
               (j/with-identity (j/key "jobs.noop.1")))
         trigger (t/build
                   (t/with-identity (t/key "triggers.1"))
@@ -235,21 +285,35 @@
   )
 
 (defn make-sampledata-cache []
+  (let [path ["/home/jack/test/ZJ.201403060002.0005.seed"
+              "/home/jack/test/ZJ.201403082200.0005.seed"
+              ]]
+    (doall(map #(let [seedplugin (new SeedVolumeNativePlugin)
+                ]
+            (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
+            (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
+              (if (nil? gmsRec)
+                (println "解码完成la")
+                (recur (.getNextMiniSeedData seedplugin)
+                  (
+                    do
+                    ;(println (.getStartTimes gmsRec))
 
-  (let [seedplugin (new SeedVolumeNativePlugin)
-        ]
-    (.setFile  seedplugin (new File "/home/jack/test/ZJ.201402130341.0002.seed"))
-    (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
-      (if (nil? gmsRec)
-        (println "解码完成la")
-        (recur (.getNextMiniSeedData seedplugin)
-          (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
-                                     :data (into [] (.getData gmsRec))
-                                     :time (new Timestamp (* (long (.getStartTime gmsRec)) 1000))
-                                     :edtime (new Timestamp (* (long (.getEndTime gmsRec)) 1000))
-                                     }   ))) )
+                    ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
+                    ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
+                    ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
+
+                    (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
+                                             :data (into [] (.getData gmsRec))
+                                             :time (new Timestamp (* (.getStartTime gmsRec) 1000))
+                                             :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
+                                             }   )))) )
+
+            ) path))
 
     )
+
+
   )
 
 (defn makerealstreamfile []

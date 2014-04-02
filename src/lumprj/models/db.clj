@@ -56,6 +56,7 @@
   )
 
 (defn insert-streamcache [caches]
+  (println caches)
   (insert streamcache
     (values caches)
     )
@@ -63,7 +64,7 @@
 
 (defn insert-samplecache [caches]
   (insert samplecache
-    (values caches)
+    (values  caches )
     )
   )
 
@@ -98,14 +99,37 @@
              ))
     )
   )
-(defn get-streamcacheall[]
-  (select streamcache
 
+(defn get-streamcacheall-data [station]
+  (select streamcache
+    (where
+      {:stationname  station}
+      )
+    (order :time)
+    )
+
+  )
+
+(defn get-streamcacheall[starttime station]
+  (select streamcache
+    (where
+      {:stationname station  :time [>= starttime]}
+      )
     (order :time)
     )
   )
-(defn get-samplecache []
-  (select samplecache)
+(defn get-samplecache [starttime station]
+  (println starttime station)
+  (select samplecache
+    ;(fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT+") :time]
+    ;         [(sqlfn FORMATDATETIME :edtime "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT") :edtime]
+    ;         :stationname :data)
+    (where
+             {:stationname station :time [>= starttime]}
+    )
+
+    )
+
   )
 (defn create-user [user]
 

@@ -19,11 +19,11 @@
 
     )
 
-  (GET "/readrealstreamfromcache" []
+  (GET "/readrealstreamfromcache" [time station]
 
-
-    (resp/json {:success true :result (realstreammanager/readrealstreamfromcache)})
-
+    (let [data (realstreammanager/readrealstreamfromcache time station)]
+      (resp/json {:success true :result  data})
+      )
     )
 
   (GET "/readrealstream" []
@@ -40,8 +40,8 @@
   (GET "/realstream/realstreamrelations" []
     (realstreammanager/realstreamrelations)
     )
-  (GET "/realstream/samplescache" []
-    (resp/json {:success true :result (realstreammanager/readsamplestreamcache)})
+  (GET "/realstream/samplescache" [time station]
+    (resp/json {:success true :result (realstreammanager/readsamplestreamcache time station)})
     )
 
 

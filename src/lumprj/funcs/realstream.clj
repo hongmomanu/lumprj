@@ -18,10 +18,12 @@
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
     (if(.decompress gmsRec updata)()())
+    ;;(println (.getNanos (.getStartTime gmsRec)))
+    ;;(println (.toString (.getStartTime gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
-     :time (.getStartTime gmsRec)
-     :edtime (.getEndTime gmsRec)
+     :time (.toString (.getStartTime gmsRec))
+     :edtime (.toString (.getEndTime gmsRec))
      }
     )
 
@@ -32,7 +34,9 @@
   (let [
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
+    ;;(println )
     (if(.decompress gmsRec updata)()())
+    ;;(println (.getNanos (.getStartTime gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
      :time (.getStartTime gmsRec)
@@ -45,7 +49,7 @@
 
 ;;相关分析
 (defn correlation-analysis [reallist realbegin samplelist samplebegin len ]
-
+  (println reallist)
   (let [aw1arr (drop realbegin (take (+ len realbegin) reallist))
         aw2arr (drop samplebegin (take (+ len samplebegin) samplelist))
         aw1 (conmmon/average aw1arr)
