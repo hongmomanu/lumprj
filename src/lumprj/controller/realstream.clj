@@ -104,17 +104,17 @@
 
   )
 ;根据震中获取样本数据
-(defn get-epicenter-sampledata [epicenter time station]
+(defn get-epicenter-sampledata [ time station]
   ;;(println (db/get))
   ;;(readrealstreamfromcache)
   (readsamplestreamcache time station)
   )
 
 ;;相关分析业务
-(defn realstreamrelations []
+(defn realstreamrelations [rtime rstaton stime sstation]
 
-  (let [sampledata (get-epicenter-sampledata "test"  "2014-03-06 00:02:16.64" "QIY/BHZ")
-        realstreamdata (get-epicenter-sampledata "test"  "2014-03-08 22:00:04.74" "QIY/BHZ") ;(:data (first (readrealstreamfromcache)))
+  (let [sampledata (get-epicenter-sampledata  stime sstation)
+        realstreamdata (get-epicenter-sampledata   rtime rstaton) ;(:data (first (readrealstreamfromcache)))
         ]
 
     (resp/json {
