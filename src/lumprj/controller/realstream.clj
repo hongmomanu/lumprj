@@ -119,6 +119,7 @@
 
     (resp/json {
                  :success true
+                 :sstation sstation
                  :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 500) (range 0 3))
                 })
 
