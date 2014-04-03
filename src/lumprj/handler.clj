@@ -47,8 +47,14 @@
   (server/update-ssh-list) ;;更新ssh列表
   (schema/create-streamcache-table) ;;创建数据流缓存表
   (schema/create-samplecache-table) ;;创建样本缓存表
-  (realstream/makerealstreamcache) ;;生成数据缓存
-  (realstream/make-sampledata-cache) ;;生成样本缓存
+  (timbre/info "创建缓存开始")
+  (timbre/info (schema/datapath))
+
+  (future (realstream/makerealstreamcache));;生成数据缓存
+  (future(realstream/make-sampledata-cache ["/home/jack/test/ZJ.201403060002.0005.seed"
+                                     "/home/jack/test/ZJ.201403082200.0005.seed"
+                                     ])) ;;生成样本缓存
+  (timbre/info "创建缓存结束")
   (timbre/info "lumprj started successfully"))
 
 (defn destroy

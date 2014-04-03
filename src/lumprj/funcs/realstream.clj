@@ -49,7 +49,7 @@
 
 ;;相关分析
 (defn correlation-analysis [reallist realbegin samplelist samplebegin len ]
-  (println reallist)
+  ;(println reallist)
   (let [aw1arr (drop realbegin (take (+ len realbegin) reallist))
         aw2arr (drop samplebegin (take (+ len samplebegin) samplelist))
         aw1 (conmmon/average aw1arr)
@@ -64,8 +64,8 @@
                (* (- (* y) aw2) (- (* x) aw1))
                ) )
         ]
-    (println sw12)
-    (println (Math/sqrt (* sw1 sw2)))
+    ;;(println sw12)
+    ;;(println (Math/sqrt (* sw1 sw2)))
     (/ sw12 (Math/sqrt (* sw1 sw2)))
     )
   )

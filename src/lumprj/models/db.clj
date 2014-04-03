@@ -61,7 +61,11 @@
     (values caches)
     )
   )
-
+(defn del-samplecache [caches]
+  (delete samplecache
+    (where (and {:time [>= (:time caches)]} {:time [< (:edtime caches)]}  {:stationname (:stationname caches)}) )
+    )
+  )
 (defn insert-samplecache [caches]
   (insert samplecache
     (values  caches )

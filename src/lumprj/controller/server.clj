@@ -10,10 +10,8 @@
 
 (defn update-ssh-list []
   (let [results (db/serverlist 0 10000)]
-    (println "begin")
     (dorun (map #(swap! SSH_SHOW_LIST conj (system/get-ssh-connect (:servervalue %) (:username %) (:password %))) results)
       )
-    (println "end")
     )
   )
 

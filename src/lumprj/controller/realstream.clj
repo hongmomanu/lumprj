@@ -178,7 +178,7 @@
 
 
 (defn realstreamcacheJob-child-dataprocess [data]
-  (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
+  (doall(pmap #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
                 ;(db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
                 ;(db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
                 (realstream-data-update-func %)
@@ -212,6 +212,7 @@
   )
 (defn sampledata-child-process [data]
   ;(println (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
+  (db/del-samplecache data)
   (db/insert-samplecache  (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
   )
 
@@ -292,11 +293,9 @@
 
   )
 
-(defn make-sampledata-cache []
-  (let [path ["/home/jack/test/ZJ.201403060002.0005.seed"
-              "/home/jack/test/ZJ.201403082200.0005.seed"
-              ]]
-    (doall(map #(let [seedplugin (new SeedVolumeNativePlugin)
+(defn make-sampledata-cache [paths]
+  (let [path paths]
+    (doall(pmap #(let [seedplugin (new SeedVolumeNativePlugin)
                 ]
             (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
             (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
@@ -378,7 +377,7 @@
          ;;now_ms (.getTime (new Date))
          ]
     (.skip bis  (long 0))
-    (println (/ (fs/size path) 512))
+    ;;(println (/ (fs/size path) 512))
     (doall (map #(realstream/decodeminirtdata % bis buf 512)  (take (/ (fs/size path) 512) (iterate inc 0) ) ))
     )
 
