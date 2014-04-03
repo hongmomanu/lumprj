@@ -111,7 +111,7 @@
   )
 
 ;;相关分析业务
-(defn realstreamrelations [rtime rstaton stime sstation]
+(defn realstreamrelations [rtime rstaton stime sstation second]
 
   (let [sampledata (get-epicenter-sampledata  stime sstation)
         realstreamdata (get-epicenter-sampledata   rtime rstaton) ;(:data (first (readrealstreamfromcache)))
@@ -120,7 +120,7 @@
     (resp/json {
                  :success true
                  :sstation sstation
-                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % 500) (range 0 3))
+                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 3))
                 })
 
     )
@@ -168,7 +168,7 @@
 
 (defn realstream-data-func [data]
   ;;(println (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))))
-  (db/insert-streamcache (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))) )
+  (db/insert-streamcache (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data (doall data))))) )
   )
 
 (defn realstream-data-update-func [data]
@@ -178,7 +178,7 @@
 
 
 (defn realstreamcacheJob-child-dataprocess [data]
-  (doall(pmap #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
+  (doall(map #(if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
                 ;(db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
                 ;(db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
                 (realstream-data-update-func %)
@@ -201,13 +201,16 @@
   )
 (defn make-milltime-data-cross [data time n]
   (let [cal (Calendar/getInstance)]
-    (.setTimeInMillis cal (.getTime (Timestamp/valueOf time)))
+    ;(.setTimeInMillis cal (.getTime (Timestamp/valueOf time)))
+    ;(.add cal Calendar/MILLISECOND (* 10 n))
+    (.setTimeInMillis cal (.getTime time))
     (.add cal Calendar/MILLISECOND (* 10 n))
     {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n)
      :stationname (:stationname data)
      :zerocrossnum (caculate-zerocross-num (:data data))
      }
     )
+
 
   )
 (defn sampledata-child-process [data]
@@ -281,7 +284,7 @@
   (qs/initialize)
   (qs/start)
   (let [job (j/build
-              (j/of-type  realstreamcacheJob);realstream-nofile-Job realstreamcacheJob
+              (j/of-type  realstream-nofile-Job);realstream-nofile-Job realstreamcacheJob
               (j/with-identity (j/key "jobs.noop.1")))
         trigger (t/build
                   (t/with-identity (t/key "triggers.1"))
@@ -295,7 +298,7 @@
 
 (defn make-sampledata-cache [paths]
   (let [path paths]
-    (doall(pmap #(let [seedplugin (new SeedVolumeNativePlugin)
+    (doall(map #(let [seedplugin (new SeedVolumeNativePlugin)
                 ]
             (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
             (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]

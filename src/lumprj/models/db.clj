@@ -56,7 +56,6 @@
   )
 
 (defn insert-streamcache [caches]
-  ;;(println caches)
   (insert streamcache
     (values caches)
     )
@@ -101,6 +100,7 @@
     (where (and {:time [<= (sqlfn now)]}
              {:time [>= (sqlfn DATEADD "MINUTE"  -3 (sqlfn now) )]}
              ))
+    (order :time)
     )
   )
 
@@ -131,7 +131,7 @@
     (where
              {:stationname station :time [>= starttime]}
     )
-
+    (order :time)
     )
 
   )

@@ -14,6 +14,7 @@
             [lumprj.controller.realstream :as realstream]
             [com.postspectacular.rotor :as rotor]
             [selmer.parser :as parser]
+            [me.raynes.fs :as fs]
             [environ.core :refer [env]]))
 
 (defroutes app-routes
@@ -48,7 +49,9 @@
   (schema/create-streamcache-table) ;;创建数据流缓存表
   (schema/create-samplecache-table) ;;创建样本缓存表
   (timbre/info "创建缓存开始")
-  (timbre/info (schema/datapath))
+  (timbre/info (let [parentpath (str schema/datapath "samplefiles/")]
+                 (map #(str  parentpath %)(fs/list-dir parentpath))
+                 ))
 
   (future (realstream/makerealstreamcache));;生成数据缓存
   (future(realstream/make-sampledata-cache ["/home/jack/test/ZJ.201403060002.0005.seed"

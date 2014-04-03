@@ -37,8 +37,8 @@
     (realstreammanager/getstreamzerocross)
     )
 
-  (GET "/realstream/realstreamrelations" [rtime rstation stime sstation]
-    (realstreammanager/realstreamrelations rtime rstation stime sstation)
+  (GET "/realstream/realstreamrelations" [rtime rstation stime sstation second]
+    (realstreammanager/realstreamrelations rtime rstation stime sstation (read-string second))
     )
   (GET "/realstream/samplescache" [time station]
     (resp/json {:success true :result (realstreammanager/readsamplestreamcache time station)})
