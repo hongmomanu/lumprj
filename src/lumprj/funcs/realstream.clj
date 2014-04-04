@@ -22,8 +22,8 @@
     ;;(println (.toString (.getStartTime gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
-     :time (.toString (.getStartTime gmsRec))
-     :edtime (.toString (.getEndTime gmsRec))
+     :time (.getStartTime gmsRec)
+     :edtime (.getEndTime gmsRec)
      }
     )
 

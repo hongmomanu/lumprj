@@ -120,7 +120,7 @@
     (resp/json {
                  :success true
                  :sstation sstation
-                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 3))
+                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 60))
                 })
 
     )
@@ -284,7 +284,7 @@
   (qs/initialize)
   (qs/start)
   (let [job (j/build
-              (j/of-type  realstream-nofile-Job);realstream-nofile-Job realstreamcacheJob
+              (j/of-type  realstreamcacheJob);realstream-nofile-Job realstreamcacheJob
               (j/with-identity (j/key "jobs.noop.1")))
         trigger (t/build
                   (t/with-identity (t/key "triggers.1"))

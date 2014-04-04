@@ -24,7 +24,7 @@
    [korma "0.3.0-RC6"]
    [com.taoensso/tower "2.0.1"]
    [selmer "0.6.1"]
-   [org.clojure/clojure "1.5.1"]
+   [org.clojure/clojure "1.6.0"]
    [log4j
     "1.2.17"
     :exclusions
