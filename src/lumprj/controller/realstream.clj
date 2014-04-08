@@ -40,6 +40,8 @@
 
 
 
+
+
 (defn make-average-type [type data]
   (conmmon/average(map #(:zerocrossnum %) (filter (fn [x]
                                             (> (.indexOf (:stationname x) type) 0))
@@ -111,7 +113,7 @@
   )
 
 ;;相关分析业务
-(defn realstreamrelations [rtime rstaton stime sstation second]
+(defn realstreamrelations [rtime rstaton stime sstation second move]
 
   (let [sampledata (get-epicenter-sampledata  stime sstation)
         realstreamdata (get-epicenter-sampledata   rtime rstaton) ;(:data (first (readrealstreamfromcache)))
@@ -120,7 +122,8 @@
     (resp/json {
                  :success true
                  :sstation sstation
-                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 60))
+                 :rstation rstaton
+                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 move))
                 })
 
     )
@@ -370,6 +373,15 @@
 
   )
 
+(defn relation-tool [filename]
+  (try
+
+
+    {:success true :msg (read-string (slurp filename)) }
+    (catch Exception e {:success false :msg (.getMessage e)})
+    )
+
+  )
 (defn readsiglefilestream [filepath]
 
   (let [
@@ -390,12 +402,11 @@
 
 
 (defn getrealstreams []
-  (let [paths ["/home/jack/test/ZJ_HAZ_BHE_1.mseed"
-               "/home/jack/test/ZJ_HAZ_BHN_0.mseed"
-               "/home/jack/test/ZJ_HAZ_BHZ_2.mseed"
+  (let [paths ["/home/jack/test1w/ZJ_HAZ_BHE_1.mseed"
+               "/home/jack/test1w/ZJ_HAZ_BHN_0.mseed"
+               "/home/jack/test1w/ZJ_HAZ_BHZ_2.mseed"
                ]]
     (concat (readsiglefilestream (nth paths 0)) (readsiglefilestream (nth paths 1)) (readsiglefilestream (nth paths 2)))
-    ;;(map #(into [] (readsiglefilestream %)) paths)
 
     )
   )

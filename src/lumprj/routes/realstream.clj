@@ -37,8 +37,8 @@
     (realstreammanager/getstreamzerocross)
     )
 
-  (GET "/realstream/realstreamrelations" [rtime rstation stime sstation second]
-    (realstreammanager/realstreamrelations rtime rstation stime sstation (read-string second))
+  (GET "/realstream/realstreamrelations" [rtime rstation stime sstation second move]
+    (realstreammanager/realstreamrelations rtime rstation stime sstation (read-string second) (read-string move))
     )
   (GET "/realstream/samplescache" [time station]
     (resp/json {:success true :result (realstreammanager/readsamplestreamcache time station)})
@@ -46,6 +46,10 @@
   (GET "/realstream/makesamplescache" [paths]
 
     (resp/json {:success true :result  (realstreammanager/make-sampledata-cache (clojure.string/split paths #","))})
+    )
+
+  (POST "/realstream/toolconfig" [filename]
+    (resp/json (realstreammanager/relation-tool filename))
     )
 
 

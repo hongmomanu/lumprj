@@ -2,7 +2,8 @@
   lumprj
   "0.1.0-SNAPSHOT"
   :dependencies
-  [[com.h2database/h2 "1.3.174"]
+  [
+   [com.h2database/h2 "1.3.175"]
    [org.xerial/sqlite-jdbc "3.7.15-M1"]
    [com.oracle/ojdbc6 "11.2.0.3"]
    ;;[org.mariadb.jdbc/mariadb-java-client "1.1.5"]
