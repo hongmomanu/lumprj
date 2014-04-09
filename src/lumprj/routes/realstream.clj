@@ -43,9 +43,9 @@
   (GET "/realstream/samplescache" [time station]
     (resp/json {:success true :result (realstreammanager/readsamplestreamcache time station)})
     )
-  (GET "/realstream/makesamplescache" [paths]
+  (GET "/realstream/makesamplescache" [paths type]
 
-    (resp/json {:success true :result  (realstreammanager/make-sampledata-cache (clojure.string/split paths #","))})
+    (resp/json {:success true :result  (realstreammanager/make-sampledata-cache (clojure.string/split paths #",") (read-string  type))})
     )
 
   (POST "/realstream/toolconfig" [filename]

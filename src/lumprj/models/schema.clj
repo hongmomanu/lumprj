@@ -83,6 +83,7 @@
       [:stationname "nvarchar(20)"]   ;台站名
       [:time "TIMESTAMP"]    ;时间
       [:edtime "TIMESTAMP"]    ;结束时间
+      [:type "int"] ;;是否为事件 1是
       ))
   )
 

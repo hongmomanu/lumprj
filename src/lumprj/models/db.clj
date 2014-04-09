@@ -65,6 +65,16 @@
     (where (and {:time [>= (:time caches)]} {:time [< (:edtime caches)]}  {:stationname (:stationname caches)}) )
     )
   )
+(defn del-samplecache-type [typeid]
+  (delete samplecache
+    (where {:type typeid} )
+    )
+  )
+(defn get-samplecache-type [typeid]
+  (select samplecache
+    (where {:type typeid} )
+    )
+  )
 (defn insert-samplecache [caches]
   (insert samplecache
     (values  caches )

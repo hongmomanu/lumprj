@@ -198,7 +198,10 @@
   (let [cal (Calendar/getInstance)]
     (.setTimeInMillis cal (.getTime time))
     (.add cal Calendar/MILLISECOND (* 10 n))
-    {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n) :stationname (:stationname data) }
+    {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n)
+     :stationname (:stationname data)
+     :type (:type data)
+     }
     )
 
   )
@@ -299,7 +302,10 @@
 
   )
 
-(defn make-sampledata-cache [paths]
+(defn make-sampledata-cache [paths type]
+  (println (count (db/get-samplecache-type type)))
+  (when (= type 1) (db/del-samplecache-type type))
+  (println (count (db/get-samplecache-type type)))
   (let [path paths]
     (doall(map #(let [seedplugin (new SeedVolumeNativePlugin)
                 ]
@@ -320,6 +326,7 @@
                                              :data (into [] (.getData gmsRec))
                                              :time (new Timestamp (* (.getStartTime gmsRec) 1000))
                                              :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
+                                             :type type
                                              }   )))) )
 
             ) path))
