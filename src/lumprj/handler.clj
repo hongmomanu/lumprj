@@ -54,9 +54,9 @@
                  ))
 
   (future (realstream/makerealstreamcache));;生成数据缓存
-  (future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
-                                             (map #(str  parentpath %)(fs/list-dir parentpath))
-                                             ))) ;;生成样本缓存
+  ;(future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
+  ;                                           (map #(str  parentpath %)(fs/list-dir parentpath))
+  ;                                           ))) ;;生成样本缓存
   (timbre/info "创建缓存结束")
   (timbre/info "lumprj started successfully"))
 
