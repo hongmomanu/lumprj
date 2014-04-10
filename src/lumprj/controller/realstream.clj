@@ -303,11 +303,9 @@
   )
 
 (defn make-sampledata-cache [paths type]
-  (println (count (db/get-samplecache-type type)))
   (when (= type 1) (db/del-samplecache-type type))
-  (println (count (db/get-samplecache-type type)))
   (let [path paths]
-    (doall(map #(let [seedplugin (new SeedVolumeNativePlugin)
+    (map #(let [seedplugin (new SeedVolumeNativePlugin)
                 ]
             (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
             (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
@@ -329,7 +327,7 @@
                                              :type type
                                              }   )))) )
 
-            ) path))
+            ) path)
 
     )
 
