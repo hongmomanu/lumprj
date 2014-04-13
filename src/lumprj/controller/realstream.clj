@@ -5,6 +5,7 @@
            (java.io FileInputStream BufferedInputStream PushbackInputStream File DataInputStream)
            (java.util HashSet Date Calendar)
            (java.sql Timestamp)
+           (java.lang.Math)
            ;;(edu.iris.timeutils TimeStamp)
            (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
@@ -106,24 +107,38 @@
 
   )
 ;根据震中获取样本数据
-(defn get-epicenter-sampledata [ time station]
+(defn get-epicenter-sampledata [ time station type]
   ;;(println (db/get))
   ;;(readrealstreamfromcache)
-  (readsamplestreamcache time station)
+  (readsamplestreamcache time station type)
   )
 
+(defn max-one-fn [data max]
+
+  (map #(/ % max) data)
+  )
 ;;相关分析业务
 (defn realstreamrelations [rtime rstaton stime sstation second move]
 
-  (let [sampledata (get-epicenter-sampledata  stime sstation)
-        realstreamdata (get-epicenter-sampledata   rtime rstaton) ;(:data (first (readrealstreamfromcache)))
+  (let [ sample  (get-epicenter-sampledata  stime sstation 0)
+         sampledata  (map #(:data %) sample)
+         samplemax (apply max (map #(Math/abs %) sampledata ))
+         realstream (get-epicenter-sampledata   rtime rstaton 1)
+         realstreamdata (map #(:data %) realstream) ;(:data (first (readrealstreamfromcache)))
+         realmax (apply max (map #(Math/abs %) realstreamdata ))
         ]
 
     (resp/json {
                  :success true
                  :sstation sstation
+                 :stime (:time (first sample))
+                 :rtime (:time (first realstream))
                  :rstation rstaton
-                 :relations (map #(realstream/correlation-analysis realstreamdata 0 sampledata % (* second 100)) (range 0 move))
+                 :relations (map #(realstream/correlation-analysis
+                                    (max-one-fn realstreamdata realmax)
+                                    %
+                                    (max-one-fn sampledata samplemax)
+                                    0 (* second 100)) (range 0 move))
                 })
 
     )
@@ -156,11 +171,22 @@
     (db/get-streamcacheall time station))
   )
 
-(defn readsamplestreamcache [time station]
+(defn read-data-fn [row]
+  ;(println row)
+  {:data (read-string (:data row) ) :time (:time row)}
+  )
+(defn readsamplestreamcache [time station type]
   ;;(println time station)
   ;;(println (db/get-samplecache time station))
-  (map #(read-string (:data %)) (db/get-samplecache time station))
+  (map #(read-data-fn %) (db/get-samplecache time station type))
   )
+
+(defn readsamplestreamcache-detail [time station second type]
+
+  (drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
+  )
+
+
 
 (defn caculate-zerocross-num [data]
   (count (for [x (range 0 (count data))
@@ -407,9 +433,9 @@
 
 
 (defn getrealstreams []
-  (let [paths ["/home/jack/test1w/ZJ_HAZ_BHE_1.mseed"
-               "/home/jack/test1w/ZJ_HAZ_BHN_0.mseed"
-               "/home/jack/test1w/ZJ_HAZ_BHZ_2.mseed"
+  (let [paths ["/home/jack/test/ZJ_HAZ_BHE_1.mseed"
+               "/home/jack/test/ZJ_HAZ_BHN_0.mseed"
+               "/home/jack/test/ZJ_HAZ_BHZ_2.mseed"
                ]]
     (concat (readsiglefilestream (nth paths 0)) (readsiglefilestream (nth paths 1)) (readsiglefilestream (nth paths 2)))
 

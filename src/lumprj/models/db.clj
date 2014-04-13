@@ -62,7 +62,8 @@
   )
 (defn del-samplecache [caches]
   (delete samplecache
-    (where (and {:time [>= (:time caches)]} {:time [< (:edtime caches)]}  {:stationname (:stationname caches)}) )
+    (where (and {:time [>= (:time caches)]} {:time [< (:edtime caches)]}
+             {:stationname (:stationname caches)} {:type (:type caches)}) )
     )
   )
 (defn del-samplecache-type [typeid]
@@ -132,14 +133,26 @@
     (order :time)
     )
   )
-(defn get-samplecache [starttime station]
+(defn get-samplecache [starttime station type]
+  ;(println starttime station)
+  (select samplecache
+    (fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "local" "GMT") :time]
+             :stationname :data)
+    (where
+             {:stationname station :time [>= starttime] :type type}
+    )
+    (order :time)
+    )
+
+  )
+(defn get-samplecache-bytype [starttime station type]
   ;(println starttime station)
   (select samplecache
     ;(fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT+") :time]
     ;         [(sqlfn FORMATDATETIME :edtime "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT") :edtime]
     ;         :stationname :data)
     (where
-             {:stationname station :time [>= starttime]}
+             {:stationname station :time [>= starttime] :type type}
     )
     (order :time)
     )
