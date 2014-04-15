@@ -37,6 +37,15 @@
     (realstreammanager/getstreamzerocross)
     )
 
+  (GET "/realstream/eqimtest" []
+    (realstreammanager/eqim-test)
+    )
+
+  (GET "/realstream/rtstest" []
+    (realstreammanager/rts-test)
+    )
+
+
   (GET "/realstream/realstreamrelations" [rtime rstation stime sstation second move]
     (realstreammanager/realstreamrelations rtime rstation stime sstation (read-string second) (read-string move))
     )

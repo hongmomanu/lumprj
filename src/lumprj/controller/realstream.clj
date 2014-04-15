@@ -6,10 +6,16 @@
            (java.util HashSet Date Calendar)
            (java.sql Timestamp)
            (java.lang.Math)
+           (lumprj.java.eqim EqimConnectorTip)
+           ;(cn.org.gddsn.jopens.pod.util PodUtil)
+           (cn.org.gddsn.jopens.pod.amq AmqEarService)
+           (org.springframework.core.io FileSystemResource)
+           (org.springframework.beans.factory.xml XmlBeanFactory)
            ;;(edu.iris.timeutils TimeStamp)
            (cn.org.gddsn.seis.evtformat.seed SeedVolume SeedVolumeNativePlugin)
            (cn.org.gddsn.jopens.entity.seed Dataless)
            (cn.org.gddsn.jopens.client SeedVolumeImporter Migration)
+
 
            )
   (:use compojure.core)
@@ -151,6 +157,24 @@
   (resp/json {:success true
               :results  (map getstreamzerocross-fn  (db/stationcode-list))
               }   )
+  )
+
+(defn eqim-test []
+
+  (.receiveAndPublish (new EqimConnectorTip))
+  (resp/json {:success true})
+  )
+
+(defn rts-test []
+  ;;(.loadLog4jConfig PodUtil)
+  (println (str "load" (AmqEarService/cfgFile)))
+  (let [ res (new FileSystemResource (AmqEarService/cfgFile))
+         ac (new XmlBeanFactory res)
+         amq (.getBean ac "amqEarService")
+         ]
+    (.runListening amq)
+    )
+  (resp/json {:success true})
   )
 
 (defn readrealstreamfromcacheall-filter [stationname]
@@ -341,7 +365,7 @@
                   (
                     do
                     ;(println (.getStartTimes gmsRec))
-
+                    (println "解压开始...")
                     ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
                     ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
                     ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
@@ -351,7 +375,9 @@
                                              :time (new Timestamp (* (.getStartTime gmsRec) 1000))
                                              :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
                                              :type type
-                                             }   )))) )
+                                             }   )
+                    (println "解压完成...")
+                    ))) )
 
             ) path)
 

@@ -154,6 +154,21 @@
 
   )
 
+(defn eqimcheck-nologin [url]
+  (let [my-cs (client/get url {:as :auto})]
+
+    (try
+      (println (:body my-cs))
+      (resp/json {:success true :msg (:body my-cs)})
+
+      (catch Exception e (resp/json {:success false}))
+      )
+
+    )
+
+
+  )
+
 
 (defn delenumbyid [request]
   (let [form-params (:form-params request)]

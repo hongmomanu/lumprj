@@ -80,6 +80,11 @@
     (duty/eqimcheck id username password url securl)
 
     )
+  (POST "/duty/eqimpublic" [url]
+
+    (duty/eqimcheck-nologin url )
+
+    )
   (POST "/duty/completeduty" [id dutylog]
 
     (duty/completeduty id dutylog)
