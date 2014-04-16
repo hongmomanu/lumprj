@@ -46,7 +46,7 @@
 
 (def db-h2-mem {:classname "org.h2.Driver"
                 :subprotocol "h2"
-                :subname "mem:session;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false" })
+                :subname "mem:session;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;LOG=0;CACHE_SIZE=65536;LOCK_MODE=0;UNDO_LOG=0" })
 
 
 (defn initialized?

@@ -145,6 +145,36 @@
     )
 
   )
+(defn get-samplecache-less [starttime station type]
+  ;(println starttime station)
+  (select samplecache
+    (fields   :time ;;[(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "local" "GMT") :time]
+             :stationname :data)
+    (where
+      (or {:stationname station :time [>= starttime] :type type}
+        {:stationname station :time [< starttime] :edtime [> starttime] :type type}
+        )
+
+    )
+    (order :time)
+    )
+
+  )
+(defn get-samplecache-bytype-less [starttime station type]
+  ;(println starttime station)
+  (select samplecache
+    ;(fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT+") :time]
+    ;         [(sqlfn FORMATDATETIME :edtime "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT") :edtime]
+    ;         :stationname :data)
+    (where
+      (or {:stationname station :time [>= starttime] :type type}
+        {:stationname station :time [< starttime] :edtime [> starttime] :type type}
+        )
+    )
+    (order :time)
+    )
+
+  )
 (defn get-samplecache-bytype [starttime station type]
   ;(println starttime station)
   (select samplecache

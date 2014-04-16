@@ -5,6 +5,7 @@
            (java.io FileInputStream BufferedInputStream PushbackInputStream File DataInputStream)
            (java.util HashSet Date Calendar)
            (java.sql Timestamp)
+           (java.text SimpleDateFormat)
            (java.lang.Math)
            (lumprj.java.eqim EqimConnectorTip)
            ;(cn.org.gddsn.jopens.pod.util PodUtil)
@@ -30,12 +31,13 @@
             [clojurewerkz.quartzite.jobs :as j]
             [clojurewerkz.quartzite.jobs :refer [defjob]]
             [clojurewerkz.quartzite.schedule.calendar-interval :refer [schedule with-interval-in-days with-interval-in-minutes]]
-
+            [clj-time.coerce :as clj]
             )
   )
 
 (declare getrealstreams readrealstreamfromcache readsamplestreamcache
-  make-milltime-data make-milltime-data-cross readrealstreamfromcacheall-filter)
+  make-milltime-data make-milltime-data-cross readrealstreamfromcacheall-filter
+  get-epicenter-sampledata-less readsamplestreamcache-less)
 
 (def REAL_STREAM_CLIENT (atom {
 
@@ -119,6 +121,12 @@
   (readsamplestreamcache time station type)
   )
 
+(defn get-epicenter-sampledata-less [ time station type]
+  (readsamplestreamcache-less time station type)
+  )
+
+
+
 (defn max-one-fn [data max]
 
   (map #(/ % max) data)
@@ -126,19 +134,77 @@
 ;;相关分析业务
 (defn realstreamrelations [rtime rstaton stime sstation second move]
 
-  (let [ sample  (get-epicenter-sampledata  stime sstation 0)
-         sampledata  (map #(:data %) sample)
+  (let [ sample  (get-epicenter-sampledata-less  stime sstation 0)
+         df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         dft   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
+         fstime (let [time (:time (first sample))
+
+                      ]
+                  (.format df time)
+
+                  )
+         fstimet (let [time (:time (first sample))
+
+                      ]
+                  (.format dft time)
+
+                  )
+         stimet (let [calendar (Calendar/getInstance)
+                      ]
+                  (.setTime calendar (.parse df stime))
+                  ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
+                  (.format dft (new Timestamp (->(.getTime calendar)(.getTime))))
+                  )
+         sampledata1  (into []  (apply concat (map #(:data %) sample)))
+
+         stimespan (- (clj/to-long fstimet) (clj/to-long stimet))
+
+         sampledata (if (> stimespan 0)(sampledata1)(drop (/ stimespan -10) sampledata1))
          samplemax (apply max (map #(Math/abs %) sampledata ))
-         realstream (get-epicenter-sampledata   rtime rstaton 1)
-         realstreamdata (map #(:data %) realstream) ;(:data (first (readrealstreamfromcache)))
+         realstream (get-epicenter-sampledata-less   rtime rstaton 1)
+         frtime (let [time (:time (first realstream))
+                      ]
+                  (.format df time)
+
+                  )
+         frtimet (let [time (:time (first realstream))
+                      ]
+                  (.format dft time)
+
+                  )
+         rtimet (let [calendar (Calendar/getInstance)
+                      ]
+                  (.setTime calendar (.parse df rtime))
+                  ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
+                  (.format dft (new Timestamp (->(.getTime calendar)(.getTime))))
+                  )
+         ;realstreamdata (map #(:data %) realstream)
+         realstreamdata1 (into [] (apply concat (map #(:data %) realstream)))
+         rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
+
+         realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan -10) realstreamdata1))
          realmax (apply max (map #(Math/abs %) realstreamdata ))
+
+
+
+
         ]
 
     (resp/json {
                  :success true
                  :sstation sstation
-                 :stime (:time (first sample))
-                 :rtime (:time (first realstream))
+                 :stime (if (> stimespan 0)fstime (let [calendar (Calendar/getInstance)
+                                                        ]
+                                                     (.setTime calendar (.parse df stime))
+                                                     ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
+                                                    (.format df (new Timestamp (->(.getTime calendar)(.getTime))))
+                                                     ))
+                 :rtime (if (> rtimespan 0) frtime (let [calendar (Calendar/getInstance)
+                                                         ]
+                                                     (.setTime calendar (.parse df rtime))
+                                                     ;(.add calendar Calendar/MILLISECOND (- 0 rtimespan))
+                                                     (.format df (new Timestamp (->(.getTime calendar)(.getTime))))
+                                                     ))
                  :rstation rstaton
                  :relations (map #(realstream/correlation-analysis
                                     (max-one-fn realstreamdata realmax)
@@ -205,9 +271,40 @@
   (map #(read-data-fn %) (db/get-samplecache time station type))
   )
 
-(defn readsamplestreamcache-detail [time station second type]
+(defn readsamplestreamcache-less [time station type]
+  ;;(println time station)
+  ;;(println (db/get-samplecache time station))
+  (map #(read-data-fn %) (db/get-samplecache-less time station type))
+  )
 
-  (drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
+
+
+
+(defn readsamplestreamcache-detail [time station second type]
+  (drop 0 (take (* 100 second) (let
+                                 [calendar (Calendar/getInstance)
+         df   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
+         df1   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         sample  (db/get-samplecache-bytype-less time station type)
+         test1 (println (.parse df1 time))
+         fstime (let [times (:time (first sample))
+                      ]
+                  (println 1111)
+                  (println (count sample))
+                  (println times)
+                  (.format df times)
+                  )
+
+         mytime (do (.setTime calendar (.parse df1 time)) (new Timestamp (->(.getTime calendar)(.getTime))))
+         sampledata1  (into []  (apply concat (map #(read-string (:data %)) sample)))
+
+         stimespan (- (clj/to-long fstime) (clj/to-long (.format df mytime)))
+
+         ]
+                                 (println "开始啦")
+    (if (> stimespan 0) sampledata1 (drop (/ stimespan -10) sampledata1))
+    )))
+  ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
   )
 
 
@@ -270,9 +367,9 @@
 
   )
 (defn sampledata-child-process [data]
-  ;(println (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
   (db/del-samplecache data)
-  (db/insert-samplecache  (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
+  ;(db/insert-samplecache  (map #(make-milltime-data data (:time data) %) (range 0 (count (:data data)))))
+  (db/insert-samplecache  data)
   )
 
 (defjob realstreamcacheJob
@@ -365,18 +462,16 @@
                   (
                     do
                     ;(println (.getStartTimes gmsRec))
-                    (println "解压开始...")
                     ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
                     ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
                     ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
 
-                    (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
+                     (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
                                              :data (into [] (.getData gmsRec))
                                              :time (new Timestamp (* (.getStartTime gmsRec) 1000))
                                              :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
                                              :type type
                                              }   )
-                    (println "解压完成...")
                     ))) )
 
             ) path)

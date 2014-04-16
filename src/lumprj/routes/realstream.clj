@@ -53,9 +53,15 @@
     (resp/json {:success true :result (realstreammanager/readsamplestreamcache time station)})
     )
   (GET "/realstream/samplescachedetail" [time station second type timesample]
-    (resp/json {:success true :result (realstreammanager/readsamplestreamcache-detail time station (read-string second) type)
-                :result1 (realstreammanager/readsamplestreamcache-detail timesample station (read-string second) 0)
-                })
+    (let [result (realstreammanager/readsamplestreamcache-detail time station (read-string second) type)
+          result1 (realstreammanager/readsamplestreamcache-detail timesample station (read-string second) 0)
+          ]
+
+      (resp/json {:success true :result  result
+      :result1 result1
+                  })
+      )
+
     )
   (GET "/realstream/makesamplescache" [paths type]
 
