@@ -174,8 +174,8 @@
          ;realstreamdata (map #(:data %) realstream)
          realstreamdata1 (into [] (apply concat (map #(:data %) realstream)))
          rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
-         test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
-         test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
+         ;;test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
+         ;;test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
          realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan rate) realstreamdata1))
          realmax (apply max (map #(Math/abs %) realstreamdata ))
 
@@ -280,10 +280,10 @@
          sampledata1  (into []  (apply concat (map #(read-string (:data %)) sample)))
 
          stimespan (- (clj/to-long fstimet) (clj/to-long mytime))
-         test1 (println stimespan mytime fstimet (count sampledata1))
+         ;test1 (println stimespan mytime fstimet (count sampledata1))
 
          ]
-          (doall (map #(println  (:time %) (:edtime %) (count (read-string (:data %))) (:stationname %)) sample))
+          ;(doall (map #(println  (:time %) (:edtime %) (count (read-string (:data %))) (:stationname %)) sample))
     (if (>= stimespan 0) sampledata1 (drop (/ stimespan rate) sampledata1))
     )))
   ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
@@ -434,7 +434,7 @@
 (defn make-sampledata-cache [paths type]
   (when (= type 1) (db/del-samplecache-type type))
   (when (= type 0) (do (db/del-samplecache-type 1) (db/del-samplecache-type 0)))
-  (println (count (db/get-samplecache-type 1)) (count (db/get-samplecache-type 0)))
+  ;(println (count (db/get-samplecache-type 1)) (count (db/get-samplecache-type 0)))
 
   (let [path paths]
     (map #(let [seedplugin (new SeedVolumeNativePlugin)
@@ -450,7 +450,7 @@
                     ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
                     ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
                     ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
-                    (println (str (.getStation gmsRec) "/"  (.getChannel gmsRec)) (count (seq (.getData gmsRec))) (.getSampleRate gmsRec) (new Timestamp (* (.getStartTime gmsRec) 1000)) (new Timestamp (* (.getEndTime gmsRec) 1000)))
+                    ;(println (str (.getStation gmsRec) "/"  (.getChannel gmsRec)) (count (seq (.getData gmsRec))) (.getSampleRate gmsRec) (new Timestamp (* (.getStartTime gmsRec) 1000)) (new Timestamp (* (.getEndTime gmsRec) 1000)))
 
                      (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
                                              :data (into [] (.getData gmsRec))
