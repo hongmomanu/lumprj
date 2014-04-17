@@ -5,34 +5,39 @@
             )
 )
 
-(def clients (atom {}))
+(def channel-hub (atom {}))
 
-(defn ws
-  [req]
-  (with-channel req con
-    (swap! clients assoc con true)
-    (println con " connected")
-    (on-close con (fn [status]
-                    (swap! clients dissoc con)
-                    (println con " disconnected. status: " status)))))
+(defn handler [request]
+  (with-channel request channel
+    ;; Store the channel somewhere, and use it to sent response to client when interesting event happened
+    (swap! channel-hub assoc channel request)
+    (on-close channel (fn [status]
+                        ;; remove from hub when channel get closed
+                        (println channel " disconnected. status: " status)
+                        (swap! channel-hub dissoc channel)))))
+
+
+
+
+(defn start-server [port]
+  (run-server handler {:port port})
+  )
+
 
 (future (loop []
-          (doseq [client @clients]
-            (send! (key client) (json/write-str
+          (println (keys @channel-hub))
+          (doseq [channel (keys @channel-hub)]
+            (println "ok")
+            (send! channel (json/write-str
                                   {:happiness (rand 10)})
-              false))
+              false)
+            )
           (Thread/sleep 5000)
           (recur)))
 
 
-(defn app [req]
-  {:status  200
-   :headers {"Content-Type" "text/html"}
-   :body    "hello HTTP!"})
 
 
-(defn start-server [port]
 
-    (run-server app {:port port :join? false})
 
-  )
+

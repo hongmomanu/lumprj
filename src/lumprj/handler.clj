@@ -45,7 +45,7 @@
   (if (env :selmer-dev) (parser/cache-off!))
 
   (if-not (schema/initialized?) (schema/create-tables))
-  ;;(websocket/start-server 3001)
+  (websocket/start-server 3001)
   (server/update-ssh-list) ;;更新ssh列表
   (schema/create-streamcache-table) ;;创建数据流缓存表
   (schema/create-samplecache-table) ;;创建样本缓存表
