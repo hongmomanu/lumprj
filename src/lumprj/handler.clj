@@ -12,6 +12,7 @@
             [lumprj.models.schema :as schema]
             [lumprj.controller.server :as server]
             [lumprj.controller.realstream :as realstream]
+            [lumprj.funcs.websocket :as websocket]
             [com.postspectacular.rotor :as rotor]
             [selmer.parser :as parser]
             [me.raynes.fs :as fs]
@@ -44,7 +45,7 @@
   (if (env :selmer-dev) (parser/cache-off!))
 
   (if-not (schema/initialized?) (schema/create-tables))
-
+  ;;(websocket/start-server 3001)
   (server/update-ssh-list) ;;更新ssh列表
   (schema/create-streamcache-table) ;;创建数据流缓存表
   (schema/create-samplecache-table) ;;创建样本缓存表

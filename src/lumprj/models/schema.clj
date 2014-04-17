@@ -84,6 +84,7 @@
       [:time "TIMESTAMP"]    ;时间
       [:edtime "TIMESTAMP"]    ;结束时间
       [:type "int"] ;;是否为事件 1是
+      [:rate "int"] ;;样本比率
       ))
   )
 

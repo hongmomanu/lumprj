@@ -135,6 +135,7 @@
 (defn realstreamrelations [rtime rstaton stime sstation second move]
 
   (let [ sample  (get-epicenter-sampledata-less  stime sstation 0)
+         rate (/ -1000 (:rate (first sample)))
          df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
          dft   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
          fstime (let [time (:time (first sample))
@@ -149,17 +150,13 @@
                   (.format dft time)
 
                   )
-         stimet (let [calendar (Calendar/getInstance)
-                      ]
-                  (.setTime calendar (.parse df stime))
-                  ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
-                  (.format dft (new Timestamp (->(.getTime calendar)(.getTime))))
-                  )
+         stimet (clojure.string/replace stime #" " "T")
          sampledata1  (into []  (apply concat (map #(:data %) sample)))
 
          stimespan (- (clj/to-long fstimet) (clj/to-long stimet))
 
-         sampledata (if (> stimespan 0)(sampledata1)(drop (/ stimespan -10) sampledata1))
+
+         sampledata (if (> stimespan 0)(sampledata1)(drop (/ stimespan rate) sampledata1))
          samplemax (apply max (map #(Math/abs %) sampledata ))
          realstream (get-epicenter-sampledata-less   rtime rstaton 1)
          frtime (let [time (:time (first realstream))
@@ -172,17 +169,14 @@
                   (.format dft time)
 
                   )
-         rtimet (let [calendar (Calendar/getInstance)
-                      ]
-                  (.setTime calendar (.parse df rtime))
-                  ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
-                  (.format dft (new Timestamp (->(.getTime calendar)(.getTime))))
-                  )
+
+         rtimet (clojure.string/replace rtime #" " "T")
          ;realstreamdata (map #(:data %) realstream)
          realstreamdata1 (into [] (apply concat (map #(:data %) realstream)))
          rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
-
-         realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan -10) realstreamdata1))
+         test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
+         test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
+         realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan rate) realstreamdata1))
          realmax (apply max (map #(Math/abs %) realstreamdata ))
 
 
@@ -193,18 +187,9 @@
     (resp/json {
                  :success true
                  :sstation sstation
-                 :stime (if (> stimespan 0)fstime (let [calendar (Calendar/getInstance)
-                                                        ]
-                                                     (.setTime calendar (.parse df stime))
-                                                     ;(.add calendar Calendar/MILLISECOND (- 0 stimespan))
-                                                    (.format df (new Timestamp (->(.getTime calendar)(.getTime))))
-                                                     ))
-                 :rtime (if (> rtimespan 0) frtime (let [calendar (Calendar/getInstance)
-                                                         ]
-                                                     (.setTime calendar (.parse df rtime))
-                                                     ;(.add calendar Calendar/MILLISECOND (- 0 rtimespan))
-                                                     (.format df (new Timestamp (->(.getTime calendar)(.getTime))))
-                                                     ))
+                 :stime (if (> stimespan 0)fstime stime)
+                 :rtime (if (> rtimespan 0) frtime rtime)
+                 :rate rate
                  :rstation rstaton
                  :relations (map #(realstream/correlation-analysis
                                     (max-one-fn realstreamdata realmax)
@@ -263,7 +248,7 @@
 
 (defn read-data-fn [row]
   ;(println row)
-  {:data (read-string (:data row) ) :time (:time row)}
+  {:data (read-string (:data row) ) :time (:time row) :rate (:rate row)}
   )
 (defn readsamplestreamcache [time station type]
   ;;(println time station)
@@ -283,26 +268,23 @@
 (defn readsamplestreamcache-detail [time station second type]
   (drop 0 (take (* 100 second) (let
                                  [calendar (Calendar/getInstance)
-         df   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
-         df1   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
          sample  (db/get-samplecache-bytype-less time station type)
-         test1 (println (.parse df1 time))
          fstime (let [times (:time (first sample))
                       ]
-                  (println 1111)
-                  (println (count sample))
-                  (println times)
                   (.format df times)
                   )
-
-         mytime (do (.setTime calendar (.parse df1 time)) (new Timestamp (->(.getTime calendar)(.getTime))))
+         rate (/ -1000 (:rate (first sample)))
+         fstimet (clojure.string/replace fstime #" " "T")
+         mytime (clojure.string/replace time #" " "T")
          sampledata1  (into []  (apply concat (map #(read-string (:data %)) sample)))
 
-         stimespan (- (clj/to-long fstime) (clj/to-long (.format df mytime)))
+         stimespan (- (clj/to-long fstimet) (clj/to-long mytime))
+         test1 (println stimespan mytime fstimet (count sampledata1))
 
          ]
-                                 (println "开始啦")
-    (if (> stimespan 0) sampledata1 (drop (/ stimespan -10) sampledata1))
+          (doall (map #(println  (:time %) (:edtime %) (count (read-string (:data %))) (:stationname %)) sample))
+    (if (>= stimespan 0) sampledata1 (drop (/ stimespan rate) sampledata1))
     )))
   ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
   )
@@ -451,6 +433,9 @@
 
 (defn make-sampledata-cache [paths type]
   (when (= type 1) (db/del-samplecache-type type))
+  (when (= type 0) (do (db/del-samplecache-type 1) (db/del-samplecache-type 0)))
+  (println (count (db/get-samplecache-type 1)) (count (db/get-samplecache-type 0)))
+
   (let [path paths]
     (map #(let [seedplugin (new SeedVolumeNativePlugin)
                 ]
@@ -465,12 +450,14 @@
                     ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
                     ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
                     ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
+                    (println (str (.getStation gmsRec) "/"  (.getChannel gmsRec)) (count (seq (.getData gmsRec))) (.getSampleRate gmsRec) (new Timestamp (* (.getStartTime gmsRec) 1000)) (new Timestamp (* (.getEndTime gmsRec) 1000)))
 
                      (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
                                              :data (into [] (.getData gmsRec))
                                              :time (new Timestamp (* (.getStartTime gmsRec) 1000))
                                              :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
                                              :type type
+                                             :rate (int (.getSampleRate gmsRec))
                                              }   )
                     ))) )
 
