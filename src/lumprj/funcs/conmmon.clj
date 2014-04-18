@@ -11,3 +11,10 @@
 
   (let [sum (apply + coll)]
     (quot sum (count coll))))
+
+
+(defn get-config-prop []
+  (let [filename (str (System/getProperty "user.dir") "/" "server.config")]
+    (read-string (slurp filename))
+    )
+  )

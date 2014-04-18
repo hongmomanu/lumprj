@@ -58,6 +58,8 @@
   ;(future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
   ;                                           (map #(str  parentpath %)(fs/list-dir parentpath))
   ;                                           ))) ;;生成样本缓存
+
+  (future (realstream/eqim-server-init));eqim 启动服务监听
   (timbre/info "创建缓存结束")
   (timbre/info "lumprj started successfully"))
 

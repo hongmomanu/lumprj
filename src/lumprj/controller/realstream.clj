@@ -215,8 +215,12 @@
   (println "ok111")
   (str "hello" name)
   )
+(defn eqim-server-init []
+  (let [eqimservers (:eqimservers (conmmon/get-config-prop))]
+    (map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %))) eqimservers)
+    )
+  )
 (defn eqim-test []
-
   (.receiveAndPublish (new EqimConnectorTip "10.33.8.174" 5001))
   (resp/json {:success true})
   )
