@@ -79,7 +79,7 @@
   (sql/with-connection db-h2-mem
     (sql/create-table
       :samplecache
-      [:data "nvarchar(50000)"] ;数据
+      [:data "nvarchar(500000)"] ;数据
       [:stationname "nvarchar(20)"]   ;台站名
       [:time "TIMESTAMP"]    ;时间
       [:edtime "TIMESTAMP"]    ;结束时间

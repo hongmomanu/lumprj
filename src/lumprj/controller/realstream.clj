@@ -1,4 +1,5 @@
 (ns lumprj.controller.realstream
+
   (:import (cn.org.gddsn.liss.client LissClient LissException LissTransferType)
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord GenericMiniSeedRecordOutput)
            (cn.org.gddsn.liss.util LissClientReader)
@@ -210,6 +211,10 @@
               }   )
   )
 
+(defn java-clojure-test [name]
+  (println "ok111")
+  (str "hello" name)
+  )
 (defn eqim-test []
 
   (.receiveAndPublish (new EqimConnectorTip))
