@@ -29,17 +29,21 @@ public class EqimConnectorTip {
     private Thread clientThread;
     private String ip="";
     private int port=5001;
+    private  String user="";
+    private String pass="";
 
-    public EqimConnectorTip(String ip,int port){
+    public EqimConnectorTip(String ip,int port,String user,String pass){
         this.ip=ip;
         this.port=port;
+        this.user=user;
+        this.pass=pass;
     }
 
     public void connectServer() throws IOException, LissException {
 
         //client = new LissClient("10.33.5.5", 5001);  //ip 端口
         client = new LissClient(this.ip, this.port);  //ip 端口
-        client.login("show","show");//user password
+        client.login(this.user,this.pass);//user password
         locInputStream = client.retrieveResult("LOC");
         RT.loadResourceScript("lumprj/controller/realstream.clj");
         Var foo = RT.var("lumprj.controller.realstream", "java-clojure-test");
@@ -64,7 +68,7 @@ public class EqimConnectorTip {
         while (!bQuit) {
             try {
                 connectServer();
-                System.out.println("connect ok");
+                System.out.println("connect ok,"+this.ip+":"+this.port);
                 connectionOK = true;
                 break;
             } catch (Exception ex) {
@@ -123,7 +127,7 @@ public class EqimConnectorTip {
     }
 
     public static void main(String[] args){
-        EqimConnectorTip t=new EqimConnectorTip("10.33.8.174",5001);
+        EqimConnectorTip t=new EqimConnectorTip("10.33.8.174",5001,"show","show");
         t.receiveAndPublish();
     }
 

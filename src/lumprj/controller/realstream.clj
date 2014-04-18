@@ -217,11 +217,11 @@
   )
 (defn eqim-server-init []
   (let [eqimservers (:eqimservers (conmmon/get-config-prop))]
-    (map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %))) eqimservers)
+    (doall(map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %) (:user %) (:pass %))) eqimservers))
     )
   )
 (defn eqim-test []
-  (.receiveAndPublish (new EqimConnectorTip "10.33.8.174" 5001))
+  (.receiveAndPublish (new EqimConnectorTip "10.33.8.174" 5001 "show" "show"))
   (resp/json {:success true})
   )
 
