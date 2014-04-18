@@ -27,22 +27,22 @@ public class EqimConnectorTip {
     private boolean bQuit = false;
 
     private Thread clientThread;
+    private String ip="";
+    private int port=5001;
+
+    public EqimConnectorTip(String ip,int port){
+        this.ip=ip;
+        this.port=port;
+    }
 
     public void connectServer() throws IOException, LissException {
 
         //client = new LissClient("10.33.5.5", 5001);  //ip 端口
-        System.out.println("connect begin");
-        client = new LissClient("10.33.8.174", 5001);  //ip 端口
-        System.out.println("connect begin1");
+        client = new LissClient(this.ip, this.port);  //ip 端口
         client.login("show","show");//user password
-        System.out.println("connect begin2");
         locInputStream = client.retrieveResult("LOC");
-        System.out.println("connect begin3");
         RT.loadResourceScript("lumprj/controller/realstream.clj");
-        System.out.println("connect begin4");
-        // Get a reference to the hello function
         Var foo = RT.var("lumprj.controller.realstream", "java-clojure-test");
-        System.out.println("connect begin5");
         Object result = foo.invoke("121");
 
 
@@ -123,7 +123,7 @@ public class EqimConnectorTip {
     }
 
     public static void main(String[] args){
-        EqimConnectorTip t=new EqimConnectorTip();
+        EqimConnectorTip t=new EqimConnectorTip("10.33.8.174",5001);
         t.receiveAndPublish();
     }
 
