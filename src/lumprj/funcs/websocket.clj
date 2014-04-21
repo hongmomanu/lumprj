@@ -24,16 +24,16 @@
   )
 
 
-(future (loop []
-          (println (keys @channel-hub))
-          (doseq [channel (keys @channel-hub)]
-            (println "ok")
-            (send! channel (json/write-str
-                                  {:happiness (rand 10)})
-              false)
-            )
-          (Thread/sleep 5000)
-          (recur)))
+;(future (loop []
+;          (println (keys @channel-hub))
+;          (doseq [channel (keys @channel-hub)]
+;            (println "ok")
+;            (send! channel (json/write-str
+;                                  {:happiness (rand 10)})
+;              false)
+;            )
+;          (Thread/sleep 5000)
+;          (recur)))
 
 
 

@@ -69,6 +69,11 @@
     (resp/json {:success true :result  (realstreammanager/make-sampledata-cache (clojure.string/split paths #",") (read-string  type))})
     )
 
+  (GET "/realstream/websockettest" []
+    (realstreammanager/send-eqim-info)
+    (resp/json {:success true})
+    )
+
   (POST "/realstream/toolconfig" [filename]
     (resp/json (realstreammanager/relation-tool filename))
     )

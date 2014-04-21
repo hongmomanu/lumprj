@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.lang.Exception;
 import java.lang.System;
 
 import cn.gd.seismology.config.XmlLocation;
 import cn.gd.seismology.config.XmlLocation.SourceParam;
+import cn.gd.seismology.config.XmlLocation.Network;
 import cn.gd.seismology.liss.client.LissClient;
 import cn.gd.seismology.liss.client.LissException;
 import cn.gd.seismology.liss.message.Result;
@@ -45,9 +47,9 @@ public class EqimConnectorTip {
         client = new LissClient(this.ip, this.port);  //ip 端口
         client.login(this.user,this.pass);//user password
         locInputStream = client.retrieveResult("LOC");
-        RT.loadResourceScript("lumprj/controller/realstream.clj");
-        Var foo = RT.var("lumprj.controller.realstream", "java-clojure-test");
-        Object result = foo.invoke("121");
+        //RT.loadResourceScript("lumprj/controller/realstream.clj");
+        //Var foo = RT.var("lumprj.controller.realstream", "java-clojure-test");
+        //Object result = foo.invoke("121");
 
 
 
@@ -121,8 +123,16 @@ public class EqimConnectorTip {
         XmlLocation xl = new XmlLocation();
         xl.parseLocation(new ByteArrayInputStream(res.getData()));
         SourceParam sp = xl.getSource();
+        Network net =xl.getNetwork();
         //sp.Location_cname
-        System.out.println(sp.Location_cname);
+        try {
+            RT.loadResourceScript("lumprj/controller/realstream.clj");
+            Var foo = RT.var("lumprj.controller.realstream", "send-eqim-info");
+            Object result = foo.invoke(sp,net);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
 
     }
 

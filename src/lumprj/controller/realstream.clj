@@ -20,11 +20,13 @@
 
 
            )
-  (:use compojure.core)
+  (:use compojure.core  org.httpkit.server)
   (:require [lumprj.models.db :as db]
             [lumprj.funcs.realstream :as realstream]
             [lumprj.funcs.conmmon :as conmmon]
+            [lumprj.funcs.websocket :as websocket]
             [me.raynes.fs :as fs]
+            [clojure.data.json :as json]
             [noir.response :as resp]
             [taoensso.timbre :as timbre]
             [clojurewerkz.quartzite.scheduler :as qs]
@@ -212,8 +214,29 @@
   )
 
 (defn java-clojure-test [name]
-  (println "ok111")
+  ;(println "ok111")
   (str "hello" name)
+  )
+
+(defn send-eqim-info [sp net]
+  ;(println @websocket/channel-hub)
+  (let [df (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss")
+        ]
+    (doseq [channel (keys @websocket/channel-hub)]
+      ;;(println "ok")
+      (send! channel (json/write-str
+                       {:location (.Location_cname sp)
+                        :lat (.Lat sp) :lon (.Lon sp) :depth (.Depth sp)
+                        :eqtype (.Eq_type sp)  :time (.format df (.O_Time  sp))
+                        :M (.M sp) :Ml (.Ml sp) :Ms (.Ms sp) :sname (.Sname net) :cname (.Cname net)
+                        }
+                       )
+        false)
+      )
+
+    )
+
+
   )
 (defn eqim-server-init []
   (let [eqimservers (:eqimservers (conmmon/get-config-prop))]
