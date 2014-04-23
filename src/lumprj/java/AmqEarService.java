@@ -19,6 +19,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import clojure.lang.RT;
+import clojure.lang.Var;
 
 //import cn.org.gddsn.jopens.pod.bean.MessageBean;
 //import cn.org.gddsn.jopens.pod.util.PodUtil;
@@ -73,6 +75,12 @@ public class AmqEarService implements MessageListener {
 
                 mess = tm.getText();
                 logger.info("receive textMessage: eventId=" + mess);
+
+                RT.loadResourceScript("lumprj/controller/realstream.clj");
+                Var foo = RT.var("lumprj.controller.realstream", "send-rts-info");
+                Object result = foo.invoke(mess);
+
+
                 //MessageBean mssageBean = PodUtil.String2MessageBean(mess);
                 /*if (mssageBean == null) {
                     logger.info("receive textMessage: eventId=" + mess);
@@ -80,7 +88,7 @@ public class AmqEarService implements MessageListener {
                 } else {
                     //logger.info("receive messageBean: " + mssageBean);
                 }*/
-            } catch (JMSException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

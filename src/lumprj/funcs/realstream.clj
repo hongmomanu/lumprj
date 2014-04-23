@@ -23,6 +23,7 @@
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
      :time (.getStartTime gmsRec)
+     :rate (int (.getSampleRate gmsRec))
      :edtime (.getEndTime gmsRec)
      }
     )

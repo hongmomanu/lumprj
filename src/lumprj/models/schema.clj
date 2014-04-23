@@ -4,7 +4,8 @@
 
 
 (declare create-dutymission-table create-dutymissionhistory-table
-  create-servers-table create-systemwatchlog-table create-dutylog-table create-stations-table)
+  create-servers-table create-systemwatchlog-table create-dutylog-table
+  create-stations-table create-samplecache-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -25,15 +26,15 @@
                  :naming {:keys clojure.string/lower-case :fields clojure.string/upper-case}})
 
 (def db-mysql {:subprotocol "mysql"
-               :subname "//127.0.0.1:9306?characterEncoding=utf8&maxAllowedPacket=512000"
-               ;;:subname "//127.0.0.1:3306"
-               ;;:user "root"
-               ;;:password "shayu626"
+               ;;:subname "//127.0.0.1:9306?characterEncoding=utf8&maxAllowedPacket=512000"
+               :subname "//10.33.5.103:3306/jopens"
+               :user "root"
+               :password "rootme"
                })
 
 (def db-spec {:classname "org.h2.Driver"
               :subprotocol "h2"
-              :subname (str (io/resource-path) db-store)
+              :subname (str datapath db-store)
               :user "sa"
               :password ""
               :naming {:keys clojure.string/lower-case
@@ -54,6 +55,7 @@
   []
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
   ;;(create-stations-table)
+  ;(create-samplecache-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -68,6 +70,7 @@
       [:zerocrossnum "int"]  ;零交点数目
       [:stationname "nvarchar(20)"]   ;台站名
       [:time "TIMESTAMP"]    ;时间
+      [:rate "int"] ;;rate
       [:edtime "TIMESTAMP"]    ;结束时间
       ))
   )
@@ -80,8 +83,25 @@
     (sql/create-table
       :samplecache
       [:data "nvarchar(500000)"] ;数据
-      [:stationname "nvarchar(20)"]   ;台站名
+      [:stationname "nvarchar(50)"]   ;台站名
       [:time "TIMESTAMP"]    ;时间
+      [:name "nvarchar(500)"]   ;样本事件名
+      [:edtime "TIMESTAMP"]    ;结束时间
+      [:type "int"] ;;是否为事件 1是
+      [:rate "int"] ;;样本比率
+      ))
+  )
+
+;;样本数据表
+(defn create-sample-table
+  []
+  (sql/with-connection db-spec ;db-h2-mem
+    (sql/create-table
+      :sample
+      [:data "nvarchar(500000)"] ;数据
+      [:stationname "nvarchar(50)"]   ;台站名
+      [:time "TIMESTAMP"]    ;时间
+      [:name "nvarchar(500)"]   ;样本事件名
       [:edtime "TIMESTAMP"]    ;结束时间
       [:type "int"] ;;是否为事件 1是
       [:rate "int"] ;;样本比率

@@ -33,20 +33,22 @@
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.jobs :as j]
             [clojurewerkz.quartzite.jobs :refer [defjob]]
-            [clojurewerkz.quartzite.schedule.calendar-interval :refer [schedule with-interval-in-days with-interval-in-minutes]]
+            [clojurewerkz.quartzite.schedule.calendar-interval :refer [schedule with-interval-in-days with-interval-in-minutes with-interval-in-seconds]]
+            ;[clojurewerkz.quartzite.schedule.simple :refer [schedule with-repeat-count with-interval-in-seconds with-interval-in-milliseconds]]
             [clj-time.coerce :as clj]
             )
   )
 
-(declare getrealstreams readrealstreamfromcache readsamplestreamcache
+(declare getrealstreams readrealstreamfromcache readsamplestreamcache readsamplestreamcache-less
   make-milltime-data make-milltime-data-cross readrealstreamfromcacheall-filter
-  get-epicenter-sampledata-less readsamplestreamcache-less)
+  get-epicenter-sampledata-less readsamplestreamcache-less readsamplestreamcache-less-name send-rts-info rts-relation-begin
+  get-epicenter-sampledata-less-name )
 
 (def REAL_STREAM_CLIENT (atom {
 
                                 :ip  "10.33.5.103"
                                 :port 5000
-                                :timelong 61
+                                :timelong 11
                                 :user "rts"
                                 :pass "rts"}))
 
@@ -128,6 +130,10 @@
   (readsamplestreamcache-less time station type)
   )
 
+(defn get-epicenter-sampledata-less-name [ time station name]
+  (readsamplestreamcache-less-name time station name)
+  )
+
 
 
 (defn max-one-fn [data max]
@@ -206,18 +212,92 @@
 
   )
 
+
+;;相关分析业务实时
+(defn realstreamrelationsrts [name rtime rstaton stime sstation second move]
+
+  (let [ sample  (get-epicenter-sampledata-less-name  stime sstation name)
+         rate (/ -1000 (:rate (first sample)))
+         df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         dft   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
+         fstime (let [time (:time (first sample))
+
+                      ]
+                  (.format df time)
+
+                  )
+         fstimet (let [time (:time (first sample))
+
+                       ]
+                   (.format dft time)
+
+                   )
+         stimet (clojure.string/replace stime #" " "T")
+         sampledata1  (into []  (apply concat (map #(:data %) sample)))
+
+         stimespan (- (clj/to-long fstimet) (clj/to-long stimet))
+
+
+         sampledata (if (> stimespan 0)(sampledata1)(drop (/ stimespan rate) sampledata1))
+         samplemax (apply max (map #(Math/abs %) sampledata ))
+         realstream (readrealstreamfromcache  rtime rstaton )
+         frtime (let [time (:time (first realstream))
+                      ]
+                  (.format df time)
+
+                  )
+         frtimet (let [time (:time (first realstream))
+                       ]
+                   (.format dft time)
+
+                   )
+
+         rtimet (clojure.string/replace rtime #" " "T")
+         ;realstreamdata (map #(:data %) realstream)
+         realstreamdata1 (map #(:data %) realstream)
+         rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
+         ;;test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
+         ;;test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
+         realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan rate) realstreamdata1))
+         realmax (apply max (map #(Math/abs %) realstreamdata ))
+
+
+
+
+         ]
+
+    (resp/json {
+                 :success true
+                 :sstation sstation
+                 :stime (if (> stimespan 0)fstime stime)
+                 :rtime (if (> rtimespan 0) frtime rtime)
+                 :rate rate
+                 :rstation rstaton
+                 :relations (map #(realstream/correlation-analysis
+                                    (max-one-fn realstreamdata realmax)
+                                    %
+                                    (max-one-fn sampledata samplemax)
+                                    0 (* second 100)) (range 0 move))
+                 })
+
+    )
+
+
+  )
+
+
 (defn getstreamzerocross []
   ;;(println (db/stationcode-list))
   (resp/json {:success true
               :results  (map getstreamzerocross-fn  (db/stationcode-list))
               }   )
   )
-
+;单元测试
 (defn java-clojure-test [name]
   ;(println "ok111")
   (str "hello" name)
   )
-
+;eqim 推送自动报警
 (defn send-eqim-info [sp net]
   ;(println @websocket/channel-hub)
   (let [df (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss")
@@ -229,6 +309,7 @@
                         :lat (.Lat sp) :lon (.Lon sp) :depth (.Depth sp)
                         :eqtype (.Eq_type sp)  :time (.format df (.O_Time  sp))
                         :M (.M sp) :Ml (.Ml sp) :Ms (.Ms sp) :sname (.Sname net) :cname (.Cname net)
+                        :type "eqim"
                         }
                        )
         false)
@@ -238,6 +319,41 @@
 
 
   )
+;rts 地震监测
+(defn send-rts-info [eventid]
+  (let [infoitem (first (db/get-rts-eventinfo eventid))
+        lon (:epi_lon infoitem)
+        lat (:epi_lat infoitem)
+        id (:id infoitem)
+        eventranges (:eventranges (conmmon/get-config-prop))
+        ]
+    (doall(map #(when (and
+                        (<= lon (nth (:range %) 1))
+                        (>= lon (nth (:range %) 0))
+                 (<= lat (nth (:range %) 3)) (>= lat (nth (:range %) 2))
+                 ) (doseq [channel (keys @websocket/channel-hub)]
+                         ;;(println "ok")
+                         (send! channel (json/write-str
+                                          {:results (rts-relation-begin id)
+                                           :type "rts"
+                                           :lonlat [lon lat]
+                                           :name (:sname %)
+                                           }
+                                          )
+                           false)))  eventranges) )
+
+
+  )
+  )
+
+(defn rts-relation-begin [catalogid]
+
+  (let [stationitems (db/get-rts-contentinfo catalogid )]
+    stationitems
+    )
+
+  )
+
 (defn eqim-server-init []
   (let [eqimservers (:eqimservers (conmmon/get-config-prop))]
     (doall(map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %) (:user %) (:pass %))) eqimservers))
@@ -249,15 +365,15 @@
   )
 
 (defn rts-test []
-  ;;(.loadLog4jConfig PodUtil)
-  (println (str "load" (AmqEarService/cfgFile)))
-  (let [ res (new FileSystemResource (AmqEarService/cfgFile))
-         ac (new XmlBeanFactory res)
-         amq (.getBean ac "amqEarService")
-         ]
-    (.runListening amq)
-    )
-  (resp/json {:success true})
+  ;(println (str "load" (AmqEarService/cfgFile)))
+  ;(let [ res (new FileSystemResource (AmqEarService/cfgFile))
+  ;       ac (new XmlBeanFactory res)
+  ;       amq (.getBean ac "amqEarService")
+  ;       ]
+   ; (.runListening amq)
+
+  ;  )
+  (resp/json {:success true :results (send-rts-info "ZJ.201404141732.0001")})
   )
 
 (defn readrealstreamfromcacheall-filter [stationname]
@@ -271,6 +387,7 @@
 (defn readrealstreamfromcache [time station]
   (map #(conj {:time (:time % )}
           {:edtime (:edtime % )}
+          {:rate (:rate % )}
           {:stationname (:stationname %)}
           {:data (read-string (:data %))}
           {:zerocrossnum (:zerocrossnum %)}
@@ -294,6 +411,11 @@
   (map #(read-data-fn %) (db/get-samplecache-less time station type))
   )
 
+(defn readsamplestreamcache-less-name [time station name]
+  ;;(println time station)
+  ;;(println (db/get-samplecache time station))
+  (map #(read-data-fn %) (db/get-sample-less time station name))
+  )
 
 
 
@@ -302,6 +424,29 @@
                                  [calendar (Calendar/getInstance)
          df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
          sample  (db/get-samplecache-bytype-less time station type)
+         fstime (let [times (:time (first sample))
+                      ]
+                  (.format df times)
+                  )
+         rate (/ -1000 (:rate (first sample)))
+         fstimet (clojure.string/replace fstime #" " "T")
+         mytime (clojure.string/replace time #" " "T")
+         sampledata1  (into []  (apply concat (map #(read-string (:data %)) sample)))
+
+         stimespan (- (clj/to-long fstimet) (clj/to-long mytime))
+         ;test1 (println stimespan mytime fstimet (count sampledata1))
+
+         ]
+          ;(doall (map #(println  (:time %) (:edtime %) (count (read-string (:data %))) (:stationname %)) sample))
+    (if (>= stimespan 0) sampledata1 (drop (/ stimespan rate) sampledata1))
+    )))
+  ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
+  )
+(defn readsamplestreamdata-detail [time station second name]
+  (drop 0 (take (* 100 second) (let
+                                 [calendar (Calendar/getInstance)
+         df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         sample  (db/get-sample-bytype-less time station name)
          fstime (let [times (:time (first sample))
                       ]
                   (.format df times)
@@ -374,11 +519,16 @@
     (.add cal Calendar/MILLISECOND (* 10 n))
     {:time (new Timestamp (->(.getTime cal)(.getTime))) :data (nth (:data data) n)
      :stationname (:stationname data)
+     :rate (:rate data)
      :zerocrossnum (caculate-zerocross-num (:data data))
      }
     )
 
 
+  )
+
+(defn sampledata-child-process-local [data]
+  (db/insert-sample  data)
   )
 (defn sampledata-child-process [data]
   (db/del-samplecache data)
@@ -451,19 +601,53 @@
   (qs/initialize)
   (qs/start)
   (let [job (j/build
-              (j/of-type  realstreamcacheJob);realstream-nofile-Job realstreamcacheJob
+              (j/of-type  realstream-nofile-Job);realstream-nofile-Job realstreamcacheJob
               (j/with-identity (j/key "jobs.noop.1")))
         trigger (t/build
                   (t/with-identity (t/key "triggers.1"))
                   (t/start-now)
                   (t/with-schedule (schedule
                                      ;;(with-repeat-count 10)
-                                     (with-interval-in-minutes 1))))]
+                                     ;(with-interval-in-minutes 0.1)
+                                     (with-interval-in-seconds 10)
+                                     )))]
     (qs/schedule job trigger))
 
   )
 
-(defn make-sampledata-cache [paths type]
+(defn make-sampledata [paths  name]
+
+  (let [path paths
+        nums (count (db/get-sample-byname name))
+        ]
+    (if (> 0 nums) "已存在" (map #(let [seedplugin (new SeedVolumeNativePlugin)
+                                     ]
+                                 (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
+                                 (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]
+                                   (if (nil? gmsRec)
+                                     (println "解码完成la")
+                                     (recur (.getNextMiniSeedData seedplugin)
+                                       (
+                                         do
+
+                                         (sampledata-child-process-local {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
+                                                                    :data (into [] (.getData gmsRec))
+                                                                    :time (new Timestamp (* (.getStartTime gmsRec) 1000))
+                                                                    :edtime (new Timestamp (* (.getEndTime gmsRec) 1000))
+                                                                    :rate (int (.getSampleRate gmsRec))
+                                                                    :name name
+                                                                    }   )
+                                         ))) )
+
+                                 ) path))
+
+
+    )
+
+
+  )
+
+(defn make-sampledata-cache [paths type name]
   (when (= type 1) (db/del-samplecache-type type))
   (when (= type 0) (do (db/del-samplecache-type 1) (db/del-samplecache-type 0)))
   ;(println (count (db/get-samplecache-type 1)) (count (db/get-samplecache-type 0)))
@@ -478,11 +662,6 @@
                 (recur (.getNextMiniSeedData seedplugin)
                   (
                     do
-                    ;(println (.getStartTimes gmsRec))
-                    ;;(println (-> (Calendar/getInstance)(.add Calendar/MILLISECOND 32)))
-                    ;;(println (.toString (new Timestamp (* (.getStartTime gmsRec) 1000))))
-                    ;;(println (.toString (new Timestamp (* (.getEndTime gmsRec) 1000))))
-                    ;(println (str (.getStation gmsRec) "/"  (.getChannel gmsRec)) (count (seq (.getData gmsRec))) (.getSampleRate gmsRec) (new Timestamp (* (.getStartTime gmsRec) 1000)) (new Timestamp (* (.getEndTime gmsRec) 1000)))
 
                      (sampledata-child-process {:stationname (str (.getStation gmsRec) "/"  (.getChannel gmsRec))
                                              :data (into [] (.getData gmsRec))

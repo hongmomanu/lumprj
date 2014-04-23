@@ -6,6 +6,7 @@
 (defdb db schema/db-spec-sqlite)
 (defdb dbmysql schema/db-mysql)
 (defdb memdb schema/db-h2-mem)
+(defdb h2db schema/db-spec)
 
 
 
@@ -18,6 +19,11 @@
 (defentity samplecache
   (database memdb)
   )
+(defentity sample
+  (database h2db)
+)
+
+
 
 (defentity dutyenum
   (database db)
@@ -73,6 +79,11 @@
     (where {:type typeid} )
     )
   )
+(defn get-sample-byname [name]
+  (select sample
+    (where {:name name})
+    )
+  )
 (defn get-samplecache-type [typeid]
   (select samplecache
     (where {:type typeid} )
@@ -80,6 +91,12 @@
   )
 (defn insert-samplecache [caches]
   (insert samplecache
+    (values  caches )
+    )
+  )
+
+(defn insert-sample [caches]
+  (insert sample
     (values  caches )
     )
   )
@@ -162,6 +179,24 @@
     )
 
   )
+
+(defn get-sample-less [starttime station name]
+  ;(println starttime station)
+  (println starttime station name)
+  (select sample
+    (fields   :time ;;[(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "local" "GMT") :time]
+             :stationname :data :rate)
+    (where
+      (or {:stationname station :time [>= starttime] :name name}
+        {:stationname station :time [< starttime] :edtime [> starttime] :name name}
+        )
+
+    )
+    (order :time :ASC)
+    )
+
+  )
+
 (defn get-samplecache-bytype-less [starttime station type]
   ;(println starttime station)
   (select samplecache
@@ -171,6 +206,21 @@
     (where
       (or {:stationname station :time [>= starttime] :type type}
         {:stationname station :time [< starttime] :edtime [> starttime] :type type}
+        )
+    )
+    (order :time :ASC)
+    )
+
+  )
+(defn get-sample-bytype-less [starttime station name]
+  ;(println starttime station)
+  (select sample
+    ;(fields  [(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT+") :time]
+    ;         [(sqlfn FORMATDATETIME :edtime "yyyy-MM-dd hh:mm:ss.SS" "en" "GMT") :edtime]
+    ;         :stationname :data)
+    (where
+      (or {:stationname station :time [>= starttime] :name name}
+        {:stationname station :time [< starttime] :edtime [> starttime] :type name}
         )
     )
     (order :time :ASC)
@@ -536,6 +586,15 @@
     (exec-raw ["SELECT * FROM servers WHERE parentid=?" [serverid]] :results))
   )
 
+(defn get-rts-contentinfo [catalogid]
+  (with-db dbmysql
+    (exec-raw ["select  Net_code , Sta_code ,Chn_code , DATE_FORMAT(Phase_time, '%Y-%m-%d %H:%i:%s') as time  from  Phase_A where Catalog_id =?" [catalogid]] :results))
+
+  )
+(defn get-rts-eventinfo [eventid]
+  (with-db dbmysql
+    (exec-raw ["select id,Epi_lat, Epi_lon from  Catalog_A where Event_id =?" [eventid]] :results))
+  )
 (defn mysqlalert []
   (with-db dbmysql
     (exec-raw ["SELECT * FROM rt where MATCH ('\"320902\"')" []] :results))
