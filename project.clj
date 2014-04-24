@@ -42,6 +42,7 @@
    [compojure "1.1.6"]
    [lib-noir "0.8.1"]
    [com.postspectacular/rotor "0.1.0"]]
+  :aot [lumprj.controller.realstream]
   :repl-options {:init-ns lumprj.repl}
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.4.0"]

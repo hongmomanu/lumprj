@@ -137,7 +137,7 @@
 (defn get-streamcacheall-data [station]
   (select streamcache
     (where
-      {:stationname  station}
+      {:stationname  [like station]}
       )
     (order :time :ASC)
     )
@@ -595,7 +595,7 @@
   )
 (defn get-rts-eventinfo [eventid]
   (with-db dbmysql
-    (exec-raw ["select id,Epi_lat, Epi_lon from  Catalog_A where Event_id =?" [eventid]] :results))
+    (exec-raw ["select id,Epi_lat, Epi_lon, DATE_FORMAT(O_time, '%Y-%m-%d %H:%i:%s') as o_time from  Catalog_A where Event_id =?" [eventid]] :results))
   )
 (defn mysqlalert []
   (with-db dbmysql

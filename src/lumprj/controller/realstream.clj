@@ -75,9 +75,9 @@
 
 
   (let [
-        alldata-bhe   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHE")))
-        alldata-bhz   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHZ")))
-        alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/BHN")))
+        alldata-bhe   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HE")))
+        alldata-bhz   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HZ")))
+        alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HN")))
         ;;stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
         bhesub  (take-last (quot  (count alldata-bhe) 2) alldata-bhe)
         bhelast (take  (quot  (count alldata-bhe) 2) alldata-bhe)
@@ -85,6 +85,7 @@
         bhzlast (take  (quot  (count alldata-bhz) 2) alldata-bhz)
         bhnsub  (take-last (quot  (count alldata-bhz) 2) alldata-bhn)
         bhnlast (take  (quot  (count alldata-bhz) 2) alldata-bhn)
+        df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
         ]
 
                           {
@@ -96,7 +97,7 @@
                             :crossnowbhn (make-average-no-type bhnlast)
                             :stationname (:stationname station)
                             :stationcode (:stationcode station)
-                            :time  (:time (first bhesub))
+                            :time  (.format df (:time (first bhesub)))
                            }
 
     )
@@ -325,6 +326,7 @@
         lon (:epi_lon infoitem)
         lat (:epi_lat infoitem)
         id (:id infoitem)
+        time (:o_time infoitem)
         eventranges (:eventranges (conmmon/get-config-prop))
         ]
     (doall(map #(when (and
@@ -338,6 +340,7 @@
                                            :type "rts"
                                            :lonlat [lon lat]
                                            :name (:sname %)
+                                           :time time
                                            }
                                           )
                            false)))  eventranges) )
@@ -474,10 +477,27 @@
         :when (and (> x 0) (< (* (nth data x)(nth data (- x 1))) 0))]
     y))
   )
-
+;; 实时地震数据
 (defn realstream-data-func [data]
   ;;(println (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))))
-  (db/insert-streamcache (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data (doall data))))) )
+  (let [realdata (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data (doall data)))))
+        ;df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+        ;realdataformat (map #(conj {:time  (.format df (:time %))}
+        ;                       {:stationname %} {:data %}
+        ;                       {:zerocrossnum %}) realdata)
+        ]
+    ;(doseq [channel (keys @websocket/channel-hub)]
+      ;;(println realdataformat)
+    ;  (send! channel (json/write-str
+    ;                   {:results realdataformat
+    ;                    :type "realdata"
+    ;                    }
+    ;                   )
+    ;    false)
+    ;  )
+    (db/insert-streamcache  realdata)
+    )
+
   )
 
 (defn realstream-data-update-func [data]
@@ -548,7 +568,7 @@
 
 (defjob realstream-nofile-Job
   [ctx]
-  (println "定时获取实时数据la")
+  (println "定时获取实时数据")
   (try
     (let [lissClient (new LissClient (:ip @REAL_STREAM_CLIENT) (:port @REAL_STREAM_CLIENT))
           buf  (byte-array 512)
@@ -576,7 +596,7 @@
             (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
               (
                 do
-                (println "读取数据中...")
+                ;;(println "读取数据中...")
                 (.readFully lissInputStream buf)
                 (GenericMiniSeedRecord/buildMiniSeedRecord buf)
                 (realstreamcacheJob-child-dataprocess

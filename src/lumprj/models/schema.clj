@@ -197,6 +197,7 @@
       [:statustype "nvarchar(100)"]  ;状态类型
       [:userid "integer"]   ;;jack added 03-11  用户id
       [:logcontent "nvarchar(200)"]    ;日志类型
+      [:imgurl "nvarchar(5000)"]   ;图片预览
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"] ;时间
       ))
   )
