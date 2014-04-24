@@ -182,7 +182,7 @@
 
 (defn get-sample-less [starttime station name]
   ;(println starttime station)
-  (println starttime station name)
+  ;(println starttime station name)
   (select sample
     (fields   :time ;;[(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "local" "GMT") :time]
              :stationname :data :rate)
@@ -220,11 +220,13 @@
     ;         :stationname :data)
     (where
       (or {:stationname station :time [>= starttime] :name name}
-        {:stationname station :time [< starttime] :edtime [> starttime] :type name}
+        {:stationname station :time [< starttime] :edtime [> starttime] :name name}
         )
     )
     (order :time :ASC)
     )
+
+
 
   )
 (defn get-samplecache-bytype [starttime station type]

@@ -71,6 +71,16 @@
       :result1 result1
                   })
       )
+    )
+  (GET "/realstream/samplescachedetaillocal" [name time station second type timesample rate]
+    (let [result1 (realstreammanager/readsamplestreamdata-detail timesample station (read-string second) name)
+          result (map #(:data %) (drop 0 (take (* (read-string rate) (read-string second)) (realstreammanager/readrealstreamfromcache time station))))
+          ]
+
+      (resp/json {:success true :result  result
+      :result1 result1
+                  })
+      )
 
     )
   (GET "/realstream/makesamplescache" [paths type name]

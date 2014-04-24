@@ -138,7 +138,7 @@
 
 (defn max-one-fn [data max]
 
-  (map #(/ % max) data)
+  (map #(/ % 1) data)
   )
 ;;相关分析业务
 (defn realstreamrelations [rtime rstaton stime sstation second move]
@@ -238,7 +238,7 @@
          stimespan (- (clj/to-long fstimet) (clj/to-long stimet))
 
 
-         sampledata (if (> stimespan 0)(sampledata1)(drop (/ stimespan rate) sampledata1))
+         sampledata (if (> stimespan 0)sampledata1(drop (/ stimespan rate) sampledata1))
          samplemax (apply max (map #(Math/abs %) sampledata ))
          realstream (readrealstreamfromcache  rtime rstaton )
          frtime (let [time (:time (first realstream))
@@ -265,7 +265,7 @@
 
 
          ]
-
+    (println (count sampledata1))
     (resp/json {
                  :success true
                  :sstation sstation
@@ -443,7 +443,7 @@
   ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
   )
 (defn readsamplestreamdata-detail [time station second name]
-  (drop 0 (take (* 100 second) (let
+  (let
                                  [calendar (Calendar/getInstance)
          df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
          sample  (db/get-sample-bytype-less time station name)
@@ -461,8 +461,8 @@
 
          ]
           ;(doall (map #(println  (:time %) (:edtime %) (count (read-string (:data %))) (:stationname %)) sample))
-    (if (>= stimespan 0) sampledata1 (drop (/ stimespan rate) sampledata1))
-    )))
+    (drop 0 (take (* (:rate (first sample)) second) (if (>= stimespan 0) sampledata1 (drop (/ stimespan rate) sampledata1)) ))
+    )
   ;(drop 0 (take (* 100 second) (map #(read-string (:data %)) (db/get-samplecache-bytype time station type))))
   )
 
