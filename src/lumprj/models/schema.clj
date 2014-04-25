@@ -231,6 +231,9 @@
       [:connecttype "nvarchar(100)"] ;通讯类型
       [:contact "nvarchar(100)"] ;联系人
       [:phone "nvarchar(100)"] ;联系人电话
+      [:img "nvarchar(100)"] ;imgurl
+      [:alertimg "nvarchar(100)"] ;alertimg
+      [:geom "nvarchar(100)"] ;geom
       [:time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]
       ))
   )

@@ -38,6 +38,9 @@
   (POST "/duty/addnewstation"  request
     (duty/addnewstation (:params request))
    )
+  (POST "/duty/savestation"  request
+    (duty/savestation (:params request))
+   )
 
   (GET "/duty/getworkmanagerevents" [startDate endDate]
     (duty/getworkmanagerevents startDate endDate)

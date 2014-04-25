@@ -97,6 +97,7 @@
                             :crossnowbhn (make-average-no-type bhnlast)
                             :stationname (:stationname station)
                             :stationcode (:stationcode station)
+                            :geom (:geom station)
                             :time  (.format df (:time (first bhesub)))
                            }
 

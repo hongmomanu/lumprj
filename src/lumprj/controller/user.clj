@@ -16,12 +16,9 @@
            )
  )
 (defn saveuser [request]
-  ;;(println request)
-  ;(let [form-params (:form-params request)]
-  (let [query-params (:query-params request)]
-    (db/update-user query-params (get query-params "id"))
-    (resp/json {:success false})
-    ;;(db/duty-del-byids (get form-params "enumids"))
+  (let [query-params (:params request)]
+    (db/update-user query-params)
+    (resp/json {:success true})
     )
   )
 (defn userlist []

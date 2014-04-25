@@ -280,10 +280,10 @@
     (where {:id id})
     )
   )
-(defn update-user [data id]
+(defn update-user [data]
   (update users
   (set-fields data)
-  (where {:id id})))
+  (where {:id (:id data)})))
 
 (defn get-user [id]
   (first (select users
@@ -385,7 +385,7 @@
 
 (defn stationcode-list []
   (select stations
-    (fields :stationcode :stationname)
+    (fields :stationcode :stationname :geom)
     )
   )
 (defn stations-list [keyword starts limits]
@@ -410,6 +410,13 @@
     (values  key-values)
     )
 
+  )
+(defn savestation [key-values]
+  (update stations
+    (set-fields key-values)
+    (where {:id  (:id key-values)}
+      )
+    )
   )
 (defn log-duty-count [params]
   (select dutylog
@@ -512,8 +519,8 @@
       (fields :username :displayname)
       )
     ;(where {:day day})
-    (where (and {(sqlfn strftime "%Y-%m-%d" :start) [<= date]}
-                 {(sqlfn strftime "%Y-%m-%d" :end) [>= date]}
+    (where (and {(sqlfn strftime "%Y-%m-%d" :start "localtime") [<= date]}
+                 {(sqlfn strftime "%Y-%m-%d" :end "localtime") [>= date]}
                  )
       )
     )

@@ -85,6 +85,11 @@
     )
   (resp/json {:success true})
   )
+(defn savestation [values]
+  (db/savestation values)
+  (resp/json {:success true})
+
+  )
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )
@@ -92,7 +97,6 @@
   (if (= (:counts (first (db/mission-history-query day userid))) 0)
     (insertnewmission userid)(resp/json {:success false}))
   )
-
 (defn insertduty [day userid]
   (if (> (count (db/duty-query-day day)) 0) (resp/json {:success false :msg "已存在"})
     (if (> (first (vals (db/duty-insert day userid))) 0) (resp/json {:success true})
