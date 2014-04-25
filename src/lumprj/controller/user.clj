@@ -21,6 +21,10 @@
     (resp/json {:success true})
     )
   )
+(defn deluser [userid]
+  (db/del-user userid)
+  (resp/json {:success true})
+  )
 (defn userlist []
   (resp/json (db/user-list))
   )

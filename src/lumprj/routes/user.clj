@@ -15,6 +15,9 @@
   (POST "/user/saveuser" request
     (user/saveuser request)
     )
+  (POST "/user/deluser" [userid]
+    (user/deluser userid)
+    )
   (GET "/users" []
     (user/userlist)
     )

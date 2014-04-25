@@ -285,6 +285,12 @@
   (set-fields data)
   (where {:id (:id data)})))
 
+(defn del-user [userid]
+  (delete users
+    (where {:id userid})
+    )
+  )
+
 (defn get-user [id]
   (first (select users
                  (where {:id id})
@@ -410,6 +416,12 @@
     (values  key-values)
     )
 
+  )
+
+(defn delstation [sid]
+  (del stations
+    (where {:id sid})
+    )
   )
 (defn savestation [key-values]
   (update stations

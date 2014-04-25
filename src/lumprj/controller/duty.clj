@@ -90,6 +90,10 @@
   (resp/json {:success true})
 
   )
+(defn delstation [sid]
+  (db/delstation sid)
+  (resp/json {:success true})
+  )
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )
