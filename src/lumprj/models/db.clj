@@ -420,7 +420,8 @@
   )
 (defn get-station-code [code]
   (select stations
-    (fields :stationcode :stationname :geom)
+    (fields :stationcode :stationname :networkcode :networkname)
+    (where {:stationcode code})
     )
   )
 (defn stationcode-list []

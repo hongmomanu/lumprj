@@ -67,7 +67,9 @@
   (GET "/duty/getstations" [keyword start limit]
     (duty/getstations keyword start limit)
     )
-  (GET "/duty/getstation")
+  (GET "/duty/getstationinfo" [stationcode]
+    (duty/getstationinfo stationcode)
+    )
 
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)
@@ -94,6 +96,11 @@
   (POST "/duty/eqimpublic" [url]
 
     (duty/eqimcheck-nologin url )
+
+    )
+  (POST "/duty/newrecord" request
+
+    (duty/newrecord (:params request) )
 
     )
   (POST "/duty/completeduty" [id dutylog]

@@ -69,6 +69,9 @@
 
     )
 
+(defn getstationinfo [stationcode]
+  (resp/json (db/get-station-code stationcode))
+  )
 (defn getstations[keyword start limit]
   (resp/json
     {
@@ -167,8 +170,19 @@
 
   )
 
+(defn newrecord [params]
+  (try
+    (client/post (:url params) {:form-params params  :socket-timeout 1000
+                                :conn-timeout 1000})
+    (resp/json {:success true :msg "ok"})
+    (catch Exception e (resp/json {:success false}))
+    )
+
+  )
+
 (defn eqimcheck-nologin [url]
-  (let [my-cs (client/get url {:as :auto})]
+  (let [my-cs (client/get url {:as :auto  :socket-timeout 1000
+                               :conn-timeout 1000})]
 
     (try
       (println (:body my-cs))
