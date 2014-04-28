@@ -5,7 +5,7 @@
 
 (declare create-dutymission-table create-dutymissionhistory-table
   create-servers-table create-systemwatchlog-table create-dutylog-table
-  create-stations-table create-samplecache-table)
+  create-stations-table create-samplecache-table create-suspend-table)
 (def db-store "site.db")
 (def db-store-sqlite "sqlite.db3")
 
@@ -56,6 +56,7 @@
   ;;(.exists (new java.io.File (str (io/resource-path) db-store ".h2.db")))
   ;;(create-stations-table)
   ;(create-samplecache-table)
+  ;;(create-suspend-table)
   (.exists (new java.io.File (str datapath db-store-sqlite "")))
   )
 
@@ -107,6 +108,20 @@
       [:rate "int"] ;;样本比率
       ))
   )
+
+
+;;断记统计表
+(defn create-suspend-table
+  []
+  (sql/with-connection db-spec-sqlite
+    (sql/create-table
+      :suspend
+      [:id "integer primary key autoincrement"]  ;;id
+      [:station "varchar(30)"]    ;用户名
+      [:end_time "DATETIME"] ; 恢复时间
+      [:begin_time "DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))"]))) ;开始时间
+
+
 
 ;;用户表
 (defn create-users-table

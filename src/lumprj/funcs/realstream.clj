@@ -7,6 +7,7 @@
            (java.util StringTokenizer))
   (:require
             [lumprj.funcs.conmmon :as conmmon]
+            [lumprj.models.db :as db]
             )
   )
 
@@ -30,13 +31,21 @@
 
   )
 
+(defn running-station [station]
+  (db/has-suspend-station station)
+  )
+
+(defn suspend-station [station]
+  (println (str station "断记"))
+  (db/new-suspend-station station)
+  )
 ;;解码minidata
 (defn decodeminirtbufdata  [x  buf]
   (let [
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
     ;;(println )
-    (if(.decompress gmsRec updata)()())
+    (if(.decompress gmsRec updata)(running-station (.getStation gmsRec))(suspend-station (.getStation gmsRec)))
     ;;(println (.getNanos (.getStartTime gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)

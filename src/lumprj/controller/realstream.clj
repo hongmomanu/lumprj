@@ -583,7 +583,13 @@
       (.setRtServerPassiveMode lissClient false)
       (timbre/info "Enter the passive transport mod")
       (timbre/info (str "Retrieving  MiniSeed data from " (:ip @REAL_STREAM_CLIENT)))
-      (let [lissInputStream  (new DataInputStream (.retrieveRealTimeStream lissClient (into-array (map #(:stationcode %) (db/stationcode-list)))))]
+      (let [
+             realclientstream (.retrieveRealTimeStream lissClient (into-array (map #(:stationcode %) (db/stationcode-list))))
+             lissInputStream  (new DataInputStream realclientstream)
+             ;;lissInputStreamcopy (new DataInputStream realclientstream)
+             ;;shortnum (.readShort lissInputStreamcopy)
+             ;test (println shortnum)
+            ]
 
         (loop [nCurrent 0 test 1]
 
@@ -641,7 +647,8 @@
   (let [path paths
         nums (count (db/get-sample-byname name))
         ]
-    (if (> 0 nums) "已存在" (map #(let [seedplugin (new SeedVolumeNativePlugin)
+    ()
+    (if (> nums 0) "已存在" (map #(let [seedplugin (new SeedVolumeNativePlugin)
                                      ]
                                  (.setFile  seedplugin (new File %))                  ;/home/jack/test/ZJ.201402130341.0002.seed
                                  (loop [gmsRec (.getNextMiniSeedData seedplugin) test 1]

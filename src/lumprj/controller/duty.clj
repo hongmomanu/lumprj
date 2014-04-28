@@ -97,6 +97,11 @@
 (defn mysqlalert []
   (resp/json (db/mysqlalert))
   )
+(defn recordcheck [today yestoday]
+  (let [results (db/is-suspend today yestoday)]
+    (resp/json {:success (> (count results) 0) :result results})
+    )
+  )
 (defn maketodaymission [day userid]
   (if (= (:counts (first (db/mission-history-query day userid))) 0)
     (insertnewmission userid)(resp/json {:success false}))

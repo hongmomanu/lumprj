@@ -10,7 +10,7 @@
 
 
 
-(declare users dutyenum dutymission dutymissionhistory)
+(declare users dutyenum dutymission dutymissionhistory suspend)
 
 
 (defentity streamcache
@@ -61,6 +61,35 @@
   (database db)
   )
 
+(defentity suspend
+  (database db)
+  )
+
+(defn is-suspend [today yestday]
+  (select suspend
+    (where (or (and
+             {:begin_time [>= yestday] :end_time [= nil]}
+             {:begin_time [< today]})
+
+             (and
+               {:begin_time [>= yestday] :end_time [not= nil]}
+               {:begin_time [< today]} {:end_time [> (sqlfn date :begin_time "+10 minute")]})
+
+             )
+      )
+    )
+  )
+(defn has-suspend-station [station]
+  (update suspend
+    (set-fields {:end_time (sqlfn datetime "now" "localtime")})
+    (where {:station station :end_time [= nil]})
+    )
+  )
+(defn new-suspend-station [station]
+  (insert suspend
+    (values {:station station :begin_time (sqlfn datetime "now" "localtime")})
+    )
+  )
 (defn insert-streamcache [caches]
   (insert streamcache
     (values caches)
@@ -419,7 +448,7 @@
   )
 
 (defn delstation [sid]
-  (del stations
+  (delete stations
     (where {:id sid})
     )
   )
