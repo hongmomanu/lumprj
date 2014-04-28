@@ -35,7 +35,7 @@
     (duty/mysqlalert)
     )
 
-  (GET "/duty/recordcheck" [today yestoday]
+  (POST "/duty/recordcheck" [today yestoday]
     (duty/recordcheck today yestoday)
     )
 
@@ -67,6 +67,7 @@
   (GET "/duty/getstations" [keyword start limit]
     (duty/getstations keyword start limit)
     )
+  (GET "/duty/getstation")
 
   (POST "/addnewduty" [day userid]
     (duty/insertduty day userid)

@@ -67,6 +67,7 @@
 
 (defn is-suspend [today yestday]
   (select suspend
+    (fields :station :begin_time)
     (where (or (and
              {:begin_time [>= yestday] :end_time [= nil]}
              {:begin_time [< today]})
@@ -417,7 +418,11 @@
     (order :id :DESC)
     )
   )
-
+(defn get-station-code [code]
+  (select stations
+    (fields :stationcode :stationname :geom)
+    )
+  )
 (defn stationcode-list []
   (select stations
     (fields :stationcode :stationname :geom)

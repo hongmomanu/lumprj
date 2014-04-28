@@ -240,6 +240,7 @@
       [:id "integer primary key autoincrement"]
       [:stationname "nvarchar(100)"] ;台站名称
       [:networkname "nvarchar(100)"] ;台网名称
+      [:networkcode "nvarchar(100)"] ;台网代码
       [:stationcode "nvarchar(100)"] ;台站代码
       [:dataaddr "nvarchar(100)"] ;数采地址
       [:gatewayaddr "nvarchar(100)"] ;网关地址
