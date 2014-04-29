@@ -199,19 +199,27 @@
 
   )
 
+
+(defn sendsms [tel msg telpart]
+  (db/insertmsm tel msg telpart)
+  (resp/json {:success true})
+  )
 (defn completeduty [id dutylog]
   (db/completedutymission id dutylog)
   (resp/json {:success true})
   )
 (defn eqimcheck [id username password url securl]
   (let [my-cs (clj-http.cookies/cookie-store)]
+    (println url securl)
+    (println  username password)
 
     (try
-      (client/post url {:form-params {:username username :password password}
+      (client/post url {:form-params {:name username :pwd password}
                         :socket-timeout 1000
                         :conn-timeout 1000
                         :cookie-store my-cs})
-      (resp/json {:success true :msg (:body (client/get securl {:cookie-store my-cs}))})
+      (resp/json {:success true :msg (:body (client/get securl {:cookie-store my-cs
+                                                                :as :auto}))})
 
       (catch Exception e (resp/json {:success false}))
       )

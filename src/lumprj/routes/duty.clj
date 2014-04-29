@@ -98,6 +98,10 @@
     (duty/eqimcheck-nologin url )
 
     )
+  (POST "/duty/eqimpubliclogin" [id username password url securl]
+
+    (duty/eqimcheck id username password url securl)
+    )
   (POST "/duty/newrecord" request
 
     (duty/newrecord (:params request) )
@@ -106,6 +110,11 @@
   (POST "/duty/completeduty" [id dutylog]
 
     (duty/completeduty id dutylog)
+
+    )
+  (POST "/duty/sendsms" [tel msg telpart]
+
+    (duty/sendsms tel msg telpart)
 
     )
 

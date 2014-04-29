@@ -7,7 +7,7 @@
 (defdb dbmysql schema/db-mysql)
 (defdb memdb schema/db-h2-mem)
 (defdb h2db schema/db-spec)
-
+(defdb orcldb schema/db-oracle)
 
 
 (declare users dutyenum dutymission dutymissionhistory suspend)
@@ -660,5 +660,11 @@
 (defn mysqlalert []
   (with-db dbmysql
     (exec-raw ["SELECT * FROM rt where MATCH ('\"320902\"')" []] :results))
+  )
+
+(defn insertmsm [tel msg telpart]
+  (with-db orcldb
+    (exec-raw ["insert into m_sms_queue (TELNUMBER,MSGCONTENT,state,telpart) values (?,?,?,?)" [tel msg 0 telpart]])
+    )
   )
 
