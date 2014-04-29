@@ -112,8 +112,9 @@
   (POST "/duty/copywavefile" [sourcedir targetdir]
     (duty/copywavefile sourcedir targetdir)
     )
-  (POST "/duty/checkarchive" [sourcedir earthplatformlist archiveminsize]
-    (duty/checkarchive sourcedir (json/read-str earthplatformlist) archiveminsize)
+  (POST "/duty/checkarchive" [sourcedir  archiveminsize type]
+    (if (= type "wave") (duty/checkarchive sourcedir archiveminsize) (duty/checkevents sourcedir archiveminsize))
+
     )
 
 )

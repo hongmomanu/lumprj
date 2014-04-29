@@ -1,15 +1,23 @@
 (ns lumprj.controller.duty
+  (:import
+           (java.util Calendar)
+           (java.sql Timestamp)
+           (java.text SimpleDateFormat)
+           )
   (:use compojure.core)
   (:require [lumprj.models.db :as db]
             [noir.response :as resp]
             [me.raynes.fs :as fs]
             [clj-http.client :as client]
+            [clj-time.format :as f]
+            [clj-time.local :as l]
             )
   )
 
 (defn dutylist []
   (resp/json (db/duty-list))
   )
+(def custom-formatter (f/formatter "yyyyMMdd"))
 
 (defn getcurrentduty [day date]
   (resp/json (db/duty-query-day day date))
@@ -133,14 +141,57 @@
   (resp/json {:success (fs/exists? sourcedir)})
 
   )
-(defn checkarchive [sourcedir earthplatformlist archiveminsize]
-  (println earthplatformlist)
-  (let [earthplatformlist (db/stationcode-list)]
-    (let [results (filter
-                    #(false? (and (fs/child-of? sourcedir (str sourcedir (:stationcode %)))
-                               (>= (fs/size (str sourcedir (:stationcode %))) (* (read-string archiveminsize) 1048576)))) earthplatformlist)]
 
-      (resp/json {:success (empty? results) :results (map #(:stationcode %) results)})
+(defn checkevents [sourcedir  archiveminsize]
+
+  (let [
+         cal (Calendar/getInstance)
+         df   (new SimpleDateFormat "yyyyMMdd")
+         dfm (new SimpleDateFormat "M")
+         datastr2 (do (.add cal Calendar/DATE -1) (.format df (new Timestamp (->(.getTime cal)(.getTime)))))
+         mstr  (do (.add cal Calendar/DATE -1) (.format dfm (new Timestamp (->(.getTime cal)(.getTime)))))
+         results1 (doall (fs/find-files
+                    (str sourcedir "seed/" mstr "/")  ; The root directory to search
+                           (re-pattern (str "(.*)" datastr2 "(.*)" ))))
+         results2 (doall (fs/find-files
+                    (str sourcedir "evt/" mstr "/")  ; The root directory to search
+                           (re-pattern (str "(.*)" datastr2 "(.*)" ))))
+         allresults (into results1 results2)
+         ]
+    (resp/json {:success (empty? allresults) :results (/ (count allresults) 2)})
+    )
+  )
+;;波形文件监测
+(defn checkarchive [sourcedir  archiveminsize]
+  (let [earthplatformlist (db/stationcode-list)
+        networklist (db/network-list)
+        ;datestr (f/unparse custom-formatter (l/local-now))
+        cal (Calendar/getInstance)
+        df   (new SimpleDateFormat "yyyyMMdd")
+        datastr2 (do (.add cal Calendar/DATE -1) (.format df (new Timestamp (->(.getTime cal)(.getTime)))))
+        hourrange (map #(if (< % 10) (str 0 %) %) (range 0 24))
+        earthplatformliststr (map #(conj {:str (str datastr2 "." (:networkcode %) "." (:stationcode %) ".seed" )} %) earthplatformlist)
+
+        ]
+
+    (let [
+           netresultsstr (for [x networklist
+                            y hourrange
+                            ]
+                        (str datastr2 y "." (:networkcode x) ".seed" ))
+
+           netresults (filter
+                            #(false? (and (fs/child-of? sourcedir (str sourcedir %))
+                                       (>= (fs/size (str sourcedir %)) (* (read-string archiveminsize) 1024)))) netresultsstr)
+
+
+           results (filter
+                    #(false? (and (fs/child-of? sourcedir (str sourcedir (:str %)))
+                               (>= (fs/size (str sourcedir (:str %))) (* (read-string archiveminsize) 1024)))) earthplatformliststr)
+
+           allresults (into (map #(:str %) results) netresults)
+           ]
+      (resp/json {:success (empty? allresults) :results allresults})
       )
 
     )
