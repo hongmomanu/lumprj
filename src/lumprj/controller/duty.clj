@@ -33,6 +33,11 @@
     )
   )
 
+(defn delmission [missionid]
+  (db/del-mission missionid)
+  (resp/json {:success true})
+  )
+
 (defn getdutymissions [day]
   (resp/json (db/mission-today-list day))
   )

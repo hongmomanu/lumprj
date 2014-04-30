@@ -23,6 +23,9 @@
   (POST "/duty/savemission" request
     (duty/savemission request)
     )
+  (POST "/duty/delmission" [missionid]
+    (duty/delmission missionid)
+    )
   (GET "/getdutymissions" [day]
     (duty/getdutymissions day)
     )

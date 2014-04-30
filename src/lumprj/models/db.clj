@@ -304,6 +304,11 @@
     (where {:id id}))
 
   )
+(defn del-mission [missionid]
+  (delete dutymission
+    (where {:id id})
+    )
+  )
 (defn update-mission [data id]
   (update dutymission
     (set-fields data)
@@ -567,9 +572,9 @@
 
 (defn duty-query-day [day date]
   (select dutyenum
-    (fields [:id :enumid] :day :userid)
+    (fields [:id :enumid] :day :userid )
     (with users
-      (fields :username :displayname)
+      (fields :username :displayname :telnum)
       )
     ;(where {:day day})
     (where (and {(sqlfn strftime "%Y-%m-%d" :start "localtime") [<= date]}
