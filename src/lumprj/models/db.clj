@@ -306,7 +306,7 @@
   )
 (defn del-mission [missionid]
   (delete dutymission
-    (where {:id id})
+    (where {:id missionid})
     )
   )
 (defn update-mission [data id]

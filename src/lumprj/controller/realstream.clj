@@ -363,6 +363,17 @@
     (doall(map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %) (:user %) (:pass %))) eqimservers))
     )
   )
+
+(defn rts-server-init []
+  (let [rootpath (str (System/getProperty "user.dir") "/")
+        cfgFile (str rootpath "applicationContext-amqEar-jms.xml")
+        res (new FileSystemResource cfgFile)
+        ac (new XmlBeanFactory res)
+        amq (.getBean ac "amqEarService")
+        ]
+    (.runListening amq)
+    )
+  )
 (defn eqim-test []
   (.receiveAndPublish (new EqimConnectorTip "10.33.8.174" 5001 "show" "show"))
   (resp/json {:success true})
