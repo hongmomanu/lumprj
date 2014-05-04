@@ -23,6 +23,8 @@
 
 (defn checkappname [ip appname SSH_SHOW_LIST]
   (let [result (execCommand ip  appname SSH_SHOW_LIST) ]
+    (println result)
+    (println ip)
     (if(> (count result) 0) true false)
     )
   )
@@ -67,17 +69,17 @@
 (defn execCommand [ip cmdstr SSH_SHOW_LIST]
   (let [connect (get SSH_SHOW_LIST (read-string (str ":" ip)))
         ]
-
     (if (nil? connect)[] ( let [
                                     sess  (.openSession connect)
                                     ]
                               (.requestPTY sess "vt100" 80 24 640 480 nil)
                               (.execCommand sess cmdstr)
 
-                              (let [result (line-seq (new BufferedReader
+
+                           (let [result (line-seq (new BufferedReader
                                                                      (new InputStreamReader (new StreamGobbler (.getStdout sess )))))
                                                  ]
-                                (.close sess)
+                               (.close sess)
                                 result
                                )
 
@@ -87,7 +89,10 @@
     )
   )
 (defn getDiskRatioByIp [ip SSH_SHOW_LIST]
-  (let [result (execCommand ip "df -hl | grep -w '/home\\|/'" SSH_SHOW_LIST) ]
+  (let [
+         ;result (execCommand ip "df -hl | grep -w '/home\\|/'" SSH_SHOW_LIST)
+         result (execCommand ip "df -hl | grep -w '/'" SSH_SHOW_LIST)
+         ]
     result
     )
   )
@@ -97,8 +102,42 @@
     )
   )
 
-(defn getMemRatioByIp [ip SSH_SHOW_LIST]
-  (let [result (execCommand ip "top -n 1 b|grep Mem:| cut -d ':' -f 2" SSH_SHOW_LIST) ]
+(defn getunix-version [ip SSH_SHOW_LIST]
+  (let [version (first (execCommand ip "uname" SSH_SHOW_LIST))]
+    (clojure.string/lower-case (if (nil? version) "win" version))
+    )
+
+  )
+(defn getMemRationLinux [ip SSH_SHOW_LIST]
+  (let [
+         result (execCommand ip "top -n 1 b|grep Mem:| cut -d ':' -f 2 | tr '[:upper:]' '[:lower:]'" SSH_SHOW_LIST)
+        ]
+    result
+  )
+  )
+(defn getMemRatioByIpBsd [ip SSH_SHOW_LIST]
+  ;(println (count (execCommand ip "ps aux" SSH_SHOW_LIST))  )
+  ;(println (execCommand ip "ps aux" SSH_SHOW_LIST))
+  ;(println (clojure.string/split (nth (execCommand ip "ps aux" SSH_SHOW_LIST) 10) #"\s"))
+  (let [
+         ;result (execCommand ip "top -n 1 b|grep Mem:| cut -d ':' -f 2 | tr '[:upper:]' '[:lower:]'" SSH_SHOW_LIST)
+
+         result   (drop 1 (execCommand ip "ps -aux -m" SSH_SHOW_LIST))
+         ]
+
+    result
+    )
+  )
+
+(defn getCpuRatioByIpBsd [ip SSH_SHOW_LIST]
+  ;(println (count (execCommand ip "ps aux" SSH_SHOW_LIST))  )
+  ;(println (execCommand ip "ps aux" SSH_SHOW_LIST))
+  ;(println (clojure.string/split (nth (execCommand ip "ps aux" SSH_SHOW_LIST) 10) #"\s"))
+  (let [
+         ;result (execCommand ip "top -n 1 b|grep Mem:| cut -d ':' -f 2 | tr '[:upper:]' '[:lower:]'" SSH_SHOW_LIST)
+         result   (drop 1 (execCommand ip "ps -aux -r" SSH_SHOW_LIST))
+         ]
+
     result
     )
   )

@@ -54,13 +54,13 @@
   ;               (map #(str  parentpath %)(fs/list-dir parentpath))
   ;               ))
 
-  (future (realstream/makerealstreamcache));;生成数据缓存
+  ;(future (realstream/makerealstreamcache));;生成数据缓存
   ;(future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
   ;                                           (map #(str  parentpath %)(fs/list-dir parentpath))
   ;                                           ))) ;;生成样本缓存
 
   (future (realstream/eqim-server-init));eqim 启动服务监听
-  (future (realstream/rts-server-init));rts 启动服务监听
+  ;(future (realstream/rts-server-init));rts 启动服务监听
   (timbre/info "创建缓存结束")
   (timbre/info "lumprj started successfully"))
 

@@ -612,6 +612,11 @@
     (exec-raw ["SELECT * FROM users WHERE username = ? " [username]] :results))
   )
 
+(defn del-server [serverid]
+  (delete servers
+    (where {:id serverid})
+    )
+  )
 (defn has-server [servername servervalue]
   (with-db db
     (select servers (where {:servervalue servervalue :servername servername}) (aggregate (count :id) :counts)))

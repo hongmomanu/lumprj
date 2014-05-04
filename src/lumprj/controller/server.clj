@@ -3,8 +3,11 @@
   (:require [lumprj.models.db :as db]
             [lumprj.funcs.system :as system]
             [noir.response :as resp]
+            [lumprj.funcs.conmmon :as conmmon]
             )
   )
+
+(declare mem-cpu-filter)
 
 (def SSH_SHOW_LIST (atom {}))
 
@@ -23,6 +26,11 @@
      id
     )
   (resp/json {:success true})
+  )
+(defn delserver [serverid]
+
+  (db/del-server serverid)
+  (resp/json {:success true :msg "删除成功"})
   )
 (defn addserver [servername servervalue parentid type]
   (let [servercount (if (> (read-string parentid) 0) (:counts (first (db/has-server servername servervalue)))
@@ -58,7 +66,7 @@
   )
 (defn serverport-app-check [serverid ip]
   (let [results (db/serverport serverid)]
-    (map #(conj % {:isconnect (if (> (:type %) 0) (system/checkappname ip (:servervalue %) @SSH_SHOW_LIST) (system/checkport ip (:servervalue %)))}) results)
+    (map #(conj % {:isconnect (if (> (:type %) 0)  (system/checkappname ip (:servervalue %) @SSH_SHOW_LIST) (system/checkport ip (:servervalue %)))}) results)
     )
   )
 (defn serverport-app [serverid ip]
@@ -68,11 +76,35 @@
   )
 
 (defn server-cpu [ip]
-  (let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
-    ;(println (count results))
-    (if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
 
+  (if (= (system/getunix-version ip @SSH_SHOW_LIST) "linux")
+    (let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
+      (if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
+
+
+      )
+    (let [results (system/getCpuRatioByIpBsd ip @SSH_SHOW_LIST)]
+      (if
+        (> (count results) 0)
+        (
+
+          let [ memlist (map #(mem-cpu-filter % 2) results)]
+          (conmmon/sum memlist)
+          ;/
+          ;(read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
+
+
+          ;(read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
+
+          ) "")
+
+      )
     )
+
+  ;(let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
+    ;(if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
+
+    ;)
   )
 
 (defn server-disk [ip]
@@ -84,19 +116,48 @@
         ) [])
     )
   )
-(defn server-mem [ip]
-  (let [results (system/getMemRatioByIp ip @SSH_SHOW_LIST)]
-    (if
-      (> (count results) 0)
-      (
 
-        /
-        (read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"used")))
-        (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
+(defn mem-cpu-filter [item num]
 
-        ) "")
-
+  (let [itemlist (clojure.string/split item #"\s+")
+        mem   (read-string (nth  itemlist num) )
+        ]
+    ;(println itemlist)
+    (if ( >  mem 100) 0 mem)
     )
+  )
+(defn server-mem [ip]
+  (if (= (system/getunix-version ip @SSH_SHOW_LIST) "linux")
+    (let [results (system/getMemRationLinux ip @SSH_SHOW_LIST)]
+      (if (> (count results) 0) (
+
+                                  /
+                                  (read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
+                                  (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
+                                  ) "")
+
+
+      )
+    (let [results (system/getMemRatioByIpBsd ip @SSH_SHOW_LIST)]
+      (if
+        (> (count results) 0)
+        (
+          let [ memlist (map #(mem-cpu-filter % 3) results)]
+
+          (conmmon/sum memlist)
+
+          ;/
+          ;(read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
+
+
+          ;(read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
+
+          ) "")
+
+      )
+    )
+
+
   )
 
 (defn serverlist [key start limit]
