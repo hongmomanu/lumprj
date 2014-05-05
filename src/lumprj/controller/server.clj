@@ -144,7 +144,7 @@
         (
           let [ memlist (map #(mem-cpu-filter % 3) results)]
 
-          (conmmon/sum memlist)
+          (/ (- 100 (conmmon/sum memlist)) 100)
 
           ;/
           ;(read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
