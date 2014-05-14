@@ -74,7 +74,7 @@
 
              (and
                {:begin_time [>= yestday] :end_time [not= nil]}
-               {:begin_time [< today]} {:end_time [> (sqlfn date :begin_time "+10 minute")]})
+               {:begin_time [< today]} {:end_time [> (sqlfn DATETIME :begin_time "+10 minutes")]})
 
              )
       )
@@ -86,6 +86,14 @@
     (where {:station station :end_time [= nil]})
     )
   )
+
+(defn is-suspend-station [station]
+  (select suspend
+    (set-fields {:end_time (sqlfn datetime "now" "localtime")})
+    (where {:station station :end_time [= nil]})
+    )
+  )
+
 (defn new-suspend-station [station]
   (insert suspend
     (values {:station station :begin_time (sqlfn datetime "now" "localtime")})
@@ -139,10 +147,12 @@
     )
   )
 
-(defn del-streamcache []
+(defn del-streamcache [name]
 
   (delete streamcache
-    (where {:time [< (sqlfn DATEADD "MINUTE"  -3 (sqlfn now) )]})
+    (where {:time [< (sqlfn DATEADD "MINUTE"  -10 (sqlfn now) )]
+            :stationname name
+            })
     )
   )
 
@@ -164,10 +174,11 @@
     )
   )
 
+
 (defn get-streamcacheall-data [station]
   (select streamcache
     (where
-      {:stationname  [like station]}
+      {:stationname  [like (str  station "%")]}
       )
     (order :time :ASC)
     )

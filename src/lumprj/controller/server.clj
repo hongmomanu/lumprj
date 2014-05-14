@@ -77,34 +77,36 @@
 
 (defn server-cpu [ip]
 
-  (if (= (system/getunix-version ip @SSH_SHOW_LIST) "linux")
-    (let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
-      (if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
+  (let [results (system/getCpuRatioByIpCommon ip @SSH_SHOW_LIST)
+        version (system/getunix-version ip @SSH_SHOW_LIST)
+        ]
+    (if (nil? (first results)) "" (* 100 ( / (read-string (re-find #"\d+.\d+" (first results))) (if(= version "linux")
+                                                                                                  (let [results (system/getLinuxCpu-num ip @SSH_SHOW_LIST)]
+                                                                                                    (read-string (first results))
+                                                                                                    )(let [results (system/getBsdCpu-num ip @SSH_SHOW_LIST)]
+                                                                                                       (read-string (first results))
+                                                                                                       )) )))
 
-
-      )
-    (let [results (system/getCpuRatioByIpBsd ip @SSH_SHOW_LIST)]
-      (if
-        (> (count results) 0)
-        (
-
-          let [ memlist (map #(mem-cpu-filter % 2) results)]
-          (conmmon/sum memlist)
-          ;/
-          ;(read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
-
-
-          ;(read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
-
-          ) "")
-
-      )
     )
+  ;(if (= (system/getunix-version ip @SSH_SHOW_LIST) "linux")
+  ;  (let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
+  ;    (if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
 
-  ;(let [results (system/getCpuRatioByIp ip @SSH_SHOW_LIST)]
-    ;(if (> (count results) 0) (re-find #"\d+.\d+" (first results)) "")
 
-    ;)
+  ;    )
+  ;  (let [results (system/getCpuRatioByIpBsd ip @SSH_SHOW_LIST)]
+  ;    (if
+  ;      (> (count results) 0)
+  ;      (
+
+  ;        let [ memlist (map #(mem-cpu-filter % 2) results)]
+  ;        (conmmon/sum memlist)
+
+   ;       ) "")
+
+   ;   )
+   ; )
+
   )
 
 (defn server-disk [ip]
@@ -129,11 +131,12 @@
 (defn server-mem [ip]
   (if (= (system/getunix-version ip @SSH_SHOW_LIST) "linux")
     (let [results (system/getMemRationLinux ip @SSH_SHOW_LIST)]
+
       (if (> (count results) 0) (
 
                                   /
-                                  (read-string (first (clojure.string/split (re-find #"\d+ free" (first results)) #"free")))
-                                  (read-string (first (clojure.string/split (re-find #"\d+ total" (first results)) #"total")))
+                                  (read-string (re-find #"\d+"  (re-find #"\w+ free" (first results))))
+                                  (read-string (re-find #"\d+"  (re-find #"\w+ total" (first results))))
                                   ) "")
 
 
@@ -164,11 +167,14 @@
   (let [results (db/serverlist start limit)]
     ;;(println (server-cpu "192.168.2.112"))
     (resp/json {:results (map #(conj %
-                                 {:isping (system/ping (:servervalue %))
-                                  :cpu (server-cpu (:servervalue %))
-                                  :mem (server-mem (:servervalue %))
-                                  :disk (server-disk (:servervalue %))
-                                  :apps (serverport-app (:key %) (:servervalue %))}) results)
+                                 (let [isping (system/ping (:servervalue %))]
+                                   {:isping isping
+                                    :cpu (if(true? isping) (server-cpu (:servervalue %)) "")
+                                    :mem (if(true? isping) (server-mem (:servervalue %)) "")
+                                    :disk (if(true? isping) (server-disk (:servervalue %))  "")
+                                    :apps (if(true? isping) (serverport-app (:key %) (:servervalue %)) [])}
+                                   )
+                                 ) results)
                 :totalCount (:counts (first (db/servercount)))})
     )
 

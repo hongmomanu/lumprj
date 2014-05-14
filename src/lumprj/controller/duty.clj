@@ -220,8 +220,8 @@
 
     (try
       (client/post url {:form-params {:name username :pwd password}
-                        :socket-timeout 1000
-                        :conn-timeout 1000
+                        :socket-timeout 5000
+                        :conn-timeout 5000
                         :cookie-store my-cs})
       (resp/json {:success true :msg (:body (client/get securl {:cookie-store my-cs
                                                                 :as :auto}))})

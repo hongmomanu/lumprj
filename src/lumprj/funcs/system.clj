@@ -23,8 +23,8 @@
 
 (defn checkappname [ip appname SSH_SHOW_LIST]
   (let [result (execCommand ip  appname SSH_SHOW_LIST) ]
-    (println result)
-    (println ip)
+    ;(println ip appname)
+    ;(println result)
     (if(> (count result) 0) true false)
     )
   )
@@ -33,7 +33,7 @@
 (defn checkappname-old [ip appname]
   (let [connect (new Connection ip)
         ]
-    (.connect connect nil 100 0)
+    (.connect connect nil 1000 0)
     (.authenticateWithPassword connect "jack" "shayu626")
     ( let [
             sess  (.openSession connect)
@@ -59,7 +59,7 @@
   (let [connect (new Connection ip)
         ]
     (try
-      (.connect connect nil 100 0)
+      (.connect connect nil 1000 0)
       (if (true? (.authenticateWithPassword connect username password)) (assoc {} (read-string (str ":" ip)) connect){})
       (catch Exception e {})
       )
@@ -70,7 +70,10 @@
   (let [connect (get SSH_SHOW_LIST (read-string (str ":" ip)))
         ]
     (if (nil? connect)[] ( let [
-                                    sess  (.openSession connect)
+                                 sess (try
+                                        (.openSession connect)
+                                   (catch Exception e (do (.connect connect) (.openSession connect)))
+                                   )
                                     ]
                               (.requestPTY sess "vt100" 80 24 640 480 nil)
                               (.execCommand sess cmdstr)
@@ -98,6 +101,21 @@
   )
 (defn getCpuRatioByIp [ip SSH_SHOW_LIST]
   (let [result (execCommand ip "top -n 1 b|grep Cpu | cut -d ',' -f 1 | cut -d ':' -f 2" SSH_SHOW_LIST) ]
+    result
+    )
+  )
+(defn getLinuxCpu-num [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "grep 'model name' /proc/cpuinfo | wc -l" SSH_SHOW_LIST) ]
+    result
+    )
+  )
+(defn getBsdCpu-num [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "sysctl -n hw.ncpu" SSH_SHOW_LIST) ]
+    result
+    )
+  )
+(defn getCpuRatioByIpCommon [ip SSH_SHOW_LIST]
+  (let [result (execCommand ip "uptime | awk '{print $10,$11,$12}' " SSH_SHOW_LIST) ]
     result
     )
   )

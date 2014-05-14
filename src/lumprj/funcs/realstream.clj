@@ -7,6 +7,7 @@
            (java.util StringTokenizer))
   (:require
             [lumprj.funcs.conmmon :as conmmon]
+            [taoensso.timbre :as timbre]
             [lumprj.models.db :as db]
             )
   )
@@ -38,20 +39,24 @@
 
 
 (defn suspend-station [station]
-  (println (str station "断记"))
-  (db/new-suspend-station station)
+  (println (str station "断记11111"))
+  (when (= (count (db/is-suspend-station  station)) 0)(db/new-suspend-station station))
   )
 ;;解码minidata
 (defn decodeminirtbufdata  [x  buf]
   (let [
          gmsRec (GenericMiniSeedRecord/buildMiniSeedRecord buf)
          updata (make-array Integer/TYPE (.getNumSamples gmsRec))]
-    ;;(println )
-    (if(.decompress gmsRec updata)(running-station (.getStation gmsRec))(suspend-station (.getStation gmsRec)))
-    ;;(println (.getNanos (.getStartTime gmsRec)))
+
+    (if(.decompress gmsRec updata)()(suspend-station (.getStation gmsRec)))     ;running-station (.getStation gmsRec)
+    ;(println (.getNanos (.getStartTime gmsRec)))
+    (timbre/info (str (.getStartTime gmsRec) ": " (.getStation gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
+     :channel (.getChannel gmsRec)
+     :name   (.getStation gmsRec)
      :time (.getStartTime gmsRec)
+     :rate (int (.getSampleRate gmsRec))
      :edtime (.getEndTime gmsRec)
      }
     )

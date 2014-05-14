@@ -8,9 +8,9 @@
   (apply + arr)
     )
 (defn average [coll]
-
-  (let [sum (apply + coll)]
-    (quot sum (count coll))))
+  (if (= (count coll) 0) 0  (let [sum (apply + coll)]
+                    (quot sum (count coll))))
+  )
 
 
 (defn get-config-prop []

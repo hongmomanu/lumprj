@@ -47,20 +47,23 @@
   (if-not (schema/initialized?) (schema/create-tables))
   (websocket/start-server 3001)
   (server/update-ssh-list) ;;更新ssh列表
+  (realstream/updatestreamserver);;更新rtsserver配置信息
   (schema/create-streamcache-table) ;;创建数据流缓存表
   (schema/create-samplecache-table) ;;创建样本缓存表
-  ;(timbre/info "创建缓存开始")
+  (timbre/info "创建缓存表结束")
   ;(timbre/info (let [parentpath (str schema/datapath "samplefiles/")]
   ;               (map #(str  parentpath %)(fs/list-dir parentpath))
   ;               ))
 
-  ;(future (realstream/makerealstreamcache));;生成数据缓存
+  (future (realstream/makerealstreamcache));;生成数据缓存
+  ;(future (realstream/realstream-indirect ["*"]));;生成数据缓存直接取
+  ;(future (realstream/get-stations-realstream));;生成数据缓存直接取
   ;(future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
   ;                                           (map #(str  parentpath %)(fs/list-dir parentpath))
   ;                                           ))) ;;生成样本缓存
 
   (future (realstream/eqim-server-init));eqim 启动服务监听
-  ;(future (realstream/rts-server-init));rts 启动服务监听
+  (future (realstream/rts-server-init));rts 启动服务监听
   (timbre/info "创建缓存结束")
   (timbre/info "lumprj started successfully"))
 

@@ -42,6 +42,10 @@
     (duty/recordcheck today yestoday)
     )
 
+  (GET "/duty/recordcheck" [today yestoday]
+    (duty/recordcheck today yestoday)
+    )
+
   (POST "/duty/addnewstation"  request
     (duty/addnewstation (:params request))
    )
