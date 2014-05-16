@@ -26,8 +26,11 @@
       (resp/json {:success true :result  data})
       )
     )
+  (GET "/realstream/realdata" [time station step]
+    (resp/json (realstreammanager/readrealstreamfromcache-now time station (read-string step)))
+    )
   (GET "/realstream/datatest" [station step]
-    (resp/json {:results (realstreammanager/get-streamcacheall-data-new station (read-string step))})
+    (resp/json {:results (realstreammanager/get-streamcacheall-data-new station (read-string step) 600000)})
     )
 
   (GET "/readrealstream" []

@@ -55,8 +55,9 @@
   ;               (map #(str  parentpath %)(fs/list-dir parentpath))
   ;               ))
 
-  (future (realstream/makerealstreamcache));;生成数据缓存
-  ;(future (realstream/realstream-indirect ["*"]));;生成数据缓存直接取
+  ;(future (realstream/makerealstreamcache));;生成数据缓存
+  (future (realstream/realstream-indirect ["*"]));;生成数据缓存直接取
+  ;(future (realstream/realstream-del)) ;;删除数据
   ;(future (realstream/get-stations-realstream));;生成数据缓存直接取
   ;(future(realstream/make-sampledata-cache (let [parentpath (str schema/datapath "samplefiles/")]
   ;                                           (map #(str  parentpath %)(fs/list-dir parentpath))
