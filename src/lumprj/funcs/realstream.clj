@@ -50,7 +50,7 @@
 
     (if(.decompress gmsRec updata)()(suspend-station (.getStation gmsRec)))     ;running-station (.getStation gmsRec)
     ;(println (.getNanos (.getStartTime gmsRec)))
-    ;(timbre/info (str (.getStartTime gmsRec) ": " (.getStation gmsRec)))
+    (timbre/info (str (.getStartTime gmsRec) ": " (.getStation gmsRec)))
     {:stationname (str (.getStation gmsRec) "/" (.getChannel gmsRec))
      :data (into [] updata)
      :channel (.getChannel gmsRec)
