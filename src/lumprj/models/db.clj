@@ -175,12 +175,13 @@
   )
 
 
-(defn get-streamcacheall-data [station]
+(defn get-streamcacheall-data [station step]
   (select streamcache
     (where
       {:stationname  [like (str  station "%")]}
       )
-    (order :time :ASC)
+    (limit step)
+    (order :time :DESC)
     )
 
   )

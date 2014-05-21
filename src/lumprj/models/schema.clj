@@ -70,6 +70,8 @@
       [:data "nvarchar(5000)"] ;数据
       [:zerocrossnum "int"]  ;零交点数目
       [:stationname "nvarchar(20)"]   ;台站名
+      [:channel "nvarchar(20)"]   ;台站名震向
+      [:name "nvarchar(20)"]   ;名
       [:time "TIMESTAMP"]    ;时间
       [:rate "int"] ;;rate
       [:edtime "TIMESTAMP"]    ;结束时间

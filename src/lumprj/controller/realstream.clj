@@ -43,7 +43,8 @@
   make-milltime-data make-milltime-data-cross readrealstreamfromcacheall-filter  readrealstreamfromcacheall-filter-new
   get-epicenter-sampledata-less readsamplestreamcache-less readsamplestreamcache-less-name send-rts-info rts-relation-begin
   get-epicenter-sampledata-less-name get-streamcacheall-data-new readrealstreamfromcache-now
-  dataprocess-new dataprocess-new-caculate make-milltime-data-nocross )
+  dataprocess-new dataprocess-new-caculate make-milltime-data-nocross readrealstreamfromcacheall-filter-last
+  get-streamcacheall-data-last)
 
 (def REAL_STREAM_CLIENT (atom {
                                }))
@@ -94,14 +95,17 @@
 
   ;(future (getsuspend-station     station))
   (let [
+        ;test1 (println (get @realstream-hub (:stationcode station)) )
         statione-type  (get @realstream-hub (:stationcode station))
-        alldata-bhe  (if (nil? statione-type) [] (reverse (readrealstreamfromcacheall-filter-new (str (:stationcode station) "/" (first statione-type))
-                                                            (/ 1000 (second statione-type)) 10000)))
+        alldata-bhe  (if (nil? statione-type) [] (reverse (readrealstreamfromcacheall-filter-last (str (:stationcode station) "/" (first statione-type))
+                                                            (/ 1000 (second   statione-type)) (* (get @REAL_STREAM_CLIENT "cachelong") 1000))))
+
         ;alldata-bhz   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HZ")))
         ;alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HN")))
         bhelast (first alldata-bhe)
+        ;test (println (count alldata-bhe) (:stationcode station) (/ 1000 (if (nil?(second statione-type)) 10 (second statione-type))))
         ispasue  (or (= (count alldata-bhe) 0) (nil? bhelast))
-        pausedo (future(if ispasue (realstream/suspend-station (:stationcode station))(realstream/running-station (:stationcode station))))
+        pausedo (if ispasue (realstream/suspend-station (:stationcode station))(realstream/running-station (:stationcode station)))
         ;;stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
 
         bhesub  (get @avarage-cross (:stationcode station))
@@ -319,7 +323,7 @@
 (defn getstreamzerocross []
   ;;(println (db/stationcode-list))
   (resp/json {:success true
-              :results  (pmap getstreamzerocross-fn  (db/stationcode-list))
+              :results  (map getstreamzerocross-fn  (db/stationcode-list))
               }   )
   )
 ;单元测试
@@ -424,6 +428,11 @@
   (get-streamcacheall-data-new stationname step timelong)
 
   )
+(defn readrealstreamfromcacheall-filter-last [stationname step timelong]
+  ;(println stationname)
+  (get-streamcacheall-data-last stationname step timelong)
+
+  )
 (defn readrealstreamfromcacheall-filter [stationname]
   (map #(conj {:time (:time % )}
           {:stationname (:stationname %)}
@@ -433,10 +442,49 @@
     (db/get-streamcacheall-data stationname))
   )
 (defn get-streamcacheall-data [station]
-  (db/get-streamcacheall-data station)
+  (let [data (db/get-streamcacheall-data station)]
+    (println (count data))
+    (apply concat  (map #(let [
+                                itemdatas (:data %)
+                                items   (dataprocess-new itemdatas)
+                                ]
+                           items
+                           ;{:data (nth data 0) :time (nth data 1) } :zerocrossnum (nth data 2)
+                           ) data))
+
+    )
+
+
   )
 (defn make-datas-to-data [datas time]
   (map #(conj {} {:data % :time time}) datas)
+  )
+
+(defn get-streamcacheall-data-last [station step timelong]
+  (let [timenow (* (quot (.getTime (new Timestamp (.getTime (new Date))))1000) 1000)
+        time-range (range timenow (- timenow timelong)  (- 0 step))
+        realdata
+        (loop [nCurrent 0 ]
+          (if (not (nil? (get @realstream-hub (str (nth time-range nCurrent) station))) )
+
+                [(nth time-range nCurrent)]
+
+
+            (recur (+ nCurrent 1))))
+
+
+        ]
+    ;(println realdata)
+
+    ;(println @realstream-hub)
+    (apply concat  (map #(let [
+                                data (get @realstream-hub (str % station))
+                                items   (dataprocess-new data)
+                                ]
+                           items
+                           ;{:data (nth data 0) :time (nth data 1) } :zerocrossnum (nth data 2)
+                           ) realdata))
+    )
   )
 (defn get-streamcacheall-data-new [station step timelong]
   (let [timenow (* (quot (.getTime (new Timestamp (.getTime (new Date))))1000) 1000)
@@ -582,24 +630,9 @@
   )
 ;; 实时地震数据
 (defn realstream-data-func [data]
-  ;;(println (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data data)))))
-  (let [realdata (map #(make-milltime-data-cross data (:time data) %) (range 0 (count (:data (doall data)))))
-        ;df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
-        ;realdataformat (map #(conj {:time  (.format df (:time %))}
-        ;                       {:stationname %} {:data %}
-        ;                       {:zerocrossnum %}) realdata)
-        ]
-    ;(doseq [channel (keys @websocket/channel-hub)]
-      ;;(println realdataformat)
-    ;  (send! channel (json/write-str
-    ;                   {:results realdataformat
-    ;                    :type "realdata"
-    ;                    }
-    ;                   )
-    ;    false)
-    ;  )
-    (db/insert-streamcache  realdata)
-    )
+
+    (db/insert-streamcache  data)
+
 
   )
 
@@ -621,11 +654,17 @@
 (defn dataprocess-del [step station]
   (let [
          timenow (* (quot (.getTime (new Timestamp (.getTime (new Date))))1000) 1000)
+         lists (map #(str (subs station 0 (- (count station) 1) ) %) ["E" "N" "Z"])
         timetenminuts-before  (- timenow (* (get @REAL_STREAM_CLIENT "cachelong") 1000))
-        del-range (range (- timetenminuts-before 100) timetenminuts-before step)
+        del-range (range (- timetenminuts-before (* (get @REAL_STREAM_CLIENT "cachelong") 1000) ) timetenminuts-before step)
         ]
-    ;(println "删除缓存数据 " station)
-    (doall (map #(swap! realstream-hub dissoc (str % station)) del-range))
+    ;(println "删除缓存数据 " station step (first del-range) (last del-range))
+    (dorun (for [x lists]
+      (do (println x) (dorun (map #(swap! realstream-hub dissoc (str % x)) del-range)))))
+
+    ;(dorun (map #(swap! realstream-hub dissoc (str % station)) del-range))
+    ;(println @realstream-hub)
+    ;(reset! realstream-hub (take (/ (count @realstream-hub) 2)  @realstream-hub ))
     )
   ;(doall (map ))
   )
@@ -638,22 +677,15 @@
 
     (swap! realstream-hub assoc (str (.getTime (:time data)) (:stationname data)) data)
 
-    (future (dataprocess-del (/ 1000 (:rate data)) (:stationname data)))
+    ;(dataprocess-del (/ 1000 (:rate data)) (:stationname data))
 
-    (future (swap! realstream-hub assoc (:name data) [(:channel data) (:rate data)]))
+    (swap! realstream-hub assoc (:name data) [(:channel data) (:rate data)])
     )
 
 
   )
 (defn realstreamcacheJob-child-dataprocess [data]
-  (doall(map #(do (db/del-streamcache (:stationname %)) (if(> (count (db/has-streamcache (:time %) (:stationname %))) 0)
-                ;(db/update-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
-                ;(db/insert-streamcache ( conj {:zerocrossnum (caculate-zerocross-num (:data %))} %))
-
-                (realstream-data-update-func %)
-                (realstream-data-func %)
-                ))
-          data))
+  (realstream-data-func data)
   ;(let [result (db/get-streamcache)]
    ; (when (>  (count result) 0) (db/del-streamcache))
    ; )
@@ -775,6 +807,7 @@
       (let [
              realclientstream (.retrieveRealTimeStream lissClient (into-array stations))  ;[stationcodename] stations
              lissInputStream  (new DataInputStream realclientstream)
+             timelong   (get @REAL_STREAM_CLIENT "timelong")
              ;;lissInputStreamcopy (new DataInputStream realclientstream)
              ;;shortnum (.readShort lissInputStreamcopy)
              ;test (println shortnum)
@@ -782,7 +815,7 @@
 
         (loop [nCurrent 0 test 1]
 
-          (if (< (get @REAL_STREAM_CLIENT "timelong")  nCurrent)
+          (if (<  timelong nCurrent)
             (
               do
               (timbre/info "读取数据完成")
@@ -792,10 +825,11 @@
             (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
               (
                 do
-                ;(println "读取数据中..." nCurrent)
+                ;(println "读取数据中..." nCurrent "/" timelong)
                 (.readFully lissInputStream buf)
                 (GenericMiniSeedRecord/buildMiniSeedRecord buf)
-                (realstreamcacheJob-child-dataprocess-new (realstream/decodeminirtbufdata 1 buf ) )
+               (realstreamcacheJob-child-dataprocess-new (realstream/decodeminirtbufdata 1 buf ) )
+                ;(realstreamcacheJob-child-dataprocess (realstream/decodeminirtbufdata 1 buf ) )
                 ;(realstreamcacheJob-child-dataprocess-new  (pmap #(realstream/decodeminirtbufdata % buf)  (take 1 (iterate inc 0) ) ))
                 ;(Thread/sleep 10)
                 ;(println "poooo")
@@ -808,7 +842,7 @@
       ;(doall (pmap #(realstream-one rtsserver lissClient firstTime buf %) stations))
       )
     true
-    (catch Exception e false)
+    (catch Exception e (do  (timbre/info "重新获取数据") (realstream-indirect "*")false))
     )
 
 
@@ -823,8 +857,10 @@
 (defjob realstream-del-Job [ctx]
   (let [stations (get @REAL_STREAM_CLIENT "stations")
         ;rangelist (range 0 (count stations) 7)
-
         ]
+
+    ;(dataprocess-del (/ 1000 (:rate data)) (:stationname data))
+    (dorun (map #(dataprocess-del (/ 1000 (second (get @realstream-hub %))) (str % "/" (first (get @realstream-hub %)) )) stations))
 
     )
 

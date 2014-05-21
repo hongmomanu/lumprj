@@ -2,7 +2,7 @@
 
   (:import (java.net Socket InetAddress InetSocketAddress)
            (ch.ethz.ssh2 Connection Session StreamGobbler)
-           (com.sun.management OperatingSystemMXBean)
+           (java.lang.management OperatingSystemMXBean)
            (java.io  BufferedReader InputStreamReader)
            (java.util StringTokenizer)
 
