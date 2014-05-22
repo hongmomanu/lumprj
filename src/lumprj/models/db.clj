@@ -156,6 +156,14 @@
     )
   )
 
+(defn del-streamcache-all []
+
+  (delete streamcache
+    (where {:time [< (sqlfn DATEADD "MINUTE"  -10 (sqlfn now) )]
+            })
+    )
+  )
+
 (defn has-streamcache [time stationname]
 
   (select streamcache
@@ -231,6 +239,22 @@
     (where
       (or {:stationname station :time [>= starttime] :name name}
         {:stationname station :time [< starttime] :edtime [> starttime] :name name}
+        )
+
+    )
+    (order :time :ASC)
+    )
+
+  )
+(defn get-real-less [starttime station]
+  ;(println starttime station)
+  ;(println starttime station name)
+  (select streamcache
+    (fields   :time ;;[(sqlfn FORMATDATETIME :time "yyyy-MM-dd hh:mm:ss.SS" "local" "GMT") :time]
+             :stationname :data :rate)
+    (where
+      (or {:stationname station :time [>= starttime] }
+        {:stationname station :time [< starttime] :edtime [> starttime]}
         )
 
     )

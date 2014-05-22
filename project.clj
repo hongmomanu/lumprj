@@ -9,9 +9,9 @@
    ;;[org.mariadb.jdbc/mariadb-java-client "1.1.5"]
    [mysql/mysql-connector-java "5.1.25"]
    ;;[self/sigar "1.6.4"]
-   [org.springframework/spring-beans "2.5"]
-   [org.springframework/spring-core "2.5"]
-   [org.springframework/spring-jms "2.5"]
+   [org.springframework/spring-beans "3.2.8.RELEASE"]
+   [org.springframework/spring-core "3.2.8.RELEASE"]
+   [org.springframework/spring-jms "3.2.8.RELEASE"]
    [org.codehaus.castor/castor "1.2"]
    [http-kit "2.1.16"]
    [self/lumprj "1.0.6"]
@@ -49,6 +49,7 @@
             [ring-refresh "0.1.1"]
             [ring/ring-jetty-adapter "1.2.1"]
             [lein-localrepo "0.5.3"]
+            [lein-immutant "1.2.1"]
             ]
   :ring {:handler lumprj.handler/app
          :init    lumprj.handler/init

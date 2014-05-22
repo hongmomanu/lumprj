@@ -44,7 +44,7 @@
   get-epicenter-sampledata-less readsamplestreamcache-less readsamplestreamcache-less-name send-rts-info rts-relation-begin
   get-epicenter-sampledata-less-name get-streamcacheall-data-new readrealstreamfromcache-now
   dataprocess-new dataprocess-new-caculate make-milltime-data-nocross readrealstreamfromcacheall-filter-last
-  get-streamcacheall-data-last)
+  get-streamcacheall-data-last get-streamcacheall-data readrealstreamcache-less-name)
 
 (def REAL_STREAM_CLIENT (atom {
                                }))
@@ -96,15 +96,15 @@
   ;(future (getsuspend-station     station))
   (let [
         ;test1 (println (get @realstream-hub (:stationcode station)) )
-        statione-type  (get @realstream-hub (:stationcode station))
-        alldata-bhe  (if (nil? statione-type) [] (reverse (readrealstreamfromcacheall-filter-last (str (:stationcode station) "/" (first statione-type))
-                                                            (/ 1000 (second   statione-type)) (* (get @REAL_STREAM_CLIENT "cachelong") 1000))))
-
+        ;statione-type  (get @realstream-hub (:stationcode station))
+        ;alldata-bhe  (if (nil? statione-type) [] (reverse (readrealstreamfromcacheall-filter-last (str (:stationcode station) "/" (first statione-type))
+        ;                                                    (/ 1000 (second   statione-type)) (* (get @REAL_STREAM_CLIENT "cachelong") 1000))))
+        alldata-bhe (get-streamcacheall-data (:stationcode station) 1)
         ;alldata-bhz   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HZ")))
         ;alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HN")))
         bhelast (first alldata-bhe)
         ;test (println (count alldata-bhe) (:stationcode station) (/ 1000 (if (nil?(second statione-type)) 10 (second statione-type))))
-        ispasue  (or (= (count alldata-bhe) 0) (nil? bhelast))
+        ispasue  (nil? bhelast)
         pausedo (if ispasue (realstream/suspend-station (:stationcode station))(realstream/running-station (:stationcode station)))
         ;;stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
 
@@ -166,6 +166,10 @@
 
 (defn get-epicenter-sampledata-less-name [ time station name]
   (readsamplestreamcache-less-name time station name)
+  )
+
+(defn get-epicenter-realdata-less-name [ time station]
+  (readrealstreamcache-less-name time station)
   )
 
 
@@ -274,7 +278,8 @@
 
          sampledata (if (> stimespan 0)sampledata1(drop (/ stimespan rate) sampledata1))
          samplemax (apply max (map #(Math/abs %) sampledata ))
-         realstream (readrealstreamfromcache-now rtime rstaton (- 0 rate));(readrealstreamfromcache  rtime rstaton )
+         realstream (get-epicenter-realdata-less-name rtime rstaton);(readrealstreamfromcache-now rtime rstaton (- 0 rate));(readrealstreamfromcache  rtime rstaton )
+
          frtime (let [time (:time (first realstream))
                       ]
                   (.format df time)
@@ -288,10 +293,11 @@
 
          rtimet (clojure.string/replace rtime #" " "T")
          ;realstreamdata (map #(:data %) realstream)
-         realstreamdata1 (map #(:data %) realstream)
+         realstreamdata1 (into []  (apply concat (map #(:data %) realstream))) ;(map #(:data %) realstream)
          rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
          ;;test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
          ;;test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
+         ;;test1 (println (:time (first realstream) ) (/ rtimespan rate))
          realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan rate) realstreamdata1))
          realmax (apply max (map #(Math/abs %) realstreamdata ))
 
@@ -441,11 +447,10 @@
           )
     (db/get-streamcacheall-data stationname))
   )
-(defn get-streamcacheall-data [station]
-  (let [data (db/get-streamcacheall-data station)]
-    (println (count data))
+(defn get-streamcacheall-data [station step]
+  (let [data (db/get-streamcacheall-data station step)]
     (apply concat  (map #(let [
-                                itemdatas (:data %)
+                                itemdatas (conj % {:data (read-string (:data %))})
                                 items   (dataprocess-new itemdatas)
                                 ]
                            items
@@ -569,6 +574,12 @@
   ;;(println time station)
   ;;(println (db/get-samplecache time station))
   (map #(read-data-fn %) (db/get-sample-less time station name))
+  )
+
+(defn readrealstreamcache-less-name [time station ]
+  ;;(println time station)
+  ;;(println (db/get-samplecache time station))
+  (map #(read-data-fn %) (db/get-real-less time station ))
   )
 
 
@@ -825,11 +836,11 @@
             (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
               (
                 do
-                ;(println "读取数据中..." nCurrent "/" timelong)
+                (timbre/info "读取数据中..." nCurrent "/" timelong)
                 (.readFully lissInputStream buf)
                 (GenericMiniSeedRecord/buildMiniSeedRecord buf)
-               (realstreamcacheJob-child-dataprocess-new (realstream/decodeminirtbufdata 1 buf ) )
-                ;(realstreamcacheJob-child-dataprocess (realstream/decodeminirtbufdata 1 buf ) )
+                ;(realstreamcacheJob-child-dataprocess-new (realstream/decodeminirtbufdata 1 buf ) )
+                (realstreamcacheJob-child-dataprocess (realstream/decodeminirtbufdata 1 buf ) )
                 ;(realstreamcacheJob-child-dataprocess-new  (pmap #(realstream/decodeminirtbufdata % buf)  (take 1 (iterate inc 0) ) ))
                 ;(Thread/sleep 10)
                 ;(println "poooo")
@@ -860,8 +871,8 @@
         ]
 
     ;(dataprocess-del (/ 1000 (:rate data)) (:stationname data))
-    (dorun (map #(dataprocess-del (/ 1000 (second (get @realstream-hub %))) (str % "/" (first (get @realstream-hub %)) )) stations))
-
+    ;(dorun (map #(dataprocess-del (/ 1000 (second (get @realstream-hub %))) (str % "/" (first (get @realstream-hub %)) )) stations))
+    (db/del-streamcache-all)
     )
 
   )
