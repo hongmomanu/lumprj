@@ -21,6 +21,7 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import clojure.lang.RT;
 import clojure.lang.Var;
+import lumprj.java.AmqClojure;
 
 //import cn.org.gddsn.jopens.pod.bean.MessageBean;
 //import cn.org.gddsn.jopens.pod.util.PodUtil;
@@ -31,6 +32,7 @@ public class AmqEarService implements MessageListener {
     public static String cfgFile = "/home/jack/soft/lumprj/src/lumprj/java/applicationContext-amqEar-jms.xml";
     static XmlBeanFactory ac;
     private JmsTemplate jmsTemplate;
+    private AmqClojure amqclj;
 
     private DefaultMessageListenerContainer container;
 
@@ -55,6 +57,16 @@ public class AmqEarService implements MessageListener {
 
     }
 
+    public void setclojure (AmqClojure acl){
+        logger.info("acl change begin");
+        this.amqclj=acl;
+        logger.info("acl change end");
+
+    }
+    public void clojureRts(String mess){
+        this.amqclj.amqplay(mess);
+
+    }
     public void onMessage(Message message) {
         //logger.info("get a message at time: " + PodUtil.dft.format(new Date()));
         if (message instanceof TextMessage) {
@@ -74,12 +86,13 @@ public class AmqEarService implements MessageListener {
                 }
 
                 mess = tm.getText();
-                logger.info("receive textMessage: eventId=" + mess);
+                logger.info("receive textMessages: eventId=" + mess);
 
-                RT.loadResourceScript("lumprj/controller/realstream.clj");
+                this.clojureRts(mess);
+                /*RT.loadResourceScript("lumprj/controller/realstream.clj");
                 Var foo = RT.var("lumprj.controller.realstream", "send-rts-info");
                 Object result = foo.invoke(mess);
-
+                logger.info("receive over");*/
 
                 //MessageBean mssageBean = PodUtil.String2MessageBean(mess);
                 /*if (mssageBean == null) {
@@ -89,6 +102,7 @@ public class AmqEarService implements MessageListener {
                     //logger.info("receive messageBean: " + mssageBean);
                 }*/
             } catch (Exception e) {
+                logger.info(e.getMessage()+"receive error");
                 e.printStackTrace();
             }
 

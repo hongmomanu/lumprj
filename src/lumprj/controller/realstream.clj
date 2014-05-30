@@ -8,6 +8,7 @@
            (java.sql Timestamp)
            (java.text SimpleDateFormat)
            (java.lang.Math)
+           (lumprj.java AmqClojure)
            (lumprj.java.eqim EqimConnectorTip)
            ;(cn.org.gddsn.jopens.pod.util PodUtil)
            (cn.org.gddsn.jopens.pod.amq AmqEarService)
@@ -403,14 +404,17 @@
   )
 
 (defn rts-server-init []
-  (let [rootpath (str (System/getProperty "user.dir") "/")
+  (let [pamq (proxy [AmqClojure] [] (amqplay [mess] (do (send-rts-info mess)(println "rts happen"))))
+        rootpath (str (System/getProperty "user.dir") "/")
         cfgFile (str rootpath "applicationContext-amqEar-jms.xml")
         res (new FileSystemResource cfgFile)
         ac (new XmlBeanFactory res)
         amq (.getBean ac "amqEarService")
         ]
+    (.setclojure amq pamq)
     (.runListening amq)
     )
+
   )
 (defn eqim-test []
   (.receiveAndPublish (new EqimConnectorTip "10.33.8.174" 5001 "show" "show"))
@@ -836,7 +840,7 @@
             (recur (quot (- (.getTime (new Date))  (.getTime firstTime))  1000)
               (
                 do
-                (timbre/info "读取数据中..." nCurrent "/" timelong)
+                ;(timbre/info "读取数据中..." nCurrent "/" timelong)
                 (.readFully lissInputStream buf)
                 (GenericMiniSeedRecord/buildMiniSeedRecord buf)
                 ;(realstreamcacheJob-child-dataprocess-new (realstream/decodeminirtbufdata 1 buf ) )

@@ -89,7 +89,7 @@
 
 (defn is-suspend-station [station]
   (select suspend
-    (set-fields {:end_time (sqlfn datetime "now" "localtime")})
+    ;(set-fields {:end_time (sqlfn datetime "now" "localtime")})
     (where {:station station :end_time [= nil]})
     )
   )

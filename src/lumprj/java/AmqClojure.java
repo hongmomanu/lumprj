@@ -1,11 +1,8 @@
 package lumprj.java;
 
-public class Test {
-    public String say() {
+public class AmqClojure {
+    public String amqplay(String mess) {
         return "Hello Worlds!!";
-    }
-    public static  String saystatic(){
-        return  "jimsss" ;
     }
 
     public static void main(String[] args) {
