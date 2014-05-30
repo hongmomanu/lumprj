@@ -9,6 +9,7 @@
            (java.text SimpleDateFormat)
            (java.lang.Math)
            (lumprj.java AmqClojure)
+           (lumprj.java Test)
            (lumprj.java.eqim EqimConnectorTip)
            ;(cn.org.gddsn.jopens.pod.util PodUtil)
            (cn.org.gddsn.jopens.pod.amq AmqEarService)
@@ -398,8 +399,12 @@
   )
 
 (defn eqim-server-init []
-  (let [eqimservers (:eqimservers (conmmon/get-config-prop))]
-    (doall(map #(.receiveAndPublish (new EqimConnectorTip (:ip %) (:port %) (:user %) (:pass %))) eqimservers))
+  (let [
+         eqimservers (:eqimservers (conmmon/get-config-prop))
+         ]
+    (doall(map #(.receiveAndPublish
+                  (proxy [EqimConnectorTip] [(:ip %) (:port %) (:user %) (:pass %)]
+                    (clojureeqm [sp net ] (send-eqim-info sp net)))) eqimservers))
     )
   )
 

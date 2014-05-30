@@ -10,7 +10,7 @@
 		<property name="connectionFactory">
 			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
 				<property name="brokerURL">
-					<value>failover:(tcp://10.33.253.11:61616)</value>
+					<value>failover:(tcp://10.33.253.103:61616)</value>
 				</property>
 				<property name="userName">
 					<value>system</value>

@@ -2,13 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2762cbdd-20d2-48f9-b881-f777be454c3d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/site.db.h2.db" afterPath="$PROJECT_DIR$/site.db.h2.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlite.db3" afterPath="$PROJECT_DIR$/sqlite.db3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/models/db.clj" afterPath="$PROJECT_DIR$/src/lumprj/models/db.clj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/controller/duty.clj" afterPath="$PROJECT_DIR$/src/lumprj/controller/duty.clj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/routes/duty.clj" afterPath="$PROJECT_DIR$/src/lumprj/routes/duty.clj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java" afterPath="$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/java/Test.java" afterPath="$PROJECT_DIR$/src/lumprj/java/Test.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/applicationContext-amqEar-jms.xml" afterPath="$PROJECT_DIR$/applicationContext-amqEar-jms.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.clj" afterPath="$PROJECT_DIR$/project.clj" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/controller/realstream.clj" afterPath="$PROJECT_DIR$/src/lumprj/controller/realstream.clj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/models/schema.clj" afterPath="$PROJECT_DIR$/src/lumprj/models/schema.clj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lumprj/controller/user.clj" afterPath="$PROJECT_DIR$/src/lumprj/controller/user.clj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.config" afterPath="$PROJECT_DIR$/server.config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="lumprj.iws" />
@@ -78,93 +79,109 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="realstream.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/routes/realstream.clj">
+      <file leaf-file-name="AmqEarService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/java/AmqEarService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="33" selection-start="836" selection-end="836" vertical-scroll-proportion="-13.037037" vertical-offset="314" max-vertical-offset="2088">
+            <state line="91" column="14" selection-start="2872" selection-end="2872" vertical-scroll-proportion="-5.185185" vertical-offset="1498" max-vertical-offset="2718">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#4005#4006#0" expanded="true" />
+                <element signature="e#4051#4052#0" expanded="true" />
+                <element signature="e#4112#4113#0" expanded="true" />
+                <element signature="e#4144#4145#0" expanded="true" />
+                <element signature="e#4219#4220#0" expanded="true" />
+                <element signature="e#4261#4262#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="applicationContext-amqEar-jms.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/applicationContext-amqEar-jms.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="22" selection-start="996" selection-end="996" vertical-scroll-proportion="-15.84" vertical-offset="0" max-vertical-offset="1080">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="realstream.clj" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="realstream.clj" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lumprj/controller/realstream.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="94" column="87" selection-start="4366" selection-end="4366" vertical-scroll-proportion="-9.185185" vertical-offset="1444" max-vertical-offset="14742">
+            <state line="404" column="9" selection-start="15325" selection-end="15325" vertical-scroll-proportion="0.33246073" vertical-offset="7145" max-vertical-offset="20160">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.config" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server.config">
+          <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="0" selection-start="143" selection-end="143" vertical-scroll-proportion="-2.7692308" vertical-offset="0" max-vertical-offset="594">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EqimConnectorTip.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="124" column="50" selection-start="3395" selection-end="3578" vertical-scroll-proportion="-5.851852" vertical-offset="868" max-vertical-offset="1314">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#connectServer#0;class#EqimConnectorTip#0" expanded="false" />
+                <element signature="method#quit#0;class#EqimConnectorTip#0" expanded="false" />
+                <element signature="method#loopConnect#0;class#EqimConnectorTip#0" expanded="false" />
+                <element signature="method#receiveAndPublish#0;class#EqimConnectorTip#0" expanded="false" />
+                <element signature="method#parse#0;class#EqimConnectorTip#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="applicationContext-amqEar-jms.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/java/applicationContext-amqEar-jms.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="50" selection-start="1259" selection-end="1259" vertical-scroll-proportion="-6.48" vertical-offset="342" max-vertical-offset="1080">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Test.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/java/Test.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="25" selection-start="163" selection-end="170" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="486">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AmqClojure.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/java/AmqClojure.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="25" selection-start="66" selection-end="73" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="user.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/routes/user.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="15" selection-start="396" selection-end="396" vertical-scroll-proportion="0.0" vertical-offset="54" max-vertical-offset="648">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.clj" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lumprj/controller/user.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="29" selection-start="745" selection-end="745" vertical-scroll-proportion="0.36363637" vertical-offset="116" max-vertical-offset="738">
+            <state line="32" column="24" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="810">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/models/db.clj">
+      <file leaf-file-name="handler.clj" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lumprj/handler.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="282" column="6" selection-start="6156" selection-end="6156" vertical-scroll-proportion="-6.5555553" vertical-offset="4899" max-vertical-offset="11106">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="schema.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/models/schema.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="226" column="46" selection-start="6829" selection-end="6829" vertical-scroll-proportion="-11.222222" vertical-offset="3765" max-vertical-offset="4626">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="duty.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/routes/duty.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="60" selection-start="776" selection-end="776" vertical-scroll-proportion="-5.3703704" vertical-offset="557" max-vertical-offset="2016">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="duty.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/controller/duty.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="107" column="9" selection-start="2908" selection-end="2908" vertical-scroll-proportion="0.0" vertical-offset="1727" max-vertical-offset="3384">
-              <folding>
-                <marker date="1398395319214" expanded="true" signature="2323:2410" placeholder="(defn savestation ...)" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/routes/server.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="26" selection-start="623" selection-end="623" vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="1026">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lumprj/controller/server.clj">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="16" selection-start="1291" selection-end="1291" vertical-scroll-proportion="0.0" vertical-offset="516" max-vertical-offset="2772">
+            <state line="65" column="29" selection-start="2470" selection-end="2470" vertical-scroll-proportion="0.0" vertical-offset="824" max-vertical-offset="1908">
               <folding />
             </state>
           </provider>
@@ -194,44 +211,89 @@
         <option value="$PROJECT_DIR$/resources/public/app/js/Desktop.js" />
         <option value="$PROJECT_DIR$/src/lumprj/models/dboracle.clj" />
         <option value="$PROJECT_DIR$/resources/public/index.html" />
-        <option value="$PROJECT_DIR$/src/lumprj/java/Test.java" />
         <option value="$PROJECT_DIR$/resources/public/md/success.md" />
         <option value="$PROJECT_DIR$/src/lumprj/controller/log.clj" />
         <option value="$PROJECT_DIR$/src/lumprj/routes/log.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/routes/user.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/routes/server.clj" />
         <option value="$PROJECT_DIR$/src/log4j.xml" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/src/lumprj/routes/home.clj" />
         <option value="$PROJECT_DIR$/src/lumprj/java/MiniSeedRecordHeader.java" />
-        <option value="$PROJECT_DIR$/src/lumprj/controller/server.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/funcs/system.clj" />
         <option value="$PROJECT_DIR$/sample.config" />
         <option value="$PROJECT_DIR$/src/lumprj/java/applicationContext-amqEar-jms.xml" />
-        <option value="$PROJECT_DIR$/project.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/funcs/conmmon.clj" />
         <option value="$PROJECT_DIR$/src/lumprj/funcs/websocket.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java" />
-        <option value="$PROJECT_DIR$/src/lumprj/java/AmqEarService.java" />
         <option value="$PROJECT_DIR$/target/sample1.config" />
-        <option value="$PROJECT_DIR$/src/lumprj/handler.clj" />
         <option value="$PROJECT_DIR$/sample1.config" />
-        <option value="$PROJECT_DIR$/src/lumprj/funcs/realstream.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/routes/realstream.clj" />
-        <option value="$PROJECT_DIR$/server.config" />
-        <option value="$PROJECT_DIR$/src/lumprj/models/schema.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/routes/duty.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/controller/duty.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/controller/realstream.clj" />
-        <option value="$PROJECT_DIR$/src/lumprj/models/db.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/routes/user.clj" />
         <option value="$PROJECT_DIR$/src/lumprj/controller/user.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/routes/server.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/controller/duty.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/funcs/conmmon.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/routes/duty.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/controller/server.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/funcs/realstream.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/handler.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/funcs/system.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/models/schema.clj" />
+        <option value="$PROJECT_DIR$/applicationContext-amqEar-jms.xml" />
+        <option value="$PROJECT_DIR$/src/lumprj/routes/realstream.clj" />
+        <option value="$PROJECT_DIR$/src/lumprj/models/db.clj" />
+        <option value="$PROJECT_DIR$/project.clj" />
+        <option value="$PROJECT_DIR$/server.config" />
+        <option value="$PROJECT_DIR$/src/lumprj/java/AmqClojure.java" />
+        <option value="$PROJECT_DIR$/src/lumprj/java/AmqEarService.java" />
+        <option value="$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java" />
+        <option value="$PROJECT_DIR$/src/lumprj/java/Test.java" />
+        <option value="$PROJECT_DIR$/src/lumprj/controller/realstream.clj" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="30" />
-    <option name="width" value="1366" />
-    <option name="height" value="738" />
+    <option name="width" value="1346" />
+    <option name="height" value="728" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android Lint</id>
+          </State>
+          <State>
+            <id>GSPGrailsGroovy</id>
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>GrailsGroovy</id>
+          </State>
+          <State>
+            <id>Groovy</id>
+          </State>
+          <State>
+            <id>J2ME Plugin</id>
+          </State>
+          <State>
+            <id>Maven</id>
+          </State>
+          <State>
+            <id>Plugin DevKit</id>
+          </State>
+          <State>
+            <id>XPath</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Abstraction issues</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -261,31 +323,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope">
-        <subPane subId="Production">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="js">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources/public/js">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -354,7 +391,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
+              <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -368,34 +405,41 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
+              <option name="myItemId" value="lumprj" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope">
+        <subPane subId="Production">
           <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lumprj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lumprj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            <PATH_ELEMENT USER_OBJECT="js">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="images" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            <PATH_ELEMENT USER_OBJECT="resources/public/js">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -406,8 +450,8 @@
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="project.propCompiler" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/lumprj/java/Test.java" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../hvitpublic" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -424,11 +468,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/lumprj/java" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/resources/public/images" />
       <recent name="$PROJECT_DIR$/src/lumprj/funcs" />
-      <recent name="$PROJECT_DIR$/src/lumprj/java" />
       <recent name="$PROJECT_DIR$/src/lumprj/controller" />
-      <recent name="$PROJECT_DIR$/src/lumprj/routes" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -692,6 +736,12 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
+      <option name="VM_PARAMETERS" value="" />
+      <option name="USER_CFG_CLASS" />
+      <option name="CONTEXT_PROVIDER" />
+      <method />
+    </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="ACTIVITY_CLASS" value="" />
@@ -709,12 +759,6 @@
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
-      <option name="VM_PARAMETERS" value="" />
-      <option name="USER_CFG_CLASS" />
-      <option name="CONTEXT_PROVIDER" />
       <method />
     </configuration>
     <list size="0" />
@@ -783,7 +827,28 @@
       <workItem from="1397801520405" duration="23567000" />
       <workItem from="1398129723708" duration="5282000" />
       <workItem from="1398138887024" duration="19459000" />
-      <workItem from="1398219181016" duration="35622000" />
+      <workItem from="1398219181016" duration="86499000" />
+      <workItem from="1398762701612" duration="4026000" />
+      <workItem from="1398843118111" duration="2695000" />
+      <workItem from="1399165497984" duration="32717000" />
+      <workItem from="1399269669914" duration="24239000" />
+      <workItem from="1399437929627" duration="12615000" />
+      <workItem from="1399519100221" duration="21086000" />
+      <workItem from="1399612328494" duration="56260000" />
+      <workItem from="1399962251915" duration="4038000" />
+      <workItem from="1399970570017" duration="3574000" />
+      <workItem from="1400031119434" duration="29828000" />
+      <workItem from="1400134405659" duration="27915000" />
+      <workItem from="1400224396441" duration="8257000" />
+      <workItem from="1400466834552" duration="11208000" />
+      <workItem from="1400486336784" duration="15328000" />
+      <workItem from="1400634147281" duration="22123000" />
+      <workItem from="1400662270743" duration="169000" />
+      <workItem from="1400720328635" duration="2135000" />
+      <workItem from="1400726221275" duration="8965000" />
+      <workItem from="1401087473487" duration="2217000" />
+      <workItem from="1401182913651" duration="10179000" />
+      <workItem from="1401357288620" duration="14417000" />
     </task>
     <task id="LOCAL-00001" summary="jack commit&#10;">
       <created>1387339760949</created>
@@ -1245,14 +1310,86 @@
       <created>1398404451180</created>
       <updated>1398404451180</updated>
     </task>
-    <option name="localTasksCounter" value="116" />
+    <task id="LOCAL-00116" summary="jack commit&#10;">
+      <created>1398408427939</created>
+      <updated>1398408427939</updated>
+    </task>
+    <task id="LOCAL-00117" summary="jack commit&#10;">
+      <created>1398408566492</created>
+      <updated>1398408566492</updated>
+    </task>
+    <task id="LOCAL-00118" summary="jack commit&#10;">
+      <created>1398413751661</created>
+      <updated>1398413751661</updated>
+    </task>
+    <task id="LOCAL-00119" summary="jack commit&#10;">
+      <created>1398666557878</created>
+      <updated>1398666557878</updated>
+    </task>
+    <task id="LOCAL-00120" summary="jack commit&#10;">
+      <created>1398673684762</created>
+      <updated>1398673684762</updated>
+    </task>
+    <task id="LOCAL-00121" summary="jack commit&#10;">
+      <created>1398677186775</created>
+      <updated>1398677186775</updated>
+    </task>
+    <task id="LOCAL-00122" summary="jack commit&#10;">
+      <created>1398750639208</created>
+      <updated>1398750639208</updated>
+    </task>
+    <task id="LOCAL-00123" summary="jack commit&#10;">
+      <created>1398759333713</created>
+      <updated>1398759333713</updated>
+    </task>
+    <task id="LOCAL-00124" summary="jack commit&#10;">
+      <created>1398821506779</created>
+      <updated>1398821506779</updated>
+    </task>
+    <task id="LOCAL-00125" summary="jack commit&#10;">
+      <created>1398822745339</created>
+      <updated>1398822745339</updated>
+    </task>
+    <task id="LOCAL-00126" summary="jack commit&#10;">
+      <created>1399196215595</created>
+      <updated>1399196215595</updated>
+    </task>
+    <task id="LOCAL-00127" summary="jack commit&#10;">
+      <created>1399251398133</created>
+      <updated>1399251398133</updated>
+    </task>
+    <task id="LOCAL-00128" summary="jack commit&#10;">
+      <created>1400058361952</created>
+      <updated>1400058361952</updated>
+    </task>
+    <task id="LOCAL-00129" summary="jack commit&#10;">
+      <created>1400214606672</created>
+      <updated>1400214606672</updated>
+    </task>
+    <task id="LOCAL-00130" summary="jack commit&#10;">
+      <created>1400214699308</created>
+      <updated>1400214699308</updated>
+    </task>
+    <task id="LOCAL-00131" summary="jack commit&#10;">
+      <created>1400651596942</created>
+      <updated>1400651596942</updated>
+    </task>
+    <task id="LOCAL-00132" summary="jack commit&#10;">
+      <created>1400720958176</created>
+      <updated>1400720958176</updated>
+    </task>
+    <task id="LOCAL-00133" summary="jack commit&#10;">
+      <created>1401423639030</created>
+      <updated>1401423639031</updated>
+    </task>
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="972003000" />
+    <option name="totallyTimeSpent" value="1336871000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="30" width="1366" height="738" extended-state="0" />
+    <frame x="0" y="30" width="1346" height="728" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1260,6 +1397,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27332243" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1274,14 +1412,13 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20984848" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15923077" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32763976" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3188406" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1308,104 +1445,27 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/public/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="738" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/public/md/docs.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="370" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/public/md/success.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="10" selection-start="10" selection-end="10" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="345" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/public/js/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="392" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/public/html/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="1" selection-start="759" selection-end="759" vertical-scroll-proportion="-2.851852" vertical-offset="445" max-vertical-offset="5274" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lumprj.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="537" selection-end="537" vertical-scroll-proportion="0.0" vertical-offset="108" max-vertical-offset="4608" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Procfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="370" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/views/layout.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="61" selection-start="391" selection-end="391" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="504" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/views/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="10" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="108" max-vertical-offset="792" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/uiDesigner.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2358" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="558" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="0" selection-start="3650" selection-end="3650" vertical-scroll-proportion="0.0" vertical-offset="1134" max-vertical-offset="26370" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="108" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/home.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="31" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="234" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/log.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="37" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="648" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/home.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="35" selection-start="46" selection-end="46" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="522" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lumprj/util.clj">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/repl.clj">
+    <entry file="file://$PROJECT_DIR$/server.config">
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="63" selection-start="829" selection-end="829" vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="720" />
+        <state line="8" column="49" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="576" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/java/Test.java">
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/server.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="19" selection-start="19" selection-end="19" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288" />
+        <state line="29" column="24" selection-start="861" selection-end="861" vertical-scroll-proportion="0.0" vertical-offset="508" max-vertical-offset="1080" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.lein-env">
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/duty.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="572" />
+        <state line="116" column="24" selection-start="3030" selection-end="3030" vertical-scroll-proportion="0.0" vertical-offset="1880" max-vertical-offset="4950" />
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/../jdk1.6.0_38/src.zip!/java/util/Calendar.java">
@@ -1413,51 +1473,12 @@
         <state line="2384" column="55" selection-start="89434" selection-end="89445" vertical-scroll-proportion="0.0" vertical-offset="42912" max-vertical-offset="48474" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/java/MiniSeedRecordHeader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2016" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/java/applicationContext-amqEar-jms.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="24" selection-start="1281" selection-end="1281" vertical-scroll-proportion="0.0" vertical-offset="522" max-vertical-offset="1080">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/system.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="10" selection-start="9" selection-end="10" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="3240" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="830" selection-end="830" vertical-scroll-proportion="-6.230769" vertical-offset="0" max-vertical-offset="558" />
-      </provider>
       <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/project.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="36" selection-start="1231" selection-end="1231" vertical-scroll-proportion="0.0" vertical-offset="373" max-vertical-offset="1818" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/conmmon.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="6" selection-start="159" selection-end="159" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/log.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="918" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="0" selection-start="509" selection-end="557" vertical-scroll-proportion="0.0" vertical-offset="4" max-vertical-offset="2700">
-          <folding />
-        </state>
+        <state line="9" column="13" selection-start="830" selection-end="830" vertical-scroll-proportion="-6.230769" vertical-offset="0" max-vertical-offset="558" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sample.config">
@@ -1465,145 +1486,266 @@
         <state line="0" column="75" selection-start="72" selection-end="72" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="396" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/target/lumprj.log">
+    <entry file="file://$PROJECT_DIR$/resources/public/images/icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lumprj.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="572" />
+        <state line="6" column="0" selection-start="675" selection-end="675" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="33516" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/headFile.BJT">
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="936" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/log4j.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="17" selection-start="469" selection-end="469" vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="738">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/sample1.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="285" selection-end="285" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="432" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/java/AmqEarService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="54" selection-start="2945" selection-end="2945" vertical-scroll-proportion="0.0" vertical-offset="1566" max-vertical-offset="2466">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/handler.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="36" selection-start="1946" selection-end="1946" vertical-scroll-proportion="0.0" vertical-offset="724" max-vertical-offset="1818">
-          <folding />
-        </state>
+        <state line="4" column="0" selection-start="160" selection-end="160" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="738" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sample1.config">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="71" selection-start="478" selection-end="478" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="594">
-          <folding />
-        </state>
+        <state line="13" column="71" selection-start="478" selection-end="478" vertical-scroll-proportion="0.0" vertical-offset="22" max-vertical-offset="594" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/home.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="22" selection-start="559" selection-end="559" vertical-scroll-proportion="0.0" vertical-offset="133" max-vertical-offset="522" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/user.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="3" selection-start="151" selection-end="606" vertical-scroll-proportion="0.0" vertical-offset="130" max-vertical-offset="702" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/util.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/views/layout.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="504" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/log.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="23" selection-start="487" selection-end="716" vertical-scroll-proportion="0.0" vertical-offset="52" max-vertical-offset="648" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/conmmon.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="32" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/server.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="51" selection-start="1081" selection-end="1081" vertical-scroll-proportion="0.48258707" vertical-offset="508" max-vertical-offset="1080" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/websocket.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="23" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882">
-          <folding />
-        </state>
+        <state line="16" column="57" selection-start="564" selection-end="596" vertical-scroll-proportion="0.0" vertical-offset="64" max-vertical-offset="882" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.config">
+    <entry file="file://$PROJECT_DIR$/src/lumprj/models/dboracle.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="59" selection-start="475" selection-end="475" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="414">
+        <state line="5" column="32" selection-start="160" selection-end="169" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="522" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="108">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/realstream.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="61" selection-start="1325" selection-end="1325" vertical-scroll-proportion="0.0" vertical-offset="404" max-vertical-offset="1386">
-          <folding />
-        </state>
+        <state line="35" column="15" selection-start="1023" selection-end="1023" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="1674" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/models/dboracle.clj">
+    <entry file="file://$PROJECT_DIR$/project.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="55" selection-start="221" selection-end="221" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="522">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/server.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="26" selection-start="623" selection-end="623" vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="1026">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/server.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="16" selection-start="1291" selection-end="1291" vertical-scroll-proportion="0.0" vertical-offset="516" max-vertical-offset="2772">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/models/schema.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="46" selection-start="6829" selection-end="6829" vertical-scroll-proportion="-11.222222" vertical-offset="3765" max-vertical-offset="4626">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/duty.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="9" selection-start="2908" selection-end="2908" vertical-scroll-proportion="0.0" vertical-offset="1727" max-vertical-offset="3384">
-          <folding>
-            <marker date="1398395319214" expanded="true" signature="2323:2410" placeholder="(defn savestation ...)" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/public/images/icon.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/realstream.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="33" selection-start="836" selection-end="836" vertical-scroll-proportion="-13.037037" vertical-offset="314" max-vertical-offset="2088">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/realstream.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="87" selection-start="4366" selection-end="4366" vertical-scroll-proportion="-9.185185" vertical-offset="1444" max-vertical-offset="14742">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/models/db.clj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="282" column="6" selection-start="6156" selection-end="6156" vertical-scroll-proportion="-6.5555553" vertical-offset="4899" max-vertical-offset="11106">
+        <state line="90" column="15" selection-start="3615" selection-end="3623" vertical-scroll-proportion="0.0" vertical-offset="1229" max-vertical-offset="1836">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lumprj/routes/duty.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="60" selection-start="776" selection-end="776" vertical-scroll-proportion="-5.3703704" vertical-offset="557" max-vertical-offset="2016">
+        <state line="45" column="21" selection-start="911" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="684" max-vertical-offset="2592">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/user.clj">
+    <entry file="file://$PROJECT_DIR$/src/lumprj/repl.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="15" selection-start="396" selection-end="396" vertical-scroll-proportion="0.0" vertical-offset="54" max-vertical-offset="648">
+        <state line="31" column="53" selection-start="1097" selection-end="1097" vertical-scroll-proportion="0.0" vertical-offset="103" max-vertical-offset="720">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/MiniSeedRecordHeader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2016">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/home.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="31" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="234">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/duty.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="115" column="6" selection-start="2977" selection-end="2977" vertical-scroll-proportion="0.33687943" vertical-offset="1880" max-vertical-offset="4950">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/funcs/system.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="46" selection-start="492" selection-end="492" vertical-scroll-proportion="0.0" vertical-offset="54" max-vertical-offset="4266">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/server.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="130" column="16" selection-start="4011" selection-end="4021" vertical-scroll-proportion="-6.4444447" vertical-offset="2166" max-vertical-offset="3978">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/models/db.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="185" column="6" selection-start="3706" selection-end="3706" vertical-scroll-proportion="0.0" vertical-offset="3147" max-vertical-offset="12996">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/models/schema.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="210" column="21" selection-start="6283" selection-end="6297" vertical-scroll-proportion="-13.111111" vertical-offset="3426" max-vertical-offset="4950">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/routes/realstream.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="61" selection-start="1174" selection-end="1174" vertical-scroll-proportion="0.0" vertical-offset="558" max-vertical-offset="2214">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.lein-env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="126">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/log.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="69" selection-start="289" selection-end="289" vertical-scroll-proportion="0.0" vertical-offset="27" max-vertical-offset="918">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lumprj/controller/user.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="29" selection-start="745" selection-end="745" vertical-scroll-proportion="0.36363637" vertical-offset="116" max-vertical-offset="738">
+        <state line="32" column="24" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="810">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/applicationContext-amqEar-jms.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="22" selection-start="996" selection-end="996" vertical-scroll-proportion="-15.84" vertical-offset="0" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/applicationContext-amqEar-jms.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="50" selection-start="1259" selection-end="1259" vertical-scroll-proportion="-6.48" vertical-offset="342" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/AmqEarService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="14" selection-start="2872" selection-end="2872" vertical-scroll-proportion="-5.185185" vertical-offset="1498" max-vertical-offset="2718">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4005#4006#0" expanded="true" />
+            <element signature="e#4051#4052#0" expanded="true" />
+            <element signature="e#4112#4113#0" expanded="true" />
+            <element signature="e#4144#4145#0" expanded="true" />
+            <element signature="e#4219#4220#0" expanded="true" />
+            <element signature="e#4261#4262#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/AmqClojure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="25" selection-start="66" selection-end="73" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/handler.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="65" column="29" selection-start="2470" selection-end="2470" vertical-scroll-proportion="0.0" vertical-offset="824" max-vertical-offset="1908">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/EqimConnectorTip.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="50" selection-start="3395" selection-end="3578" vertical-scroll-proportion="-5.851852" vertical-offset="868" max-vertical-offset="1314">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#connectServer#0;class#EqimConnectorTip#0" expanded="false" />
+            <element signature="method#quit#0;class#EqimConnectorTip#0" expanded="false" />
+            <element signature="method#loopConnect#0;class#EqimConnectorTip#0" expanded="false" />
+            <element signature="method#receiveAndPublish#0;class#EqimConnectorTip#0" expanded="false" />
+            <element signature="method#parse#0;class#EqimConnectorTip#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.config">
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="143" selection-end="143" vertical-scroll-proportion="-2.7692308" vertical-offset="0" max-vertical-offset="594">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/java/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="25" selection-start="163" selection-end="170" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="486">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lumprj/controller/realstream.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="404" column="9" selection-start="15325" selection-end="15325" vertical-scroll-proportion="0.33246073" vertical-offset="7145" max-vertical-offset="20160">
           <folding />
         </state>
       </provider>

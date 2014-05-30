@@ -88,7 +88,7 @@
                  ]
   :description
   "FIXME: write description"
-  ;;:jvm-opts ["-Djava.library.path=/home/jack/soft/lumprj/target/native"]
+    ;;:jvm-opts ["-Djava.library.path=/home/jack/soft/lumprj/target/native"]
   :java-source-paths ["src/lumprj/java" ] ; Java source is stored separately.
   ;;:native-path "native"
   ;;:resource-paths ["lib/*"]

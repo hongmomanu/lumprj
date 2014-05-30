@@ -118,7 +118,12 @@ public class EqimConnectorTip {
         };
         clientThread.start();
     }
+    public void clojureeqm (SourceParam sp ,Network net){
 
+       /* RT.loadResourceScript("lumprj/controller/realstream.clj");
+        Var foo = RT.var("lumprj.controller.realstream", "send-eqim-info");
+        Object result = foo.invoke(sp,net);*/
+    }
     private void parse(Result res) {
         XmlLocation xl = new XmlLocation();
         xl.parseLocation(new ByteArrayInputStream(res.getData()));
@@ -126,9 +131,7 @@ public class EqimConnectorTip {
         Network net =xl.getNetwork();
         //sp.Location_cname
         try {
-            RT.loadResourceScript("lumprj/controller/realstream.clj");
-            Var foo = RT.var("lumprj.controller.realstream", "send-eqim-info");
-            Object result = foo.invoke(sp,net);
+           this.clojureeqm(sp,net);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
