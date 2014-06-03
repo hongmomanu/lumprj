@@ -38,9 +38,9 @@
 
 
 
-(defn suspend-station [station]
+(defn suspend-station [station time]
   (println (str station "断记11111"))
-  (when (= (count (db/is-suspend-station  station)) 0)(db/new-suspend-station station))
+  (when (= (count (db/is-suspend-station  station)) 0)(db/new-suspend-station station time))
   )
 ;;解码minidata
 (defn decodeminirtbufdata  [x  buf]

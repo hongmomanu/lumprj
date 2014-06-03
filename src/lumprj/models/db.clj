@@ -94,9 +94,9 @@
     )
   )
 
-(defn new-suspend-station [station]
+(defn new-suspend-station [station time]
   (insert suspend
-    (values {:station station :begin_time (sqlfn datetime "now" "localtime")})
+    (values {:station station :begin_time time})
     )
   )
 (defn insert-streamcache [caches]

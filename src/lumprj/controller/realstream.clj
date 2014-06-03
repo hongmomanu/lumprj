@@ -38,6 +38,7 @@
             [clojurewerkz.quartzite.schedule.calendar-interval :refer [schedule with-interval-in-days with-interval-in-minutes with-interval-in-seconds]]
             ;[clojurewerkz.quartzite.schedule.simple :refer [schedule with-repeat-count with-interval-in-seconds with-interval-in-milliseconds]]
             [clj-time.coerce :as clj]
+            [clj-time.local :as l]
             )
   )
 
@@ -106,8 +107,9 @@
         ;alldata-bhn   (reverse (readrealstreamfromcacheall-filter (str (:stationcode station) "/%HN")))
         bhelast (first alldata-bhe)
         ;test (println (count alldata-bhe) (:stationcode station) (/ 1000 (if (nil?(second statione-type)) 10 (second statione-type))))
-        ispasue  (nil? bhelast)
-        pausedo (if ispasue (realstream/suspend-station (:stationcode station))(realstream/running-station (:stationcode station)))
+        ispasue  (or (nil? bhelast)(> (- (clj/to-long   (l/local-now)) (:time bhelast)) 60000))
+        pausetime (if (nil? bhelast) (new Timestamp (.getTime (new Date))) (new Timestamp (:time bhelast)))
+        pausedo (if ispasue (realstream/suspend-station (:stationcode station) pausetime)(realstream/running-station (:stationcode station)))
         ;;stationdata (filter (fn [x] (= (.indexOf (:stationname x) (:stationcode station)) 0)) alldata)
 
         bhesub  (get @avarage-cross (:stationcode station))
