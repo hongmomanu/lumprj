@@ -4,6 +4,7 @@
            (java.io  BufferedReader InputStreamReader)
            (edu.iris.miniseedutils.steim GenericMiniSeedRecord)
            (java.lang.Math)
+           (java.text SimpleDateFormat)
            (java.util StringTokenizer))
   (:require
             [lumprj.funcs.conmmon :as conmmon]
@@ -39,8 +40,12 @@
 
 
 (defn suspend-station [station time]
-  (println (str station "断记11111"))
-  (when (= (count (db/is-suspend-station  station)) 0)(db/new-suspend-station station time))
+  (let [ df   (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss.SSS")
+         ]
+    (println (str station "断记11111"))
+    (when (= (count (db/is-suspend-station  station)) 0)(db/new-suspend-station station  (.format df time)))
+    )
+
   )
 ;;解码minidata
 (defn decodeminirtbufdata  [x  buf]
