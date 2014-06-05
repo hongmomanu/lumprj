@@ -73,7 +73,9 @@
              {:begin_time [< today]})
 
              (and
-               {:begin_time [>= yestday] :end_time [not= nil]}
+               {:end_time [not= nil]} ;:begin_time [>= yestday]
+               {:end_time [>= yestday]}
+               {:end_time [< today]}
                {:begin_time [< today]} {:end_time [> (sqlfn DATETIME :begin_time "+10 minutes")]})
 
              )

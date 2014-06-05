@@ -342,7 +342,7 @@
   (str "hello" name)
   )
 ;eqim 推送自动报警
-(defn send-eqim-info [sp net]
+(defn send-eqim-info [sp net ip]
   ;(println @websocket/channel-hub)
   (let [df (new SimpleDateFormat "yyyy-MM-dd HH:mm:ss")
         ]
@@ -353,6 +353,7 @@
                         :lat (.Lat sp) :lon (.Lon sp) :depth (.Depth sp)
                         :eqtype (.Eq_type sp)  :time (.format df (.O_Time  sp))
                         :M (.M sp) :Ml (.Ml sp) :Ms (.Ms sp) :sname (.Sname net) :cname (.Cname net)
+                        :ip ip
                         :type "eqim"
                         }
                        )
@@ -406,7 +407,7 @@
          ]
     (doall(map #(.receiveAndPublish
                   (proxy [EqimConnectorTip] [(:ip %) (:port %) (:user %) (:pass %)]
-                    (clojureeqm [sp net ] (send-eqim-info sp net)))) eqimservers))
+                    (clojureeqm [sp net ] (send-eqim-info sp net (:ip %))))) eqimservers))
     )
   )
 
@@ -563,6 +564,35 @@
           {:zerocrossnum (:zerocrossnum %)}
           )
     (db/get-streamcacheall time station))
+  )
+
+(defn readrealstreamfromcache-mem [time station]
+
+  (let [
+
+         realstream (get-epicenter-realdata-less-name time station);(readrealstreamfromcache-now rtime rstaton (- 0 rate));(readrealstreamfromcache  rtime rstaton )
+         dft   (new SimpleDateFormat "yyyy-MM-dd'T'HH:mm:ss.SSS")
+         frtimet (let [time (:time (first realstream))
+                       ]
+                   (.format dft time)
+
+                   )
+
+         rate (/ -1000 (:rate (first realstream)))
+         rtimet (clojure.string/replace time #" " "T")
+         ;realstreamdata (map #(:data %) realstream)
+         realstreamdata1 (into []  (apply concat (map #(:data %) realstream))) ;(map #(:data %) realstream)
+         rtimespan (- (clj/to-long frtimet) (clj/to-long rtimet))
+         ;;test1 (println frtime rtime rtimet rtimespan "rtimspan" (clj/to-long frtimet) (clj/to-long rtimet))
+         ;;test2 (println fstime stimespan "stimspan" (clj/to-long fstimet) (clj/to-long stimet))
+         ;;test1 (println (:time (first realstream) ) (/ rtimespan rate))
+         realstreamdata (if (> rtimespan 0)realstreamdata1 (drop (/ rtimespan rate) realstreamdata1))
+         ]
+    (println rate )
+    (println realstreamdata1)
+    realstreamdata
+    )
+
   )
 
 (defn read-data-fn [row]
